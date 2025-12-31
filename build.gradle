@@ -46,6 +46,11 @@ dependencies {
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
 	compileOnly 'io.swagger:swagger-annotations:1.6.2'
 	implementation 'org.yaml:snakeyaml:1.33'
+	
+	implementation 'org.postgresql:postgresql:42.7.3'
+	
+	implementation 'org.flywaydb:flyway-core'
+	
 }
 
 openApiGenerate {
