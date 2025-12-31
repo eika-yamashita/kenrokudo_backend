@@ -5,22 +5,22 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.backend.entity.Individual;
-import com.backend.repository.IndividualRepository;
+import com.backend.mapper.IndividualMapper;
 
 @Service
 public class IndividualService {
 
-    private final IndividualRepository individualRepository;
+    private final IndividualMapper individualMapper;
 
-    public IndividualService(IndividualRepository individualRepository) {
-        this.individualRepository = individualRepository;
+    public IndividualService(IndividualMapper individualMapper) {
+        this.individualMapper = individualMapper;
     }
 
     public List<Individual> getIndividuals() {
-        return individualRepository.findAll();
+        return individualMapper.findAll();
     }
 
     public Individual getIndividual(String speciesCd, String id) {
-        return individualRepository.findBySpeciesCdAndId(speciesCd, id);
+        return individualMapper.findBySpeciesCdAndId(speciesCd, id);
     }
 }

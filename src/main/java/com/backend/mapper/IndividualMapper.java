@@ -1,4 +1,4 @@
-package com.backend.repository;
+package com.backend.mapper;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.backend.entity.Individual;
 
 @Mapper
-public interface IndividualRepository {
+public interface IndividualMapper {
 
     List<Individual> findAll();
 
