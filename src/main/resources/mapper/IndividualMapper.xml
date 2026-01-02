@@ -4,13 +4,13 @@
 
 	<resultMap id="IndividualResultMap"
 		type="com.backend.entity.Individual">
-		<result column="species_cd" property="speciesCd" />
 		<id column="id" property="id" />
+		<result column="species_cd" property="speciesCd" />
 		<result column="name" property="name" />
 		<result column="gender" property="gender" />
 	</resultMap>
 
-	<select id="findAll" resultMap="IndividualResultMap">
+	<select id="findAll" resultMap="IndividualResultMap">  
 		SELECT 
 			species_cd, 
 			id, 
