@@ -2,38 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.backend.mapper.IndividualMapper">
 
-	<resultMap id="IndividualResultMap"
-		type="com.backend.entity.Individual">
-		<id column="id" property="id" />
-		<result column="species_cd" property="speciesCd" />
-		<result column="name" property="name" />
-		<result column="gender" property="gender" />
-	</resultMap>
+    <resultMap id="IndividualResultMap"
+            type="com.backend.entity.Individual">
+        <id column="id" property="id" />
+        <result column="species_cd" property="speciesCd" />
+        <result column="male_parent_id" property="maleParentId" />
+        <result column="female_parent_id" property="femaleParentId" />
+        <result column="morph" property="morph" />
+        <result column="bloodline" property="bloodline" />
+        <result column="gender_category" property="genderCategory" />
+        <result column="breeding_category" property="breedingCategory" />
+        <result column="breeder" property="breeder" />
+        <result column="clutch_date" property="clutchDate" />
+        <result column="hatch_date" property="hatchDate" />
+        <result column="purchase_from" property="purchaseFrom" />
+        <result column="purchase_price" property="purchasePrice" />
+        <result column="purchase_date" property="purchaseDate" />
+        <result column="sales_category" property="salesCategory" />
+        <result column="sales_to" property="salesTo" />
+        <result column="sales_price_tax_ex" property="salesPriceTaxEx" />
+        <result column="sales_price_tax" property="salesPriceTax" />
+        <result column="sales_price_tax_in" property="salesPriceTaxIn" />
+        <result column="sales_date" property="salesDate" />
+        <result column="death_date" property="deathDate" />
+        <result column="note" property="note" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
 
-	<select id="findAll" resultMap="IndividualResultMap">  
-		SELECT 
-			species_cd, 
-			id, 
-			name, 
-			gender
-		FROM 
-			individual
-		ORDER BY 
-			species_cd, 
-			id
-	</select>
+    <sql id="individualColumns">
+        species_cd,
+        id,
+        male_parent_id,
+        female_parent_id,
+        morph,
+        bloodline,
+        gender_category,
+        breeding_category,
+        breeder,
+        clutch_date,
+        hatch_date,
+        purchase_from,
+        purchase_price,
+        purchase_date,
+        sales_category,
+        sales_to,
+        sales_price_tax_ex,
+        sales_price_tax,
+        sales_price_tax_in,
+        sales_date,
+        death_date,
+        note,
+        create_user,
+        create_at,
+        update_user,
+        update_at
+    </sql>
 
-	<select id="findBySpeciesCdAndId"
-		resultMap="IndividualResultMap">
-		SELECT 
-			species_cd, 
-			id, 
-			name, 
-			gender
-		FROM 
-			individual
-		WHERE 
-			species_cd = #{speciesCd}
-			AND id = #{id}
-	</select>
+    <select id="findAll" resultMap="IndividualResultMap">
+        SELECT
+            <include refid="individualColumns" />
+        FROM
+            individual
+        ORDER BY
+            species_cd,
+            id
+    </select>
+
+    <select id="findBySpeciesCdAndId"
+            resultMap="IndividualResultMap">
+        SELECT
+            <include refid="individualColumns" />
+        FROM
+            individual
+        WHERE
+            species_cd = #{speciesCd}
+            AND id = #{id}
+    </select>
 </mapper>

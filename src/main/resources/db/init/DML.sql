@@ -1,8 +1,34 @@
-INSERT INTO individual (species_cd, id, name, gender)
-VALUES
-  ('0001', '25A001', 'Tangerine', '0'),
-  ('0001', '25A002', 'Tangerine', '1'),
-  ('0001', '25A003', 'Tremper', '0'),
-  ('0001', '25A004', 'Tremper', '1'),
-  ('0002', '25A001', 'Normal', '0'),
-  ('0002', '25A002', 'Amel', '1');
+INSERT INTO individual (
+  species_cd,
+  id,
+  male_parent_id,
+  female_parent_id,
+  morph,
+  bloodline,
+  gender_category,
+  breeding_category,
+  breeder,
+  clutch_date,
+  hatch_date,
+  purchase_from,
+  purchase_price,
+  purchase_date,
+  sales_category,
+  sales_to,
+  sales_price_tax_ex,
+  sales_price_tax,
+  sales_price_tax_in,
+  sales_date,
+  death_date,
+  note,
+  create_user,
+  create_at,
+  update_user,
+  update_at
+) VALUES
+  ('0001', '25A001', NULL, NULL, 'Tangerine', 'US Line', '1', '0', 'Local Breeder', '2024-05-01', '2024-07-10', 'Breeder Shop', 35000.00, '2024-07-15', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'Healthy female', 'system', '2024-07-15 10:00:00', 'system', '2024-07-15 10:00:00'),
+  ('0001', '25A002', NULL, NULL, 'Tangerine', 'US Line', '0', '0', 'Local Breeder', '2024-05-01', '2024-07-12', 'Breeder Shop', 34000.00, '2024-07-15', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'Reserved for breeding', 'system', '2024-07-15 10:00:00', 'system', '2024-07-15 10:00:00'),
+  ('0001', '25A003', '25A001', '25A002', 'Tremper', 'JP Line', '1', '1', 'System', '2024-06-01', '2024-08-05', 'System', 0, '2024-08-06', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'Holdback', 'system', '2024-08-06 09:00:00', 'system', '2024-08-06 09:00:00'),
+  ('0001', '25A004', '25A001', '25A002', 'Tremper', 'JP Line', '0', '1', 'System', '2024-06-01', '2024-08-05', 'System', 0, '2024-08-06', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'For sale', 'system', '2024-08-06 09:00:00', 'system', '2024-08-06 09:00:00'),
+  ('0002', '25A001', NULL, NULL, 'Normal', 'WC', '1', '0', 'Importer', NULL, NULL, 'Overseas Supplier', 12000.00, '2024-04-10', '1', 'Local Store', 18000.00, 1800.00, 19800.00, '2024-05-01', NULL, 'Sold quickly', 'system', '2024-04-10 08:30:00', 'system', '2024-05-01 18:15:00'),
+  ('0002', '25A002', NULL, NULL, 'Amel', 'WC', '0', '0', 'Importer', NULL, NULL, 'Overseas Supplier', 12500.00, '2024-04-10', '1', 'Local Store', 19000.00, 1900.00, 20900.00, '2024-05-05', NULL, 'Sold quickly', 'system', '2024-04-10 08:30:00', 'system', '2024-05-05 09:45:00');
