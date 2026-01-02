@@ -20,10 +20,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Individual
+ * 個体管理情報
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-02T10:30:05.717929100+09:00[Asia/Tokyo]", comments = "Generator version: 7.4.0")
+@Schema(name = "Individual", description = "個体管理情報")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-02T11:48:40.426236+09:00[Asia/Tokyo]", comments = "Generator version: 7.4.0")
 public class Individual {
 
   private String speciesCd;
@@ -105,11 +106,11 @@ public class Individual {
   }
 
   /**
-   * Get speciesCd
+   * 種コード
    * @return speciesCd
   */
   @NotNull @Size(max = 20) 
-  @Schema(name = "species_cd", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "species_cd", description = "種コード", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("species_cd")
   public String getSpeciesCd() {
     return speciesCd;
@@ -125,11 +126,11 @@ public class Individual {
   }
 
   /**
-   * Get id
+   * 個体ID
    * @return id
   */
   @NotNull @Size(max = 20) 
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", description = "個体ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public String getId() {
     return id;
@@ -145,11 +146,11 @@ public class Individual {
   }
 
   /**
-   * Get maleParentId
+   * オス親個体ID
    * @return maleParentId
   */
   @Size(max = 20) 
-  @Schema(name = "male_parent_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "male_parent_id", description = "オス親個体ID", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("male_parent_id")
   public JsonNullable<@Size(max = 20) String> getMaleParentId() {
     return maleParentId;
@@ -165,11 +166,11 @@ public class Individual {
   }
 
   /**
-   * Get femaleParentId
+   * メス親個体ID
    * @return femaleParentId
   */
   @Size(max = 20) 
-  @Schema(name = "female_parent_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "female_parent_id", description = "メス親個体ID", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("female_parent_id")
   public JsonNullable<@Size(max = 20) String> getFemaleParentId() {
     return femaleParentId;
@@ -185,11 +186,11 @@ public class Individual {
   }
 
   /**
-   * Get morph
+   * モルフ
    * @return morph
   */
   @Size(max = 50) 
-  @Schema(name = "morph", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "morph", description = "モルフ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("morph")
   public JsonNullable<@Size(max = 50) String> getMorph() {
     return morph;
@@ -205,11 +206,11 @@ public class Individual {
   }
 
   /**
-   * Get bloodline
+   * 血統
    * @return bloodline
   */
   @Size(max = 50) 
-  @Schema(name = "bloodline", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "bloodline", description = "血統", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("bloodline")
   public JsonNullable<@Size(max = 50) String> getBloodline() {
     return bloodline;
@@ -225,11 +226,11 @@ public class Individual {
   }
 
   /**
-   * Get genderCategory
+   * 雌雄区分（M:オス / F:メス / U:不明）
    * @return genderCategory
   */
   @Size(max = 1) 
-  @Schema(name = "gender_category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "gender_category", description = "雌雄区分（M:オス / F:メス / U:不明）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("gender_category")
   public JsonNullable<@Size(max = 1) String> getGenderCategory() {
     return genderCategory;
@@ -245,11 +246,11 @@ public class Individual {
   }
 
   /**
-   * Get breedingCategory
+   * 繁殖区分（A:自家繁殖 / B:購入個体）
    * @return breedingCategory
   */
   @Size(max = 1) 
-  @Schema(name = "breeding_category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "breeding_category", description = "繁殖区分（A:自家繁殖 / B:購入個体）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("breeding_category")
   public JsonNullable<@Size(max = 1) String> getBreedingCategory() {
     return breedingCategory;
@@ -265,11 +266,11 @@ public class Individual {
   }
 
   /**
-   * Get breeder
+   * ブリーダー名
    * @return breeder
   */
   @Size(max = 20) 
-  @Schema(name = "breeder", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "breeder", description = "ブリーダー名", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("breeder")
   public JsonNullable<@Size(max = 20) String> getBreeder() {
     return breeder;
@@ -285,11 +286,11 @@ public class Individual {
   }
 
   /**
-   * Get clutchDate
+   * クラッチ日（産卵日）
    * @return clutchDate
   */
   @Valid 
-  @Schema(name = "clutch_date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "clutch_date", description = "クラッチ日（産卵日）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clutch_date")
   public JsonNullable<Date> getClutchDate() {
     return clutchDate;
@@ -305,11 +306,11 @@ public class Individual {
   }
 
   /**
-   * Get hatchDate
+   * ハッチ日（孵化日）
    * @return hatchDate
   */
   @Valid 
-  @Schema(name = "hatch_date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "hatch_date", description = "ハッチ日（孵化日）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("hatch_date")
   public JsonNullable<Date> getHatchDate() {
     return hatchDate;
@@ -325,11 +326,11 @@ public class Individual {
   }
 
   /**
-   * Get purchaseFrom
+   * 仕入先
    * @return purchaseFrom
   */
   
-  @Schema(name = "purchase_from", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "purchase_from", description = "仕入先", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("purchase_from")
   public JsonNullable<String> getPurchaseFrom() {
     return purchaseFrom;
@@ -345,11 +346,11 @@ public class Individual {
   }
 
   /**
-   * Get purchasePrice
+   * 仕入価格
    * @return purchasePrice
   */
   
-  @Schema(name = "purchase_price", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "purchase_price", description = "仕入価格", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("purchase_price")
   public JsonNullable<Double> getPurchasePrice() {
     return purchasePrice;
@@ -365,11 +366,11 @@ public class Individual {
   }
 
   /**
-   * Get purchaseDate
+   * 仕入日
    * @return purchaseDate
   */
   @Valid 
-  @Schema(name = "purchase_date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "purchase_date", description = "仕入日", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("purchase_date")
   public JsonNullable<Date> getPurchaseDate() {
     return purchaseDate;
@@ -385,11 +386,11 @@ public class Individual {
   }
 
   /**
-   * Get salesCategory
+   * 販売区分
    * @return salesCategory
   */
   
-  @Schema(name = "sales_category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sales_category", description = "販売区分", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_category")
   public JsonNullable<String> getSalesCategory() {
     return salesCategory;
@@ -405,11 +406,11 @@ public class Individual {
   }
 
   /**
-   * Get salesTo
+   * 販売先
    * @return salesTo
   */
   
-  @Schema(name = "sales_to", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sales_to", description = "販売先", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_to")
   public JsonNullable<String> getSalesTo() {
     return salesTo;
@@ -425,11 +426,11 @@ public class Individual {
   }
 
   /**
-   * Get salesPriceTaxEx
+   * 販売価格（税抜）
    * @return salesPriceTaxEx
   */
   
-  @Schema(name = "sales_price_tax_ex", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sales_price_tax_ex", description = "販売価格（税抜）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_price_tax_ex")
   public JsonNullable<Double> getSalesPriceTaxEx() {
     return salesPriceTaxEx;
@@ -445,11 +446,11 @@ public class Individual {
   }
 
   /**
-   * Get salesPriceTax
+   * 消費税額
    * @return salesPriceTax
   */
   
-  @Schema(name = "sales_price_tax", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sales_price_tax", description = "消費税額", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_price_tax")
   public JsonNullable<Double> getSalesPriceTax() {
     return salesPriceTax;
@@ -465,11 +466,11 @@ public class Individual {
   }
 
   /**
-   * Get salesPriceTaxIn
+   * 販売価格（税込）
    * @return salesPriceTaxIn
   */
   
-  @Schema(name = "sales_price_tax_in", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sales_price_tax_in", description = "販売価格（税込）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_price_tax_in")
   public JsonNullable<Double> getSalesPriceTaxIn() {
     return salesPriceTaxIn;
@@ -485,11 +486,11 @@ public class Individual {
   }
 
   /**
-   * Get salesDate
+   * 販売日
    * @return salesDate
   */
   @Valid 
-  @Schema(name = "sales_date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sales_date", description = "販売日", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_date")
   public JsonNullable<Date> getSalesDate() {
     return salesDate;
@@ -505,11 +506,11 @@ public class Individual {
   }
 
   /**
-   * Get deathDate
+   * 死亡日
    * @return deathDate
   */
   @Valid 
-  @Schema(name = "death_date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "death_date", description = "死亡日", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("death_date")
   public JsonNullable<Date> getDeathDate() {
     return deathDate;
@@ -525,11 +526,11 @@ public class Individual {
   }
 
   /**
-   * Get note
+   * 備考
    * @return note
   */
   @Size(max = 255) 
-  @Schema(name = "note", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "note", description = "備考", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("note")
   public JsonNullable<@Size(max = 255) String> getNote() {
     return note;
@@ -545,11 +546,11 @@ public class Individual {
   }
 
   /**
-   * Get createUser
+   * 登録者
    * @return createUser
   */
   @NotNull @Size(max = 20) 
-  @Schema(name = "create_user", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "create_user", description = "登録者", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("create_user")
   public String getCreateUser() {
     return createUser;
@@ -565,11 +566,11 @@ public class Individual {
   }
 
   /**
-   * Get createAt
+   * 登録日時
    * @return createAt
   */
   @NotNull @Valid 
-  @Schema(name = "create_at", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "create_at", description = "登録日時", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("create_at")
   public Date getCreateAt() {
     return createAt;
@@ -585,11 +586,11 @@ public class Individual {
   }
 
   /**
-   * Get updateUser
+   * 更新者
    * @return updateUser
   */
   @Size(max = 20) 
-  @Schema(name = "update_user", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "update_user", description = "更新者", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("update_user")
   public JsonNullable<@Size(max = 20) String> getUpdateUser() {
     return updateUser;
@@ -605,11 +606,11 @@ public class Individual {
   }
 
   /**
-   * Get updateAt
+   * 更新日時
    * @return updateAt
   */
   @Valid 
-  @Schema(name = "update_at", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "update_at", description = "更新日時", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("update_at")
   public JsonNullable<Date> getUpdateAt() {
     return updateAt;
