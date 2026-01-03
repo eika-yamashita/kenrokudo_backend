@@ -17,6 +17,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/Individual'
 
+    post:
+      summary: 個体情報を新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Individual'
+      responses:
+        '201':
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Individual'
+
   /individuals/{species_cd}/{id}:
     put:
       summary: 個体情報を更新

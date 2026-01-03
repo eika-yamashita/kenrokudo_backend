@@ -81,4 +81,63 @@
             species_cd = #{speciesCd}
             AND id = #{id}
     </select>
+
+    <insert id="insert">
+        INSERT INTO individual (
+            species_cd,
+            id,
+            male_parent_id,
+            female_parent_id,
+            morph,
+            bloodline,
+            gender_category,
+            breeding_category,
+            breeder,
+            clutch_date,
+            hatch_date,
+            purchase_from,
+            purchase_price,
+            purchase_date,
+            sales_category,
+            sales_to,
+            sales_price_tax_ex,
+            sales_price_tax,
+            sales_price_tax_in,
+            sales_date,
+            death_date,
+            note,
+            create_user,
+            create_at,
+            update_user,
+            update_at
+        )
+        VALUES (
+            #{speciesCd},
+            #{id},
+            #{maleParentId},
+            #{femaleParentId},
+            #{morph},
+            #{bloodline},
+            #{genderCategory},
+            #{breedingCategory},
+            #{breeder},
+            #{clutchDate},
+            #{hatchDate},
+            #{purchaseFrom},
+            #{purchasePrice},
+            #{purchaseDate},
+            #{salesCategory},
+            #{salesTo},
+            #{salesPriceTaxEx},
+            #{salesPriceTax},
+            #{salesPriceTaxIn},
+            #{salesDate},
+            #{deathDate},
+            #{note},
+            #{createUser},
+            #{createAt},
+            #{updateUser},
+            #{updateAt}
+        )
+    </insert>
 </mapper>
