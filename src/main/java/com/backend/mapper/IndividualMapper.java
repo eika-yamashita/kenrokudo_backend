@@ -13,4 +13,6 @@ public interface IndividualMapper {
     List<Individual> findAll();
 
     Individual findBySpeciesCdAndId(@Param("speciesCd") String speciesCd, @Param("id") String id);
+
+    int insert(Individual individual);
 }

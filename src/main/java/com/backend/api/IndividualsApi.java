@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-02T11:48:40.426236+09:00[Asia/Tokyo]", comments = "Generator version: 7.4.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-03T01:08:01.089826924Z[Etc/UTC]", comments = "Generator version: 7.4.0")
 @Validated
 @Tag(name = "individuals", description = "the individuals API")
 public interface IndividualsApi {
@@ -59,6 +59,33 @@ public interface IndividualsApi {
     
     ResponseEntity<List<Individual>> individualsGet(
         
+    );
+
+
+    /**
+     * POST /individuals : 個体情報を新規登録
+     *
+     * @param individual  (required)
+     * @return 登録成功 (status code 201)
+     */
+    @Operation(
+        operationId = "individualsPost",
+        summary = "個体情報を新規登録",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "登録成功", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Individual.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/individuals",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    ResponseEntity<Individual> individualsPost(
+        @Parameter(name = "Individual", description = "", required = true) @Valid @RequestBody Individual individual
     );
 
 
