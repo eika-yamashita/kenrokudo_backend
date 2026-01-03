@@ -28,34 +28,7 @@ public class IndividualService {
         // Entity → Model 変換
         for (IndividualEntity entity : entityList) {
             Individual individual = new Individual();
-
-            individual.setSpeciesCd(entity.getSpeciesCd());
-            individual.setId(entity.getId());
-            individual.setMaleParentId(entity.getMaleParentId());
-            individual.setFemaleParentId(entity.getFemaleParentId());
-            individual.setMorph(entity.getMorph());
-            individual.setBloodline(entity.getBloodline());
-            individual.setGenderCategory(entity.getGenderCategory());
-            individual.setBreedingCategory(entity.getBreedingCategory());
-            individual.setBreeder(entity.getBreeder());
-            individual.setClutchDate(entity.getClutchDate());
-            individual.setHatchDate(entity.getHatchDate());
-            individual.setPurchaseFrom(entity.getPurchaseFrom());
-            individual.setPurchasePrice(entity.getPurchasePrice());
-            individual.setPurchaseDate(entity.getPurchaseDate());
-            individual.setSalesCategory(entity.getSalesCategory());
-            individual.setSalesTo(entity.getSalesTo());
-            individual.setSalesPriceTaxEx(entity.getSalesPriceTaxEx());
-            individual.setSalesPriceTax(entity.getSalesPriceTax());
-            individual.setSalesPriceTaxIn(entity.getSalesPriceTaxIn());
-            individual.setSalesDate(entity.getSalesDate());
-            individual.setDeathDate(entity.getDeathDate());
-            individual.setNote(entity.getNote());
-            individual.setCreateUser(entity.getCreateUser());
-            individual.setCreateAt(entity.getCreateAt());
-            individual.setUpdateUser(entity.getUpdateUser());
-            individual.setUpdateAt(entity.getUpdateAt());
-
+            individual = setIndividual(individual, entity);
             individualList.add(individual);
         }
 
@@ -69,6 +42,42 @@ public class IndividualService {
 
     public Individual createIndividual(Individual individual) {
         individualMapper.insert(individual);
-        return individualMapper.findBySpeciesCdAndId(individual.getSpeciesCd(), individual.getId());
+        IndividualEntity entity = individualMapper.findBySpeciesCdAndId(individual.getSpeciesCd(), individual.getId());
+        Individual model = new Individual();
+        model = setIndividual(model, entity);
+
+        return model;
+    }
+    
+    private Individual setIndividual(Individual model, IndividualEntity entity) {
+    	
+    	model.setSpeciesCd(entity.getSpeciesCd());
+    	model.setId(entity.getId());
+    	model.setMaleParentId(entity.getMaleParentId());
+    	model.setFemaleParentId(entity.getFemaleParentId());
+    	model.setMorph(entity.getMorph());
+    	model.setBloodline(entity.getBloodline());
+    	model.setGenderCategory(entity.getGenderCategory());
+    	model.setBreedingCategory(entity.getBreedingCategory());
+    	model.setBreeder(entity.getBreeder());
+    	model.setClutchDate(entity.getClutchDate());
+    	model.setHatchDate(entity.getHatchDate());
+    	model.setPurchaseFrom(entity.getPurchaseFrom());
+    	model.setPurchasePrice(entity.getPurchasePrice());
+    	model.setPurchaseDate(entity.getPurchaseDate());
+    	model.setSalesCategory(entity.getSalesCategory());
+    	model.setSalesTo(entity.getSalesTo());
+    	model.setSalesPriceTaxEx(entity.getSalesPriceTaxEx());
+    	model.setSalesPriceTax(entity.getSalesPriceTax());
+    	model.setSalesPriceTaxIn(entity.getSalesPriceTaxIn());
+    	model.setSalesDate(entity.getSalesDate());
+    	model.setDeathDate(entity.getDeathDate());
+    	model.setNote(entity.getNote());
+    	model.setCreateUser(entity.getCreateUser());
+    	model.setCreateAt(entity.getCreateAt());
+    	model.setUpdateUser(entity.getUpdateUser());
+    	model.setUpdateAt(entity.getUpdateAt());
+    	
+		return model;
     }
 }
