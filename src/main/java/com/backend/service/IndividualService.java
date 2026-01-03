@@ -23,4 +23,9 @@ public class IndividualService {
     public Individual getIndividual(String speciesCd, String id) {
         return individualMapper.findBySpeciesCdAndId(speciesCd, id);
     }
+
+    public Individual createIndividual(Individual individual) {
+        individualMapper.insert(individual);
+        return individualMapper.findBySpeciesCdAndId(individual.getSpeciesCd(), individual.getId());
+    }
 }

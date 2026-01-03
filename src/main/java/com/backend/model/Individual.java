@@ -20,11 +20,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * 個体管理情報
+ * 個体情報
  */
 
-@Schema(name = "Individual", description = "個体管理情報")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-02T11:48:40.426236+09:00[Asia/Tokyo]", comments = "Generator version: 7.4.0")
+@Schema(name = "Individual", description = "個体情報")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-03T01:08:01.089826924Z[Etc/UTC]", comments = "Generator version: 7.4.0")
 public class Individual {
 
   private String speciesCd;
