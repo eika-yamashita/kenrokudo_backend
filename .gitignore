@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Exclude generated or external API and model sources from version control
+src/main/java/com/backend/api/
+src/main/java/com/backend/model/
