@@ -75,99 +75,79 @@ components:
         male_parent_id:
           type: string
           maxLength: 20
-          nullable: true
           description: オス親個体ID
         female_parent_id:
           type: string
           maxLength: 20
-          nullable: true
           description: メス親個体ID
         morph:
           type: string
           maxLength: 50
-          nullable: true
           description: モルフ
         bloodline:
           type: string
           maxLength: 50
-          nullable: true
           description: 血統
         gender_category:
           type: string
           maxLength: 1
-          nullable: true
           description: 雌雄区分（M:オス / F:メス / U:不明）
         breeding_category:
           type: string
           maxLength: 1
-          nullable: true
           description: 繁殖区分（A:自家繁殖 / B:購入個体）
         breeder:
           type: string
           maxLength: 20
-          nullable: true
           description: ブリーダー名
         clutch_date:
           type: string
           format: date
-          nullable: true
           description: クラッチ日（産卵日）
         hatch_date:
           type: string
           format: date
-          nullable: true
           description: ハッチ日（孵化日）
         purchase_from:
           type: string
-          nullable: true
           description: 仕入先
         purchase_price:
           type: number
           format: double
-          nullable: true
           description: 仕入価格
         purchase_date:
           type: string
           format: date
-          nullable: true
           description: 仕入日
         sales_category:
           type: string
-          nullable: true
           description: 販売区分
         sales_to:
           type: string
-          nullable: true
           description: 販売先
         sales_price_tax_ex:
           type: number
           format: double
-          nullable: true
           description: 販売価格（税抜）
         sales_price_tax:
           type: number
           format: double
-          nullable: true
           description: 消費税額
         sales_price_tax_in:
           type: number
           format: double
-          nullable: true
           description: 販売価格（税込）
         sales_date:
           type: string
           format: date
-          nullable: true
           description: 販売日
         death_date:
           type: string
           format: date
-          nullable: true
           description: 死亡日
         note:
           type: string
           maxLength: 255
-          nullable: true
           description: 備考
         create_user:
           type: string
@@ -180,12 +160,10 @@ components:
         update_user:
           type: string
           maxLength: 20
-          nullable: true
           description: 更新者
         update_at:
           type: string
           format: date-time
-          nullable: true
           description: 更新日時
       required:
         - species_cd

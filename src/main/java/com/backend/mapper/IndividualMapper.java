@@ -5,12 +5,12 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.backend.entity.Individual;
+import com.backend.entity.IndividualEntity;
 
 @Mapper
 public interface IndividualMapper {
 
-    List<Individual> findAll();
+    List<IndividualEntity> findAll();
 
-    Individual findBySpeciesCdAndId(@Param("speciesCd") String speciesCd, @Param("id") String id);
+    IndividualEntity findBySpeciesCdAndId(@Param("speciesCd") String speciesCd, @Param("id") String id);
 }

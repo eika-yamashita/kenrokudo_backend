@@ -4,11 +4,8 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.Arrays;
 import java.util.Date;
-import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.util.NoSuchElementException;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -20,71 +17,71 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * 個体管理情報
+ * 個体情報
  */
 
-@Schema(name = "Individual", description = "個体管理情報")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-02T11:48:40.426236+09:00[Asia/Tokyo]", comments = "Generator version: 7.4.0")
+@Schema(name = "Individual", description = "個体情報")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-03T09:16:45.985682500+09:00[Asia/Tokyo]", comments = "Generator version: 7.4.0")
 public class Individual {
 
   private String speciesCd;
 
   private String id;
 
-  private JsonNullable<@Size(max = 20) String> maleParentId = JsonNullable.<String>undefined();
+  private String maleParentId;
 
-  private JsonNullable<@Size(max = 20) String> femaleParentId = JsonNullable.<String>undefined();
+  private String femaleParentId;
 
-  private JsonNullable<@Size(max = 50) String> morph = JsonNullable.<String>undefined();
+  private String morph;
 
-  private JsonNullable<@Size(max = 50) String> bloodline = JsonNullable.<String>undefined();
+  private String bloodline;
 
-  private JsonNullable<@Size(max = 1) String> genderCategory = JsonNullable.<String>undefined();
+  private String genderCategory;
 
-  private JsonNullable<@Size(max = 1) String> breedingCategory = JsonNullable.<String>undefined();
+  private String breedingCategory;
 
-  private JsonNullable<@Size(max = 20) String> breeder = JsonNullable.<String>undefined();
-
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private JsonNullable<Date> clutchDate = JsonNullable.<Date>undefined();
+  private String breeder;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private JsonNullable<Date> hatchDate = JsonNullable.<Date>undefined();
-
-  private JsonNullable<String> purchaseFrom = JsonNullable.<String>undefined();
-
-  private JsonNullable<Double> purchasePrice = JsonNullable.<Double>undefined();
+  private Date clutchDate;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private JsonNullable<Date> purchaseDate = JsonNullable.<Date>undefined();
+  private Date hatchDate;
 
-  private JsonNullable<String> salesCategory = JsonNullable.<String>undefined();
+  private String purchaseFrom;
 
-  private JsonNullable<String> salesTo = JsonNullable.<String>undefined();
-
-  private JsonNullable<Double> salesPriceTaxEx = JsonNullable.<Double>undefined();
-
-  private JsonNullable<Double> salesPriceTax = JsonNullable.<Double>undefined();
-
-  private JsonNullable<Double> salesPriceTaxIn = JsonNullable.<Double>undefined();
+  private Double purchasePrice;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private JsonNullable<Date> salesDate = JsonNullable.<Date>undefined();
+  private Date purchaseDate;
+
+  private String salesCategory;
+
+  private String salesTo;
+
+  private Double salesPriceTaxEx;
+
+  private Double salesPriceTax;
+
+  private Double salesPriceTaxIn;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private JsonNullable<Date> deathDate = JsonNullable.<Date>undefined();
+  private Date salesDate;
 
-  private JsonNullable<@Size(max = 255) String> note = JsonNullable.<String>undefined();
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private Date deathDate;
+
+  private String note;
 
   private String createUser;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private Date createAt;
 
-  private JsonNullable<@Size(max = 20) String> updateUser = JsonNullable.<String>undefined();
+  private String updateUser;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private JsonNullable<Date> updateAt = JsonNullable.<Date>undefined();
+  private Date updateAt;
 
   public Individual() {
     super();
@@ -141,7 +138,7 @@ public class Individual {
   }
 
   public Individual maleParentId(String maleParentId) {
-    this.maleParentId = JsonNullable.of(maleParentId);
+    this.maleParentId = maleParentId;
     return this;
   }
 
@@ -152,16 +149,16 @@ public class Individual {
   @Size(max = 20) 
   @Schema(name = "male_parent_id", description = "オス親個体ID", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("male_parent_id")
-  public JsonNullable<@Size(max = 20) String> getMaleParentId() {
+  public String getMaleParentId() {
     return maleParentId;
   }
 
-  public void setMaleParentId(JsonNullable<String> maleParentId) {
+  public void setMaleParentId(String maleParentId) {
     this.maleParentId = maleParentId;
   }
 
   public Individual femaleParentId(String femaleParentId) {
-    this.femaleParentId = JsonNullable.of(femaleParentId);
+    this.femaleParentId = femaleParentId;
     return this;
   }
 
@@ -172,16 +169,16 @@ public class Individual {
   @Size(max = 20) 
   @Schema(name = "female_parent_id", description = "メス親個体ID", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("female_parent_id")
-  public JsonNullable<@Size(max = 20) String> getFemaleParentId() {
+  public String getFemaleParentId() {
     return femaleParentId;
   }
 
-  public void setFemaleParentId(JsonNullable<String> femaleParentId) {
+  public void setFemaleParentId(String femaleParentId) {
     this.femaleParentId = femaleParentId;
   }
 
   public Individual morph(String morph) {
-    this.morph = JsonNullable.of(morph);
+    this.morph = morph;
     return this;
   }
 
@@ -192,16 +189,16 @@ public class Individual {
   @Size(max = 50) 
   @Schema(name = "morph", description = "モルフ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("morph")
-  public JsonNullable<@Size(max = 50) String> getMorph() {
+  public String getMorph() {
     return morph;
   }
 
-  public void setMorph(JsonNullable<String> morph) {
+  public void setMorph(String morph) {
     this.morph = morph;
   }
 
   public Individual bloodline(String bloodline) {
-    this.bloodline = JsonNullable.of(bloodline);
+    this.bloodline = bloodline;
     return this;
   }
 
@@ -212,16 +209,16 @@ public class Individual {
   @Size(max = 50) 
   @Schema(name = "bloodline", description = "血統", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("bloodline")
-  public JsonNullable<@Size(max = 50) String> getBloodline() {
+  public String getBloodline() {
     return bloodline;
   }
 
-  public void setBloodline(JsonNullable<String> bloodline) {
+  public void setBloodline(String bloodline) {
     this.bloodline = bloodline;
   }
 
   public Individual genderCategory(String genderCategory) {
-    this.genderCategory = JsonNullable.of(genderCategory);
+    this.genderCategory = genderCategory;
     return this;
   }
 
@@ -232,16 +229,16 @@ public class Individual {
   @Size(max = 1) 
   @Schema(name = "gender_category", description = "雌雄区分（M:オス / F:メス / U:不明）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("gender_category")
-  public JsonNullable<@Size(max = 1) String> getGenderCategory() {
+  public String getGenderCategory() {
     return genderCategory;
   }
 
-  public void setGenderCategory(JsonNullable<String> genderCategory) {
+  public void setGenderCategory(String genderCategory) {
     this.genderCategory = genderCategory;
   }
 
   public Individual breedingCategory(String breedingCategory) {
-    this.breedingCategory = JsonNullable.of(breedingCategory);
+    this.breedingCategory = breedingCategory;
     return this;
   }
 
@@ -252,16 +249,16 @@ public class Individual {
   @Size(max = 1) 
   @Schema(name = "breeding_category", description = "繁殖区分（A:自家繁殖 / B:購入個体）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("breeding_category")
-  public JsonNullable<@Size(max = 1) String> getBreedingCategory() {
+  public String getBreedingCategory() {
     return breedingCategory;
   }
 
-  public void setBreedingCategory(JsonNullable<String> breedingCategory) {
+  public void setBreedingCategory(String breedingCategory) {
     this.breedingCategory = breedingCategory;
   }
 
   public Individual breeder(String breeder) {
-    this.breeder = JsonNullable.of(breeder);
+    this.breeder = breeder;
     return this;
   }
 
@@ -272,16 +269,16 @@ public class Individual {
   @Size(max = 20) 
   @Schema(name = "breeder", description = "ブリーダー名", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("breeder")
-  public JsonNullable<@Size(max = 20) String> getBreeder() {
+  public String getBreeder() {
     return breeder;
   }
 
-  public void setBreeder(JsonNullable<String> breeder) {
+  public void setBreeder(String breeder) {
     this.breeder = breeder;
   }
 
   public Individual clutchDate(Date clutchDate) {
-    this.clutchDate = JsonNullable.of(clutchDate);
+    this.clutchDate = clutchDate;
     return this;
   }
 
@@ -292,16 +289,16 @@ public class Individual {
   @Valid 
   @Schema(name = "clutch_date", description = "クラッチ日（産卵日）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clutch_date")
-  public JsonNullable<Date> getClutchDate() {
+  public Date getClutchDate() {
     return clutchDate;
   }
 
-  public void setClutchDate(JsonNullable<Date> clutchDate) {
+  public void setClutchDate(Date clutchDate) {
     this.clutchDate = clutchDate;
   }
 
   public Individual hatchDate(Date hatchDate) {
-    this.hatchDate = JsonNullable.of(hatchDate);
+    this.hatchDate = hatchDate;
     return this;
   }
 
@@ -312,16 +309,16 @@ public class Individual {
   @Valid 
   @Schema(name = "hatch_date", description = "ハッチ日（孵化日）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("hatch_date")
-  public JsonNullable<Date> getHatchDate() {
+  public Date getHatchDate() {
     return hatchDate;
   }
 
-  public void setHatchDate(JsonNullable<Date> hatchDate) {
+  public void setHatchDate(Date hatchDate) {
     this.hatchDate = hatchDate;
   }
 
   public Individual purchaseFrom(String purchaseFrom) {
-    this.purchaseFrom = JsonNullable.of(purchaseFrom);
+    this.purchaseFrom = purchaseFrom;
     return this;
   }
 
@@ -332,16 +329,16 @@ public class Individual {
   
   @Schema(name = "purchase_from", description = "仕入先", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("purchase_from")
-  public JsonNullable<String> getPurchaseFrom() {
+  public String getPurchaseFrom() {
     return purchaseFrom;
   }
 
-  public void setPurchaseFrom(JsonNullable<String> purchaseFrom) {
+  public void setPurchaseFrom(String purchaseFrom) {
     this.purchaseFrom = purchaseFrom;
   }
 
   public Individual purchasePrice(Double purchasePrice) {
-    this.purchasePrice = JsonNullable.of(purchasePrice);
+    this.purchasePrice = purchasePrice;
     return this;
   }
 
@@ -352,16 +349,16 @@ public class Individual {
   
   @Schema(name = "purchase_price", description = "仕入価格", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("purchase_price")
-  public JsonNullable<Double> getPurchasePrice() {
+  public Double getPurchasePrice() {
     return purchasePrice;
   }
 
-  public void setPurchasePrice(JsonNullable<Double> purchasePrice) {
+  public void setPurchasePrice(Double purchasePrice) {
     this.purchasePrice = purchasePrice;
   }
 
   public Individual purchaseDate(Date purchaseDate) {
-    this.purchaseDate = JsonNullable.of(purchaseDate);
+    this.purchaseDate = purchaseDate;
     return this;
   }
 
@@ -372,16 +369,16 @@ public class Individual {
   @Valid 
   @Schema(name = "purchase_date", description = "仕入日", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("purchase_date")
-  public JsonNullable<Date> getPurchaseDate() {
+  public Date getPurchaseDate() {
     return purchaseDate;
   }
 
-  public void setPurchaseDate(JsonNullable<Date> purchaseDate) {
+  public void setPurchaseDate(Date purchaseDate) {
     this.purchaseDate = purchaseDate;
   }
 
   public Individual salesCategory(String salesCategory) {
-    this.salesCategory = JsonNullable.of(salesCategory);
+    this.salesCategory = salesCategory;
     return this;
   }
 
@@ -392,16 +389,16 @@ public class Individual {
   
   @Schema(name = "sales_category", description = "販売区分", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_category")
-  public JsonNullable<String> getSalesCategory() {
+  public String getSalesCategory() {
     return salesCategory;
   }
 
-  public void setSalesCategory(JsonNullable<String> salesCategory) {
+  public void setSalesCategory(String salesCategory) {
     this.salesCategory = salesCategory;
   }
 
   public Individual salesTo(String salesTo) {
-    this.salesTo = JsonNullable.of(salesTo);
+    this.salesTo = salesTo;
     return this;
   }
 
@@ -412,16 +409,16 @@ public class Individual {
   
   @Schema(name = "sales_to", description = "販売先", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_to")
-  public JsonNullable<String> getSalesTo() {
+  public String getSalesTo() {
     return salesTo;
   }
 
-  public void setSalesTo(JsonNullable<String> salesTo) {
+  public void setSalesTo(String salesTo) {
     this.salesTo = salesTo;
   }
 
   public Individual salesPriceTaxEx(Double salesPriceTaxEx) {
-    this.salesPriceTaxEx = JsonNullable.of(salesPriceTaxEx);
+    this.salesPriceTaxEx = salesPriceTaxEx;
     return this;
   }
 
@@ -432,16 +429,16 @@ public class Individual {
   
   @Schema(name = "sales_price_tax_ex", description = "販売価格（税抜）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_price_tax_ex")
-  public JsonNullable<Double> getSalesPriceTaxEx() {
+  public Double getSalesPriceTaxEx() {
     return salesPriceTaxEx;
   }
 
-  public void setSalesPriceTaxEx(JsonNullable<Double> salesPriceTaxEx) {
+  public void setSalesPriceTaxEx(Double salesPriceTaxEx) {
     this.salesPriceTaxEx = salesPriceTaxEx;
   }
 
   public Individual salesPriceTax(Double salesPriceTax) {
-    this.salesPriceTax = JsonNullable.of(salesPriceTax);
+    this.salesPriceTax = salesPriceTax;
     return this;
   }
 
@@ -452,16 +449,16 @@ public class Individual {
   
   @Schema(name = "sales_price_tax", description = "消費税額", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_price_tax")
-  public JsonNullable<Double> getSalesPriceTax() {
+  public Double getSalesPriceTax() {
     return salesPriceTax;
   }
 
-  public void setSalesPriceTax(JsonNullable<Double> salesPriceTax) {
+  public void setSalesPriceTax(Double salesPriceTax) {
     this.salesPriceTax = salesPriceTax;
   }
 
   public Individual salesPriceTaxIn(Double salesPriceTaxIn) {
-    this.salesPriceTaxIn = JsonNullable.of(salesPriceTaxIn);
+    this.salesPriceTaxIn = salesPriceTaxIn;
     return this;
   }
 
@@ -472,16 +469,16 @@ public class Individual {
   
   @Schema(name = "sales_price_tax_in", description = "販売価格（税込）", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_price_tax_in")
-  public JsonNullable<Double> getSalesPriceTaxIn() {
+  public Double getSalesPriceTaxIn() {
     return salesPriceTaxIn;
   }
 
-  public void setSalesPriceTaxIn(JsonNullable<Double> salesPriceTaxIn) {
+  public void setSalesPriceTaxIn(Double salesPriceTaxIn) {
     this.salesPriceTaxIn = salesPriceTaxIn;
   }
 
   public Individual salesDate(Date salesDate) {
-    this.salesDate = JsonNullable.of(salesDate);
+    this.salesDate = salesDate;
     return this;
   }
 
@@ -492,16 +489,16 @@ public class Individual {
   @Valid 
   @Schema(name = "sales_date", description = "販売日", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sales_date")
-  public JsonNullable<Date> getSalesDate() {
+  public Date getSalesDate() {
     return salesDate;
   }
 
-  public void setSalesDate(JsonNullable<Date> salesDate) {
+  public void setSalesDate(Date salesDate) {
     this.salesDate = salesDate;
   }
 
   public Individual deathDate(Date deathDate) {
-    this.deathDate = JsonNullable.of(deathDate);
+    this.deathDate = deathDate;
     return this;
   }
 
@@ -512,16 +509,16 @@ public class Individual {
   @Valid 
   @Schema(name = "death_date", description = "死亡日", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("death_date")
-  public JsonNullable<Date> getDeathDate() {
+  public Date getDeathDate() {
     return deathDate;
   }
 
-  public void setDeathDate(JsonNullable<Date> deathDate) {
+  public void setDeathDate(Date deathDate) {
     this.deathDate = deathDate;
   }
 
   public Individual note(String note) {
-    this.note = JsonNullable.of(note);
+    this.note = note;
     return this;
   }
 
@@ -532,11 +529,11 @@ public class Individual {
   @Size(max = 255) 
   @Schema(name = "note", description = "備考", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("note")
-  public JsonNullable<@Size(max = 255) String> getNote() {
+  public String getNote() {
     return note;
   }
 
-  public void setNote(JsonNullable<String> note) {
+  public void setNote(String note) {
     this.note = note;
   }
 
@@ -581,7 +578,7 @@ public class Individual {
   }
 
   public Individual updateUser(String updateUser) {
-    this.updateUser = JsonNullable.of(updateUser);
+    this.updateUser = updateUser;
     return this;
   }
 
@@ -592,16 +589,16 @@ public class Individual {
   @Size(max = 20) 
   @Schema(name = "update_user", description = "更新者", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("update_user")
-  public JsonNullable<@Size(max = 20) String> getUpdateUser() {
+  public String getUpdateUser() {
     return updateUser;
   }
 
-  public void setUpdateUser(JsonNullable<String> updateUser) {
+  public void setUpdateUser(String updateUser) {
     this.updateUser = updateUser;
   }
 
   public Individual updateAt(Date updateAt) {
-    this.updateAt = JsonNullable.of(updateAt);
+    this.updateAt = updateAt;
     return this;
   }
 
@@ -612,11 +609,11 @@ public class Individual {
   @Valid 
   @Schema(name = "update_at", description = "更新日時", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("update_at")
-  public JsonNullable<Date> getUpdateAt() {
+  public Date getUpdateAt() {
     return updateAt;
   }
 
-  public void setUpdateAt(JsonNullable<Date> updateAt) {
+  public void setUpdateAt(Date updateAt) {
     this.updateAt = updateAt;
   }
 
@@ -631,46 +628,35 @@ public class Individual {
     Individual individual = (Individual) o;
     return Objects.equals(this.speciesCd, individual.speciesCd) &&
         Objects.equals(this.id, individual.id) &&
-        equalsNullable(this.maleParentId, individual.maleParentId) &&
-        equalsNullable(this.femaleParentId, individual.femaleParentId) &&
-        equalsNullable(this.morph, individual.morph) &&
-        equalsNullable(this.bloodline, individual.bloodline) &&
-        equalsNullable(this.genderCategory, individual.genderCategory) &&
-        equalsNullable(this.breedingCategory, individual.breedingCategory) &&
-        equalsNullable(this.breeder, individual.breeder) &&
-        equalsNullable(this.clutchDate, individual.clutchDate) &&
-        equalsNullable(this.hatchDate, individual.hatchDate) &&
-        equalsNullable(this.purchaseFrom, individual.purchaseFrom) &&
-        equalsNullable(this.purchasePrice, individual.purchasePrice) &&
-        equalsNullable(this.purchaseDate, individual.purchaseDate) &&
-        equalsNullable(this.salesCategory, individual.salesCategory) &&
-        equalsNullable(this.salesTo, individual.salesTo) &&
-        equalsNullable(this.salesPriceTaxEx, individual.salesPriceTaxEx) &&
-        equalsNullable(this.salesPriceTax, individual.salesPriceTax) &&
-        equalsNullable(this.salesPriceTaxIn, individual.salesPriceTaxIn) &&
-        equalsNullable(this.salesDate, individual.salesDate) &&
-        equalsNullable(this.deathDate, individual.deathDate) &&
-        equalsNullable(this.note, individual.note) &&
+        Objects.equals(this.maleParentId, individual.maleParentId) &&
+        Objects.equals(this.femaleParentId, individual.femaleParentId) &&
+        Objects.equals(this.morph, individual.morph) &&
+        Objects.equals(this.bloodline, individual.bloodline) &&
+        Objects.equals(this.genderCategory, individual.genderCategory) &&
+        Objects.equals(this.breedingCategory, individual.breedingCategory) &&
+        Objects.equals(this.breeder, individual.breeder) &&
+        Objects.equals(this.clutchDate, individual.clutchDate) &&
+        Objects.equals(this.hatchDate, individual.hatchDate) &&
+        Objects.equals(this.purchaseFrom, individual.purchaseFrom) &&
+        Objects.equals(this.purchasePrice, individual.purchasePrice) &&
+        Objects.equals(this.purchaseDate, individual.purchaseDate) &&
+        Objects.equals(this.salesCategory, individual.salesCategory) &&
+        Objects.equals(this.salesTo, individual.salesTo) &&
+        Objects.equals(this.salesPriceTaxEx, individual.salesPriceTaxEx) &&
+        Objects.equals(this.salesPriceTax, individual.salesPriceTax) &&
+        Objects.equals(this.salesPriceTaxIn, individual.salesPriceTaxIn) &&
+        Objects.equals(this.salesDate, individual.salesDate) &&
+        Objects.equals(this.deathDate, individual.deathDate) &&
+        Objects.equals(this.note, individual.note) &&
         Objects.equals(this.createUser, individual.createUser) &&
         Objects.equals(this.createAt, individual.createAt) &&
-        equalsNullable(this.updateUser, individual.updateUser) &&
-        equalsNullable(this.updateAt, individual.updateAt);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
+        Objects.equals(this.updateUser, individual.updateUser) &&
+        Objects.equals(this.updateAt, individual.updateAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(speciesCd, id, hashCodeNullable(maleParentId), hashCodeNullable(femaleParentId), hashCodeNullable(morph), hashCodeNullable(bloodline), hashCodeNullable(genderCategory), hashCodeNullable(breedingCategory), hashCodeNullable(breeder), hashCodeNullable(clutchDate), hashCodeNullable(hatchDate), hashCodeNullable(purchaseFrom), hashCodeNullable(purchasePrice), hashCodeNullable(purchaseDate), hashCodeNullable(salesCategory), hashCodeNullable(salesTo), hashCodeNullable(salesPriceTaxEx), hashCodeNullable(salesPriceTax), hashCodeNullable(salesPriceTaxIn), hashCodeNullable(salesDate), hashCodeNullable(deathDate), hashCodeNullable(note), createUser, createAt, hashCodeNullable(updateUser), hashCodeNullable(updateAt));
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
+    return Objects.hash(speciesCd, id, maleParentId, femaleParentId, morph, bloodline, genderCategory, breedingCategory, breeder, clutchDate, hatchDate, purchaseFrom, purchasePrice, purchaseDate, salesCategory, salesTo, salesPriceTaxEx, salesPriceTax, salesPriceTaxIn, salesDate, deathDate, note, createUser, createAt, updateUser, updateAt);
   }
 
   @Override

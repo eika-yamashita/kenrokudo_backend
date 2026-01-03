@@ -3,7 +3,7 @@
 <mapper namespace="com.backend.mapper.IndividualMapper">
 
     <resultMap id="IndividualResultMap"
-            type="com.backend.entity.Individual">
+            type="com.backend.entity.IndividualEntity">
         <id column="id" property="id" />
         <result column="species_cd" property="speciesCd" />
         <result column="male_parent_id" property="maleParentId" />

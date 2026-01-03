@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Individual implements Serializable {
+public class IndividualEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,6 @@ public class Individual implements Serializable {
     private String id;
 
     /** オス親個体ID */
-    @JsonProperty("male_parent_id")
     private String maleParentId;
 
     /** メス親個体ID */
