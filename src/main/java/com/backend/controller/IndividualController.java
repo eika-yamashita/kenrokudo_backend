@@ -2,8 +2,8 @@ package com.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.api.IndividualsApi;
@@ -13,7 +13,6 @@ import com.backend.service.IndividualService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class IndividualController implements IndividualsApi{
 
     private final IndividualService individualService;
@@ -41,8 +40,8 @@ public class IndividualController implements IndividualsApi{
 
 	@Override
 	public ResponseEntity<Individual> individualsPost(@Valid Individual individual) {
-		individualService.createIndividual(individual);
-		return null;
+		Individual created = individualService.createIndividual(individual);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 
 	@Override
