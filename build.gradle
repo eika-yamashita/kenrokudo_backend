@@ -63,3 +63,11 @@ tasks.named('test') {
 tasks.named('openApiGenerate') {
     doNotTrackState("Disable state tracking due to Windows file lock issues")
 }
+
+tasks.named('compileJava') {
+    dependsOn tasks.named('openApiGenerate')
+}
+
+tasks.named('bootJar') {
+    dependsOn tasks.named('openApiGenerate')
+}
