@@ -68,6 +68,10 @@ tasks.named('compileJava') {
     dependsOn tasks.named('openApiGenerate')
 }
 
+tasks.named('processResources') {
+    dependsOn tasks.named('openApiGenerate')
+}
+
 tasks.named('bootJar') {
     dependsOn tasks.named('openApiGenerate')
 }
