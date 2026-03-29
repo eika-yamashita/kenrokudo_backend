@@ -15,6 +15,29 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./src/main/resources/db/init:/docker-entrypoint-initdb.d
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/app_db
+      SPRING_DATASOURCE_USERNAME: app_user
+      SPRING_DATASOURCE_PASSWORD: app_pass
+      APP_UPLOAD_DIR: /app/uploads
+    ports:
+      - "8080:8080"
+    volumes:
+      - individual-uploads:/app/uploads
+    restart: always
 
 volumes:
   postgres-data:
+  individual-uploads:

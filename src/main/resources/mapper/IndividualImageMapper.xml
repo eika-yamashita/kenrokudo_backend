@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.IndividualImageMapper">
+
+    <resultMap id="IndividualImageResultMap" type="com.backend.entity.IndividualImageEntity">
+        <id column="image_id" property="imageId" />
+        <result column="species_cd" property="speciesCd" />
+        <result column="individual_id" property="individualId" />
+        <result column="storage_path" property="storagePath" />
+        <result column="public_url" property="publicUrl" />
+        <result column="file_name" property="fileName" />
+        <result column="content_type" property="contentType" />
+        <result column="file_size" property="fileSize" />
+        <result column="sort_order" property="sortOrder" />
+        <result column="is_primary" property="isPrimary" />
+        <result column="created_at" property="createdAt" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="updated_by" property="updatedBy" />
+    </resultMap>
+
+    <sql id="imageColumns">
+        image_id,
+        species_cd,
+        individual_id,
+        storage_path,
+        public_url,
+        file_name,
+        content_type,
+        file_size,
+        sort_order,
+        is_primary,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by
+    </sql>
+
+    <sql id="imageIdCondition">
+        (
+            (CAST(#{imageId} AS TEXT) ~ '^[0-9]+$' AND image_id = CAST(#{imageId} AS BIGINT))
+            OR
+            (NOT (CAST(#{imageId} AS TEXT) ~ '^[0-9]+$') AND storage_path LIKE CONCAT('%', CAST(#{imageId} AS TEXT), '%'))
+        )
+    </sql>
+
+    <select id="countByIndividual" resultType="int">
+        SELECT COUNT(*)
+        FROM individual_image
+        WHERE species_cd = #{speciesCd}
+          AND individual_id = #{individualId}
+    </select>
+
+    <select id="nextSortOrder" resultType="int">
+        SELECT COALESCE(MAX(sort_order), -1) + 1
+        FROM individual_image
+        WHERE species_cd = #{speciesCd}
+          AND individual_id = #{individualId}
+    </select>
+
+    <select id="nextImageId" resultType="long">
+        SELECT nextval(pg_get_serial_sequence('individual_image', 'image_id'))
+    </select>
+
+    <insert id="insert">
+        INSERT INTO individual_image (
+            image_id,
+            species_cd,
+            individual_id,
+            storage_path,
+            public_url,
+            file_name,
+            content_type,
+            file_size,
+            sort_order,
+            is_primary,
+            created_by
+        )
+        VALUES (
+            #{imageId},
+            #{speciesCd},
+            #{individualId},
+            #{storagePath},
+            #{publicUrl},
+            #{fileName},
+            #{contentType},
+            #{fileSize},
+            #{sortOrder},
+            #{isPrimary},
+            #{createdBy}
+        )
+    </insert>
+
+    <select id="findByIndividual" resultMap="IndividualImageResultMap">
+        SELECT <include refid="imageColumns" />
+        FROM individual_image
+        WHERE species_cd = #{speciesCd}
+          AND individual_id = #{individualId}
+        ORDER BY sort_order, created_at
+    </select>
+
+    <select id="findByImageId" resultMap="IndividualImageResultMap">
+        SELECT <include refid="imageColumns" />
+        FROM individual_image
+        WHERE <include refid="imageIdCondition" />
+    </select>
+
+    <select id="findByStoragePath" resultMap="IndividualImageResultMap">
+        SELECT <include refid="imageColumns" />
+        FROM individual_image
+        WHERE storage_path = #{storagePath}
+    </select>
+
+    <update id="clearPrimaryByIndividual">
+        UPDATE individual_image
+        SET is_primary = FALSE,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE species_cd = #{speciesCd}
+          AND individual_id = #{individualId}
+          AND is_primary = TRUE
+    </update>
+
+    <update id="setPrimaryByImageId">
+        UPDATE individual_image
+        SET is_primary = TRUE,
+            updated_by = #{updatedBy},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE <include refid="imageIdCondition" />
+    </update>
+
+    <update id="updateImageFile">
+        UPDATE individual_image
+        SET storage_path = #{storagePath},
+            public_url = #{publicUrl},
+            file_name = #{fileName},
+            content_type = #{contentType},
+            file_size = #{fileSize},
+            is_primary = #{isPrimary},
+            updated_by = #{updatedBy},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE <include refid="imageIdCondition" />
+    </update>
+
+    <delete id="deleteByImageId">
+        DELETE FROM individual_image
+        WHERE <include refid="imageIdCondition" />
+    </delete>
+</mapper>

@@ -140,4 +140,41 @@
             #{updateAt}
         )
     </insert>
+
+    <update id="update">
+        UPDATE individual
+        SET
+            male_parent_id = #{individual.maleParentId},
+            female_parent_id = #{individual.femaleParentId},
+            morph = #{individual.morph},
+            bloodline = #{individual.bloodline},
+            gender_category = #{individual.genderCategory},
+            breeding_category = #{individual.breedingCategory},
+            breeder = #{individual.breeder},
+            clutch_date = #{individual.clutchDate},
+            hatch_date = #{individual.hatchDate},
+            purchase_from = #{individual.purchaseFrom},
+            purchase_price = #{individual.purchasePrice},
+            purchase_date = #{individual.purchaseDate},
+            sales_category = #{individual.salesCategory},
+            sales_to = #{individual.salesTo},
+            sales_price_tax_ex = #{individual.salesPriceTaxEx},
+            sales_price_tax = #{individual.salesPriceTax},
+            sales_price_tax_in = #{individual.salesPriceTaxIn},
+            sales_date = #{individual.salesDate},
+            death_date = #{individual.deathDate},
+            note = #{individual.note},
+            update_user = #{individual.updateUser},
+            update_at = CURRENT_TIMESTAMP
+        WHERE
+            species_cd = #{speciesCd}
+            AND id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM individual
+        WHERE
+            species_cd = #{speciesCd}
+            AND id = #{id}
+    </delete>
 </mapper>

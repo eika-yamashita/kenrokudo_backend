@@ -1,3 +1,15 @@
+﻿INSERT INTO species (
+  species_id,
+  japanese_name,
+  common_name,
+  english_name,
+  total_length,
+  body_weight,
+  lifespan
+) VALUES
+  ('0001', 'ヒョウモントカゲモドキ', U&'\30EC\30AA\30D1', 'Leopard Gecko', '18-28cm', '45-80g', '10-20年'),
+  ('0002', 'ニシアフリカトカゲモドキ', U&'\30CB\30B7\30A2\30D5', 'African fat-tailed gecko', '18-28cm', '45-80g', '10-20年');
+
 INSERT INTO individual (
   species_cd,
   id,
