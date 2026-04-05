@@ -5,7 +5,7 @@
     <resultMap id="IndividualResultMap"
             type="com.backend.entity.IndividualEntity">
         <id column="id" property="id" />
-        <result column="species_cd" property="speciesCd" />
+        <result column="species_id" property="speciesId" />
         <result column="male_parent_id" property="maleParentId" />
         <result column="female_parent_id" property="femaleParentId" />
         <result column="morph" property="morph" />
@@ -33,7 +33,7 @@
     </resultMap>
 
     <sql id="individualColumns">
-        species_cd,
+        species_id,
         id,
         male_parent_id,
         female_parent_id,
@@ -67,24 +67,24 @@
         FROM
             individual
         ORDER BY
-            species_cd,
+            species_id,
             id
     </select>
 
-    <select id="findBySpeciesCdAndId"
+    <select id="findBySpeciesIdAndId"
             resultMap="IndividualResultMap">
         SELECT
             <include refid="individualColumns" />
         FROM
             individual
         WHERE
-            species_cd = #{speciesCd}
+            species_id = #{speciesId}
             AND id = #{id}
     </select>
 
     <insert id="insert">
         INSERT INTO individual (
-            species_cd,
+            species_id,
             id,
             male_parent_id,
             female_parent_id,
@@ -112,7 +112,7 @@
             update_at
         )
         VALUES (
-            #{speciesCd},
+            #{speciesId},
             #{id},
             #{maleParentId},
             #{femaleParentId},
@@ -167,14 +167,14 @@
             update_user = #{individual.updateUser},
             update_at = CURRENT_TIMESTAMP
         WHERE
-            species_cd = #{speciesCd}
+            species_id = #{speciesId}
             AND id = #{id}
     </update>
 
     <delete id="delete">
         DELETE FROM individual
         WHERE
-            species_cd = #{speciesCd}
+            species_id = #{speciesId}
             AND id = #{id}
     </delete>
 </mapper>

@@ -34,12 +34,12 @@ public class IndividualService {
         return individualList;
     }
 
-    public IndividualEntity getIndividual(String speciesCd, String id) {
-        return individualMapper.findBySpeciesCdAndId(speciesCd, id);
+    public IndividualEntity getIndividual(String speciesId, String id) {
+        return individualMapper.findBySpeciesIdAndId(speciesId, id);
     }
 
-    public Individual getIndividualModel(String speciesCd, String id) {
-        IndividualEntity entity = getIndividual(speciesCd, id);
+    public Individual getIndividualModel(String speciesId, String id) {
+        IndividualEntity entity = getIndividual(speciesId, id);
         if (entity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
         }
@@ -49,13 +49,13 @@ public class IndividualService {
     }
 
     public Individual createIndividual(Individual individual) {
-        String speciesCd = individual.getSpeciesCd();
+        String speciesId = individual.getSpeciesId();
         String id = individual.getId();
 
-        if (individualMapper.findBySpeciesCdAndId(speciesCd, id) != null) {
+        if (individualMapper.findBySpeciesIdAndId(speciesId, id) != null) {
             throw new ResponseStatusException(
                 HttpStatus.CONFLICT,
-                String.format("individual already exists (species_cd=%s, id=%s)", speciesCd, id)
+                String.format("individual already exists (species_id=%s, id=%s)", speciesId, id)
             );
         }
 
@@ -64,37 +64,37 @@ public class IndividualService {
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(
                 HttpStatus.CONFLICT,
-                String.format("individual already exists (species_cd=%s, id=%s)", speciesCd, id),
+                String.format("individual already exists (species_id=%s, id=%s)", speciesId, id),
                 e
             );
         }
 
-        IndividualEntity entity = individualMapper.findBySpeciesCdAndId(individual.getSpeciesCd(), individual.getId());
+        IndividualEntity entity = individualMapper.findBySpeciesIdAndId(individual.getSpeciesId(), individual.getId());
         Individual model = new Individual();
         model = setIndividual(model, entity);
         return model;
     }
 
-    public void updateIndividual(String speciesCd, String id, Individual individual) {
-        if (getIndividual(speciesCd, id) == null) {
+    public void updateIndividual(String speciesId, String id, Individual individual) {
+        if (getIndividual(speciesId, id) == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
         }
 
-        int updated = individualMapper.update(speciesCd, id, individual);
+        int updated = individualMapper.update(speciesId, id, individual);
         if (updated == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
         }
     }
 
-    public void deleteIndividual(String speciesCd, String id) {
-        int deleted = individualMapper.delete(speciesCd, id);
+    public void deleteIndividual(String speciesId, String id) {
+        int deleted = individualMapper.delete(speciesId, id);
         if (deleted == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
         }
     }
 
     private Individual setIndividual(Individual model, IndividualEntity entity) {
-        model.setSpeciesCd(entity.getSpeciesCd());
+        model.setSpeciesId(entity.getSpeciesId());
         model.setId(entity.getId());
         model.setMaleParentId(entity.getMaleParentId());
         model.setFemaleParentId(entity.getFemaleParentId());

@@ -33,12 +33,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Individual'
 
-  /individuals/{species_cd}/{id}:
+  /individuals/{species_id}/{id}:
     put:
       summary: 個体情報を更新
       parameters:
         - in: path
-          name: species_cd
+          name: species_id
           required: true
           schema:
             type: string
@@ -61,7 +61,7 @@ paths:
       summary: 個体情報を論理削除
       parameters:
         - in: path
-          name: species_cd
+          name: species_id
           required: true
           schema:
             type: string
@@ -80,7 +80,7 @@ components:
       type: object
       description: 個体情報
       properties:
-        species_cd:
+        species_id:
           type: string
           maxLength: 20
           description: 種コード
@@ -182,7 +182,7 @@ components:
           format: date-time
           description: 更新日時
       required:
-        - species_cd
+        - species_id
         - id
         - create_user
         - create_at

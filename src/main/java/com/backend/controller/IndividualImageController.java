@@ -19,7 +19,7 @@ import com.backend.service.IndividualImageService;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/individuals/{species_cd}/{id}/images")
+@RequestMapping("/individuals/{species_id}/{id}/images")
 public class IndividualImageController {
 
     private final IndividualImageService individualImageService;
@@ -30,15 +30,15 @@ public class IndividualImageController {
 
     @GetMapping
     public ResponseEntity<List<IndividualImageEntity>> getImages(
-        @PathVariable("species_cd") String speciesCd,
+        @PathVariable("species_id") String speciesId,
         @PathVariable("id") String individualId
     ) {
-        return ResponseEntity.ok(individualImageService.getImages(speciesCd, individualId));
+        return ResponseEntity.ok(individualImageService.getImages(speciesId, individualId));
     }
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<IndividualImageEntity> uploadImage(
-        @PathVariable("species_cd") String speciesCd,
+        @PathVariable("species_id") String speciesId,
         @PathVariable("id") String individualId,
         @RequestParam("file") MultipartFile file,
         @RequestParam(value = "isPrimary", required = false) Boolean isPrimary,
@@ -46,7 +46,7 @@ public class IndividualImageController {
         @RequestParam(value = "createdBy", required = false) String createdBy
     ) {
         IndividualImageEntity created = individualImageService.uploadImage(
-            speciesCd,
+            speciesId,
             individualId,
             file,
             isPrimary,
@@ -58,7 +58,7 @@ public class IndividualImageController {
 
     @PutMapping(value = "/{image_id}", consumes = "multipart/form-data")
     public ResponseEntity<IndividualImageEntity> replaceImage(
-        @PathVariable("species_cd") String speciesCd,
+        @PathVariable("species_id") String speciesId,
         @PathVariable("id") String individualId,
         @PathVariable("image_id") Long imageId,
         @RequestParam("file") MultipartFile file,
@@ -66,7 +66,7 @@ public class IndividualImageController {
         @RequestParam(value = "updatedBy", required = false) String updatedBy
     ) {
         IndividualImageEntity updated = individualImageService.replaceImage(
-            speciesCd,
+            speciesId,
             individualId,
             imageId,
             file,
@@ -78,22 +78,22 @@ public class IndividualImageController {
 
     @DeleteMapping("/{image_id}")
     public ResponseEntity<Void> deleteImage(
-        @PathVariable("species_cd") String speciesCd,
+        @PathVariable("species_id") String speciesId,
         @PathVariable("id") String individualId,
         @PathVariable("image_id") Long imageId
     ) {
-        individualImageService.deleteImage(speciesCd, individualId, imageId);
+        individualImageService.deleteImage(speciesId, individualId, imageId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{image_id}/primary")
     public ResponseEntity<Void> setPrimaryImage(
-        @PathVariable("species_cd") String speciesCd,
+        @PathVariable("species_id") String speciesId,
         @PathVariable("id") String individualId,
         @PathVariable("image_id") Long imageId,
         @RequestParam(value = "updatedBy", required = false) String updatedBy
     ) {
-        individualImageService.setPrimaryImage(speciesCd, individualId, imageId, updatedBy);
+        individualImageService.setPrimaryImage(speciesId, individualId, imageId, updatedBy);
         return ResponseEntity.ok().build();
     }
 }

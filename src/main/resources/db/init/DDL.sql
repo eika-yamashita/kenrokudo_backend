@@ -10,7 +10,7 @@ CREATE TABLE species (
 );
 
 CREATE TABLE individual (
-  species_cd VARCHAR(20) NOT NULL,
+  species_id VARCHAR(20) NOT NULL,
   id VARCHAR(20) NOT NULL,
   male_parent_id VARCHAR(20),
   female_parent_id VARCHAR(20),
@@ -36,15 +36,15 @@ CREATE TABLE individual (
   create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   update_user VARCHAR(20),
   update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (species_cd, id),
+  PRIMARY KEY (species_id, id),
   CONSTRAINT fk_individual_species
-    FOREIGN KEY (species_cd)
+    FOREIGN KEY (species_id)
     REFERENCES species (species_id)
 );
 
 CREATE TABLE individual_image (
   image_id BIGSERIAL NOT NULL,
-  species_cd VARCHAR(20) NOT NULL,
+  species_id VARCHAR(20) NOT NULL,
   individual_id VARCHAR(20) NOT NULL,
   storage_path VARCHAR(255) NOT NULL,
   public_url VARCHAR(255) NOT NULL,
@@ -59,10 +59,10 @@ CREATE TABLE individual_image (
   updated_by VARCHAR(20),
   PRIMARY KEY (image_id),
   CONSTRAINT fk_individual_image_individual
-    FOREIGN KEY (species_cd, individual_id)
-    REFERENCES individual (species_cd, id)
+    FOREIGN KEY (species_id, individual_id)
+    REFERENCES individual (species_id, id)
     ON DELETE CASCADE
 );
 
 CREATE INDEX idx_individual_image_individual
-  ON individual_image (species_cd, individual_id);
+  ON individual_image (species_id, individual_id);

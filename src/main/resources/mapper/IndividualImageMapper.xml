@@ -4,7 +4,7 @@
 
     <resultMap id="IndividualImageResultMap" type="com.backend.entity.IndividualImageEntity">
         <id column="image_id" property="imageId" />
-        <result column="species_cd" property="speciesCd" />
+        <result column="species_id" property="speciesId" />
         <result column="individual_id" property="individualId" />
         <result column="storage_path" property="storagePath" />
         <result column="public_url" property="publicUrl" />
@@ -21,7 +21,7 @@
 
     <sql id="imageColumns">
         image_id,
-        species_cd,
+        species_id,
         individual_id,
         storage_path,
         public_url,
@@ -47,14 +47,14 @@
     <select id="countByIndividual" resultType="int">
         SELECT COUNT(*)
         FROM individual_image
-        WHERE species_cd = #{speciesCd}
+        WHERE species_id = #{speciesId}
           AND individual_id = #{individualId}
     </select>
 
     <select id="nextSortOrder" resultType="int">
         SELECT COALESCE(MAX(sort_order), -1) + 1
         FROM individual_image
-        WHERE species_cd = #{speciesCd}
+        WHERE species_id = #{speciesId}
           AND individual_id = #{individualId}
     </select>
 
@@ -65,7 +65,7 @@
     <insert id="insert">
         INSERT INTO individual_image (
             image_id,
-            species_cd,
+            species_id,
             individual_id,
             storage_path,
             public_url,
@@ -78,7 +78,7 @@
         )
         VALUES (
             #{imageId},
-            #{speciesCd},
+            #{speciesId},
             #{individualId},
             #{storagePath},
             #{publicUrl},
@@ -94,7 +94,7 @@
     <select id="findByIndividual" resultMap="IndividualImageResultMap">
         SELECT <include refid="imageColumns" />
         FROM individual_image
-        WHERE species_cd = #{speciesCd}
+        WHERE species_id = #{speciesId}
           AND individual_id = #{individualId}
         ORDER BY sort_order, created_at
     </select>
@@ -115,7 +115,7 @@
         UPDATE individual_image
         SET is_primary = FALSE,
             updated_at = CURRENT_TIMESTAMP
-        WHERE species_cd = #{speciesCd}
+        WHERE species_id = #{speciesId}
           AND individual_id = #{individualId}
           AND is_primary = TRUE
     </update>

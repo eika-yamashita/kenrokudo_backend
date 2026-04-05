@@ -12,19 +12,19 @@ public interface IndividualImageMapper {
 
     Long nextImageId();
 
-    int countByIndividual(@Param("speciesCd") String speciesCd, @Param("individualId") String individualId);
+    int countByIndividual(@Param("speciesId") String speciesId, @Param("individualId") String individualId);
 
-    Integer nextSortOrder(@Param("speciesCd") String speciesCd, @Param("individualId") String individualId);
+    Integer nextSortOrder(@Param("speciesId") String speciesId, @Param("individualId") String individualId);
 
     int insert(IndividualImageEntity image);
 
-    List<IndividualImageEntity> findByIndividual(@Param("speciesCd") String speciesCd, @Param("individualId") String individualId);
+    List<IndividualImageEntity> findByIndividual(@Param("speciesId") String speciesId, @Param("individualId") String individualId);
 
     IndividualImageEntity findByStoragePath(@Param("storagePath") String storagePath);
 
     IndividualImageEntity findByImageId(@Param("imageId") Long imageId);
 
-    int clearPrimaryByIndividual(@Param("speciesCd") String speciesCd, @Param("individualId") String individualId);
+    int clearPrimaryByIndividual(@Param("speciesId") String speciesId, @Param("individualId") String individualId);
 
     int setPrimaryByImageId(@Param("imageId") Long imageId, @Param("updatedBy") String updatedBy);
 

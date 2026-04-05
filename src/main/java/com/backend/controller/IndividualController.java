@@ -30,17 +30,17 @@ public class IndividualController implements IndividualsApi {
         return ResponseEntity.ok(individualService.getIndividuals());
     }
 
-    @GetMapping("/individuals/{species_cd}/{id}")
-    public ResponseEntity<Individual> individualsSpeciesCdIdGet(
-        @PathVariable("species_cd") String speciesCd,
+    @GetMapping("/individuals/{species_id}/{id}")
+    public ResponseEntity<Individual> individualsSpeciesIdIdGet(
+        @PathVariable("species_id") String speciesId,
         @PathVariable("id") String id
     ) {
-        return ResponseEntity.ok(individualService.getIndividualModel(speciesCd, id));
+        return ResponseEntity.ok(individualService.getIndividualModel(speciesId, id));
     }
 
     @Override
-    public ResponseEntity<Void> individualsSpeciesCdIdDelete(String speciesCd, String id) {
-        individualService.deleteIndividual(speciesCd, id);
+    public ResponseEntity<Void> individualsSpeciesIdIdDelete(String speciesId, String id) {
+        individualService.deleteIndividual(speciesId, id);
         return ResponseEntity.noContent().build();
     }
 
@@ -51,8 +51,8 @@ public class IndividualController implements IndividualsApi {
     }
 
     @Override
-    public ResponseEntity<Void> individualsSpeciesCdIdPut(String speciesCd, String id, @Valid Individual individual) {
-        individualService.updateIndividual(speciesCd, id, individual);
+    public ResponseEntity<Void> individualsSpeciesIdIdPut(String speciesId, String id, @Valid Individual individual) {
+        individualService.updateIndividual(speciesId, id, individual);
         return ResponseEntity.ok().build();
     }
 }

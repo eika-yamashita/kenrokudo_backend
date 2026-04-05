@@ -52,50 +52,50 @@ public class IndividualImageService {
         this.uploadBaseDir = Paths.get(uploadBaseDir).toAbsolutePath().normalize();
     }
 
-    public List<IndividualImageEntity> getImages(String speciesCd, String individualId) {
-        ensureIndividualExists(speciesCd, individualId);
-        return individualImageMapper.findByIndividual(speciesCd, individualId);
+    public List<IndividualImageEntity> getImages(String speciesId, String individualId) {
+        ensureIndividualExists(speciesId, individualId);
+        return individualImageMapper.findByIndividual(speciesId, individualId);
     }
 
     public IndividualImageEntity uploadImage(
-        String speciesCd,
+        String speciesId,
         String individualId,
         MultipartFile file,
         Boolean isPrimary,
         Integer sortOrder,
         String createdBy
     ) {
-        ensureIndividualExists(speciesCd, individualId);
+        ensureIndividualExists(speciesId, individualId);
         validateUpload(file);
 
-        int existingCount = individualImageMapper.countByIndividual(speciesCd, individualId);
+        int existingCount = individualImageMapper.countByIndividual(speciesId, individualId);
         if (existingCount >= MAX_FILES_PER_INDIVIDUAL) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "画像は最大10件までです");
         }
 
         String extension = resolveExtension(file);
         Long imageId = individualImageMapper.nextImageId();
-        String fileName = buildImageFileName(speciesCd, individualId, imageId, extension);
-        String relativePath = Paths.get("individuals", speciesCd, individualId, fileName).toString().replace('\\', '/');
+        String fileName = buildImageFileName(speciesId, individualId, imageId, extension);
+        String relativePath = Paths.get("individuals", speciesId, individualId, fileName).toString().replace('\\', '/');
         Path destination = uploadBaseDir.resolve(relativePath).normalize();
         ensureDestination(destination);
         copyFile(file, destination);
 
-        boolean shouldBePrimary = shouldBePrimary(speciesCd, individualId, isPrimary);
+        boolean shouldBePrimary = shouldBePrimary(speciesId, individualId, isPrimary);
         if (shouldBePrimary) {
-            individualImageMapper.clearPrimaryByIndividual(speciesCd, individualId);
+            individualImageMapper.clearPrimaryByIndividual(speciesId, individualId);
         }
 
         IndividualImageEntity image = new IndividualImageEntity();
         image.setImageId(imageId);
-        image.setSpeciesCd(speciesCd);
+        image.setSpeciesId(speciesId);
         image.setIndividualId(individualId);
         image.setStoragePath(relativePath);
         image.setPublicUrl(buildPublicUrl(relativePath));
         image.setFileName(fileName);
         image.setContentType(file.getContentType());
         image.setFileSize(file.getSize());
-        image.setSortOrder(sortOrder != null ? sortOrder : individualImageMapper.nextSortOrder(speciesCd, individualId));
+        image.setSortOrder(sortOrder != null ? sortOrder : individualImageMapper.nextSortOrder(speciesId, individualId));
         image.setIsPrimary(shouldBePrimary);
         image.setCreatedBy(createdBy);
 
@@ -108,7 +108,7 @@ public class IndividualImageService {
     }
 
     public IndividualImageEntity replaceImage(
-        String speciesCd,
+        String speciesId,
         String individualId,
         Long imageId,
         MultipartFile file,
@@ -116,11 +116,11 @@ public class IndividualImageService {
         String updatedBy
     ) {
         validateUpload(file);
-        IndividualImageEntity existing = getAndValidateImage(speciesCd, individualId, imageId);
+        IndividualImageEntity existing = getAndValidateImage(speciesId, individualId, imageId);
 
         String extension = resolveExtension(file);
-        String newFileName = buildImageFileName(speciesCd, individualId, imageId, extension);
-        String relativePath = Paths.get("individuals", speciesCd, individualId, newFileName).toString().replace('\\', '/');
+        String newFileName = buildImageFileName(speciesId, individualId, imageId, extension);
+        String relativePath = Paths.get("individuals", speciesId, individualId, newFileName).toString().replace('\\', '/');
         Path destination = uploadBaseDir.resolve(relativePath).normalize();
         ensureDestination(destination);
         copyFile(file, destination);
@@ -130,7 +130,7 @@ public class IndividualImageService {
             finalPrimary = isPrimary;
         }
         if (finalPrimary) {
-            individualImageMapper.clearPrimaryByIndividual(speciesCd, individualId);
+            individualImageMapper.clearPrimaryByIndividual(speciesId, individualId);
         }
 
         individualImageMapper.updateImageFile(
@@ -148,39 +148,39 @@ public class IndividualImageService {
         return individualImageMapper.findByImageId(imageId);
     }
 
-    public void deleteImage(String speciesCd, String individualId, Long imageId) {
-        IndividualImageEntity existing = getAndValidateImage(speciesCd, individualId, imageId);
+    public void deleteImage(String speciesId, String individualId, Long imageId) {
+        IndividualImageEntity existing = getAndValidateImage(speciesId, individualId, imageId);
         individualImageMapper.deleteByImageId(imageId);
         deleteFileQuietly(uploadBaseDir.resolve(existing.getStoragePath()));
 
         if (Boolean.TRUE.equals(existing.getIsPrimary())) {
-            List<IndividualImageEntity> remaining = individualImageMapper.findByIndividual(speciesCd, individualId);
+            List<IndividualImageEntity> remaining = individualImageMapper.findByIndividual(speciesId, individualId);
             if (!remaining.isEmpty()) {
-                individualImageMapper.clearPrimaryByIndividual(speciesCd, individualId);
+                individualImageMapper.clearPrimaryByIndividual(speciesId, individualId);
                 individualImageMapper.setPrimaryByImageId(remaining.get(0).getImageId(), null);
             }
         }
     }
 
-    public void setPrimaryImage(String speciesCd, String individualId, Long imageId, String updatedBy) {
-        getAndValidateImage(speciesCd, individualId, imageId);
-        individualImageMapper.clearPrimaryByIndividual(speciesCd, individualId);
+    public void setPrimaryImage(String speciesId, String individualId, Long imageId, String updatedBy) {
+        getAndValidateImage(speciesId, individualId, imageId);
+        individualImageMapper.clearPrimaryByIndividual(speciesId, individualId);
         individualImageMapper.setPrimaryByImageId(imageId, updatedBy);
     }
 
-    private IndividualImageEntity getAndValidateImage(String speciesCd, String individualId, Long imageId) {
+    private IndividualImageEntity getAndValidateImage(String speciesId, String individualId, Long imageId) {
         IndividualImageEntity image = individualImageMapper.findByImageId(imageId);
         if (image == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "画像が見つかりません");
         }
-        if (!speciesCd.equals(image.getSpeciesCd()) || !individualId.equals(image.getIndividualId())) {
+        if (!speciesId.equals(image.getSpeciesId()) || !individualId.equals(image.getIndividualId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "個体キーと画像が一致しません");
         }
         return image;
     }
 
-    private void ensureIndividualExists(String speciesCd, String individualId) {
-        IndividualEntity individual = individualMapper.findBySpeciesCdAndId(speciesCd, individualId);
+    private void ensureIndividualExists(String speciesId, String individualId) {
+        IndividualEntity individual = individualMapper.findBySpeciesIdAndId(speciesId, individualId);
         if (individual == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "個体が見つかりません");
         }
@@ -217,10 +217,10 @@ public class IndividualImageService {
         return ".bin";
     }
 
-    private String buildImageFileName(String speciesCd, String individualId, Long imageId, String extension) {
+    private String buildImageFileName(String speciesId, String individualId, Long imageId, String extension) {
         return String.format(
             "%s_%s_%d%s",
-            toSafeToken(speciesCd),
+            toSafeToken(speciesId),
             toSafeToken(individualId),
             imageId,
             extension
@@ -234,11 +234,11 @@ public class IndividualImageService {
         return value.replaceAll("[^A-Za-z0-9_-]", "_");
     }
 
-    private boolean shouldBePrimary(String speciesCd, String individualId, Boolean requestedPrimary) {
+    private boolean shouldBePrimary(String speciesId, String individualId, Boolean requestedPrimary) {
         if (Boolean.TRUE.equals(requestedPrimary)) {
             return true;
         }
-        return individualImageMapper.countByIndividual(speciesCd, individualId) == 0;
+        return individualImageMapper.countByIndividual(speciesId, individualId) == 0;
     }
 
     private String buildPublicUrl(String relativePath) {

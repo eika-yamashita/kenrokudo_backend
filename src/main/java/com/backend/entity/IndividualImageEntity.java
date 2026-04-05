@@ -16,8 +16,8 @@ public class IndividualImageEntity implements Serializable {
     @JsonProperty("image_id")
     private Long imageId;
 
-    @JsonProperty("species_cd")
-    private String speciesCd;
+    @JsonProperty("species_id")
+    private String speciesId;
 
     @JsonProperty("individual_id")
     private String individualId;

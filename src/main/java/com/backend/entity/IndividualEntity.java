@@ -14,8 +14,8 @@ public class IndividualEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** 種コード */
-    @JsonProperty("species_cd")
-    private String speciesCd;
+    @JsonProperty("species_id")
+    private String speciesId;
 
     /** 個体ID */
     @JsonProperty("id")
