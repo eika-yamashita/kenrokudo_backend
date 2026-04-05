@@ -82,6 +82,16 @@
             AND id = #{id}
     </select>
 
+    <select id="findIdsByIdPrefix" resultType="string">
+        SELECT
+            id
+        FROM
+            individual
+        WHERE
+            id LIKE CONCAT(#{idPrefix}, '%')
+            AND CHAR_LENGTH(id) = 6
+    </select>
+
     <insert id="insert">
         INSERT INTO individual (
             species_id,

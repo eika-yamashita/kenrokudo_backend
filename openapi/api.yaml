@@ -87,7 +87,7 @@ components:
         id:
           type: string
           maxLength: 20
-          description: 個体ID
+          description: 個体ID（未入力の場合はサーバーで自動採番）
         male_parent_id:
           type: string
           maxLength: 20
@@ -183,6 +183,5 @@ components:
           description: 更新日時
       required:
         - species_id
-        - id
         - create_user
         - create_at

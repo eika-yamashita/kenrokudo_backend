@@ -66,3 +66,28 @@ CREATE TABLE individual_image (
 
 CREATE INDEX idx_individual_image_individual
   ON individual_image (species_id, individual_id);
+
+CREATE TABLE pairing (
+  species_id VARCHAR(20) NOT NULL,
+  fiscal_year INTEGER NOT NULL,
+  pairing_id VARCHAR(20) NOT NULL,
+  male_parent_id VARCHAR(20) NOT NULL,
+  female_parent_id VARCHAR(20) NOT NULL,
+  pairing_date DATE NOT NULL,
+  note VARCHAR(255),
+  PRIMARY KEY (species_id, fiscal_year, pairing_id),
+  CONSTRAINT uq_pairing_signature
+    UNIQUE (species_id, male_parent_id, female_parent_id, pairing_date),
+  CONSTRAINT fk_pairing_species
+    FOREIGN KEY (species_id)
+    REFERENCES species (species_id),
+  CONSTRAINT fk_pairing_male_parent
+    FOREIGN KEY (species_id, male_parent_id)
+    REFERENCES individual (species_id, id),
+  CONSTRAINT fk_pairing_female_parent
+    FOREIGN KEY (species_id, female_parent_id)
+    REFERENCES individual (species_id, id)
+);
+
+CREATE INDEX idx_pairing_species_year
+  ON pairing (species_id, fiscal_year);

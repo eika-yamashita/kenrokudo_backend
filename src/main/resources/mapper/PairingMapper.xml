@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.PairingMapper">
+
+    <resultMap id="PairingResultMap" type="com.backend.entity.PairingEntity">
+        <id column="species_id" property="speciesId" />
+        <id column="fiscal_year" property="fiscalYear" />
+        <id column="pairing_id" property="pairingId" />
+        <result column="male_parent_id" property="maleParentId" />
+        <result column="female_parent_id" property="femaleParentId" />
+        <result column="pairing_date" property="pairingDate" />
+        <result column="note" property="note" />
+    </resultMap>
+
+    <sql id="pairingColumns">
+        species_id,
+        fiscal_year,
+        pairing_id,
+        male_parent_id,
+        female_parent_id,
+        pairing_date,
+        note
+    </sql>
+
+    <select id="findAll" resultMap="PairingResultMap">
+        SELECT
+            <include refid="pairingColumns" />
+        FROM
+            pairing
+        ORDER BY
+            species_id,
+            fiscal_year DESC,
+            pairing_id
+    </select>
+
+    <select id="findByPrimaryKey" resultMap="PairingResultMap">
+        SELECT
+            <include refid="pairingColumns" />
+        FROM
+            pairing
+        WHERE
+            species_id = #{speciesId}
+            AND fiscal_year = #{fiscalYear}
+            AND pairing_id = #{pairingId}
+    </select>
+
+    <select id="findPairingIdsBySpeciesAndYear" resultType="string">
+        SELECT
+            pairing_id
+        FROM
+            pairing
+        WHERE
+            species_id = #{speciesId}
+            AND fiscal_year = #{fiscalYear}
+    </select>
+
+    <select id="countByPairingSignature" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            pairing
+        WHERE
+            species_id = #{speciesId}
+            AND male_parent_id = #{maleParentId}
+            AND female_parent_id = #{femaleParentId}
+            AND pairing_date = #{pairingDate}
+    </select>
+
+    <select id="countByPairingSignatureExcludingPrimaryKey" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            pairing
+        WHERE
+            species_id = #{speciesId}
+            AND male_parent_id = #{maleParentId}
+            AND female_parent_id = #{femaleParentId}
+            AND pairing_date = #{pairingDate}
+            AND NOT (
+                species_id = #{excludeSpeciesId}
+                AND fiscal_year = #{excludeFiscalYear}
+                AND pairing_id = #{excludePairingId}
+            )
+    </select>
+
+    <insert id="insert">
+        INSERT INTO pairing (
+            species_id,
+            fiscal_year,
+            pairing_id,
+            male_parent_id,
+            female_parent_id,
+            pairing_date,
+            note
+        )
+        VALUES (
+            #{speciesId},
+            #{fiscalYear},
+            #{pairingId},
+            #{maleParentId},
+            #{femaleParentId},
+            #{pairingDate},
+            #{note}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE pairing
+        SET
+            species_id = #{pairing.speciesId},
+            fiscal_year = #{pairing.fiscalYear},
+            pairing_id = #{pairing.pairingId},
+            male_parent_id = #{pairing.maleParentId},
+            female_parent_id = #{pairing.femaleParentId},
+            pairing_date = #{pairing.pairingDate},
+            note = #{pairing.note}
+        WHERE
+            species_id = #{speciesId}
+            AND fiscal_year = #{fiscalYear}
+            AND pairing_id = #{pairingId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM pairing
+        WHERE
+            species_id = #{speciesId}
+            AND fiscal_year = #{fiscalYear}
+            AND pairing_id = #{pairingId}
+    </delete>
+</mapper>
