@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.backend.entity.IndividualEntity;
+import com.backend.entity.PairingEntity;
 import com.backend.mapper.IndividualMapper;
+import com.backend.mapper.PairingMapper;
 import com.backend.model.Individual;
 
 @Service
@@ -29,9 +31,11 @@ public class IndividualService {
     private static final Map<Character, Integer> SEQ_INDEX_MAP = createSeqIndexMap();
 
     private final IndividualMapper individualMapper;
+    private final PairingMapper pairingMapper;
 
-    public IndividualService(IndividualMapper individualMapper) {
+    public IndividualService(IndividualMapper individualMapper, PairingMapper pairingMapper) {
         this.individualMapper = individualMapper;
+        this.pairingMapper = pairingMapper;
     }
 
     public List<Individual> getIndividuals() {
@@ -63,7 +67,13 @@ public class IndividualService {
 
     @Transactional
     public Individual createIndividual(Individual individual) {
-        String speciesId = individual.getSpeciesId();
+        String speciesId = trimToNull(individual.getSpeciesId());
+        if (speciesId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "species_id is required");
+        }
+        individual.setSpeciesId(speciesId);
+        applyPairingParentsIfSpecified(individual, speciesId);
+
         String id = trimToNull(individual.getId());
         boolean autoIdRequired = id == null;
         if (!autoIdRequired) {
@@ -223,6 +233,40 @@ public class IndividualService {
             current /= radix;
         }
         return new String(result);
+    }
+
+    private void applyPairingParentsIfSpecified(Individual individual, String speciesId) {
+        String pairingId = trimToNull(individual.getPairingId());
+        Integer pairingFiscalYear = individual.getPairingFiscalYear();
+
+        if (pairingId == null && pairingFiscalYear == null) {
+            return;
+        }
+
+        if (pairingId == null || pairingFiscalYear == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "pairing_id and pairing_fiscal_year must be provided together"
+            );
+        }
+
+        PairingEntity pairing = pairingMapper.findByPrimaryKey(speciesId, pairingFiscalYear, pairingId);
+        if (pairing == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format(
+                    "pairing not found (species_id=%s, fiscal_year=%s, pairing_id=%s)",
+                    speciesId,
+                    pairingFiscalYear,
+                    pairingId
+                )
+            );
+        }
+
+        individual.setPairingId(pairingId);
+        individual.setPairingFiscalYear(pairingFiscalYear);
+        individual.setMaleParentId(pairing.getMaleParentId());
+        individual.setFemaleParentId(pairing.getFemaleParentId());
     }
 
     private String trimToNull(String value) {
