@@ -2,6 +2,7 @@ package com.backend.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,12 +31,16 @@ public class IndividualImageService {
     private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
         "image/jpeg",
         "image/png",
-        "image/webp"
+        "image/webp",
+        "image/heic",
+        "image/heif"
     );
     private static final Map<String, String> CONTENT_TYPE_EXTENSIONS = Map.of(
         "image/jpeg", ".jpg",
         "image/png", ".png",
-        "image/webp", ".webp"
+        "image/webp", ".webp",
+        "image/heic", ".jpg",
+        "image/heif", ".jpg"
     );
 
     private final IndividualImageMapper individualImageMapper;
@@ -74,12 +79,13 @@ public class IndividualImageService {
         }
 
         String extension = resolveExtension(file);
+        String storedContentType = resolveStoredContentType(file.getContentType());
         Long imageId = individualImageMapper.nextImageId();
         String fileName = buildImageFileName(speciesId, individualId, imageId, extension);
         String relativePath = Paths.get("individuals", speciesId, individualId, fileName).toString().replace('\\', '/');
         Path destination = uploadBaseDir.resolve(relativePath).normalize();
         ensureDestination(destination);
-        copyFile(file, destination);
+        saveFile(file, destination);
 
         boolean shouldBePrimary = shouldBePrimary(speciesId, individualId, isPrimary);
         if (shouldBePrimary) {
@@ -93,8 +99,8 @@ public class IndividualImageService {
         image.setStoragePath(relativePath);
         image.setPublicUrl(buildPublicUrl(relativePath));
         image.setFileName(fileName);
-        image.setContentType(file.getContentType());
-        image.setFileSize(file.getSize());
+        image.setContentType(storedContentType);
+        image.setFileSize(fileSize(destination));
         image.setSortOrder(sortOrder != null ? sortOrder : individualImageMapper.nextSortOrder(speciesId, individualId));
         image.setIsPrimary(shouldBePrimary);
         image.setCreatedBy(createdBy);
@@ -119,11 +125,12 @@ public class IndividualImageService {
         IndividualImageEntity existing = getAndValidateImage(speciesId, individualId, imageId);
 
         String extension = resolveExtension(file);
+        String storedContentType = resolveStoredContentType(file.getContentType());
         String newFileName = buildImageFileName(speciesId, individualId, imageId, extension);
         String relativePath = Paths.get("individuals", speciesId, individualId, newFileName).toString().replace('\\', '/');
         Path destination = uploadBaseDir.resolve(relativePath).normalize();
         ensureDestination(destination);
-        copyFile(file, destination);
+        saveFile(file, destination);
 
         boolean finalPrimary = existing.getIsPrimary();
         if (isPrimary != null) {
@@ -138,8 +145,8 @@ public class IndividualImageService {
             relativePath,
             buildPublicUrl(relativePath),
             newFileName,
-            file.getContentType(),
-            file.getSize(),
+            storedContentType,
+            fileSize(destination),
             finalPrimary,
             updatedBy
         );
@@ -257,6 +264,18 @@ public class IndividualImageService {
         }
     }
 
+    private void saveFile(MultipartFile file, Path destination) {
+        String contentType = file.getContentType();
+        if (contentType != null) {
+            String normalized = contentType.toLowerCase(Locale.ROOT);
+            if ("image/heic".equals(normalized) || "image/heif".equals(normalized)) {
+                convertHeicToJpeg(file, destination);
+                return;
+            }
+        }
+        copyFile(file, destination);
+    }
+
     private void copyFile(MultipartFile file, Path destination) {
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
@@ -265,7 +284,59 @@ public class IndividualImageService {
         }
     }
 
+    private void convertHeicToJpeg(MultipartFile file, Path destination) {
+        Path tempInput = null;
+        Path tempOutput = null;
+        try {
+            tempInput = Files.createTempFile("upload-heic-", ".heic");
+            tempOutput = Files.createTempFile("upload-heic-converted-", ".jpg");
+            file.transferTo(tempInput);
+
+            runHeifConvert(tempInput, tempOutput);
+            Files.move(tempOutput, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException | InterruptedException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "HEIC画像の変換に失敗しました", e);
+        } finally {
+            deleteFileQuietly(tempInput);
+            deleteFileQuietly(tempOutput);
+        }
+    }
+
+    private void runHeifConvert(Path input, Path output) throws IOException, InterruptedException {
+        Process process = new ProcessBuilder("heif-convert", input.toString(), output.toString())
+            .redirectErrorStream(true)
+            .start();
+
+        String processOutput = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("heif-convert failed: " + processOutput);
+        }
+    }
+
+    private String resolveStoredContentType(String originalContentType) {
+        if (originalContentType == null) {
+            return null;
+        }
+        String normalized = originalContentType.toLowerCase(Locale.ROOT);
+        if ("image/heic".equals(normalized) || "image/heif".equals(normalized)) {
+            return "image/jpeg";
+        }
+        return originalContentType;
+    }
+
+    private long fileSize(Path path) {
+        try {
+            return Files.size(path);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "保存後ファイルサイズの取得に失敗しました", e);
+        }
+    }
+
     private void deleteFileQuietly(Path path) {
+        if (path == null) {
+            return;
+        }
         try {
             Files.deleteIfExists(path);
         } catch (IOException ignored) {
