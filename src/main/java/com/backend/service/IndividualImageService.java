@@ -28,19 +28,29 @@ public class IndividualImageService {
 
     private static final long MAX_FILE_SIZE = 5L * 1024L * 1024L;
     private static final int MAX_FILES_PER_INDIVIDUAL = 10;
+    private static final Set<String> HEIC_CONTENT_TYPES = Set.of(
+        "image/heic",
+        "image/heif",
+        "image/heic-sequence",
+        "image/heif-sequence"
+    );
     private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
         "image/jpeg",
         "image/png",
         "image/webp",
         "image/heic",
-        "image/heif"
+        "image/heif",
+        "image/heic-sequence",
+        "image/heif-sequence"
     );
     private static final Map<String, String> CONTENT_TYPE_EXTENSIONS = Map.of(
         "image/jpeg", ".jpg",
         "image/png", ".png",
         "image/webp", ".webp",
         "image/heic", ".jpg",
-        "image/heif", ".jpg"
+        "image/heif", ".jpg",
+        "image/heic-sequence", ".jpg",
+        "image/heif-sequence", ".jpg"
     );
 
     private final IndividualImageMapper individualImageMapper;
@@ -79,7 +89,7 @@ public class IndividualImageService {
         }
 
         String extension = resolveExtension(file);
-        String storedContentType = resolveStoredContentType(file.getContentType());
+        String storedContentType = resolveStoredContentType(file);
         Long imageId = individualImageMapper.nextImageId();
         String fileName = buildImageFileName(speciesId, individualId, imageId, extension);
         String relativePath = Paths.get("individuals", speciesId, individualId, fileName).toString().replace('\\', '/');
@@ -125,7 +135,7 @@ public class IndividualImageService {
         IndividualImageEntity existing = getAndValidateImage(speciesId, individualId, imageId);
 
         String extension = resolveExtension(file);
-        String storedContentType = resolveStoredContentType(file.getContentType());
+        String storedContentType = resolveStoredContentType(file);
         String newFileName = buildImageFileName(speciesId, individualId, imageId, extension);
         String relativePath = Paths.get("individuals", speciesId, individualId, newFileName).toString().replace('\\', '/');
         Path destination = uploadBaseDir.resolve(relativePath).normalize();
@@ -200,19 +210,21 @@ public class IndividualImageService {
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "画像サイズは5MB以下にしてください");
         }
-        String contentType = file.getContentType();
-        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase(Locale.ROOT))) {
+        if (!isAllowedUpload(file)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "許可されていない画像形式です");
         }
     }
 
     private String resolveExtension(MultipartFile file) {
-        String contentType = file.getContentType();
+        String contentType = normalizeContentType(file.getContentType());
         if (contentType != null) {
-            String byMime = CONTENT_TYPE_EXTENSIONS.get(contentType.toLowerCase(Locale.ROOT));
+            String byMime = CONTENT_TYPE_EXTENSIONS.get(contentType);
             if (byMime != null) {
                 return byMime;
             }
+        }
+        if (isHeicUpload(file)) {
+            return ".jpg";
         }
         String original = file.getOriginalFilename();
         if (original != null) {
@@ -265,13 +277,9 @@ public class IndividualImageService {
     }
 
     private void saveFile(MultipartFile file, Path destination) {
-        String contentType = file.getContentType();
-        if (contentType != null) {
-            String normalized = contentType.toLowerCase(Locale.ROOT);
-            if ("image/heic".equals(normalized) || "image/heif".equals(normalized)) {
-                convertHeicToJpeg(file, destination);
-                return;
-            }
+        if (isHeicUpload(file)) {
+            convertHeicToJpeg(file, destination);
+            return;
         }
         copyFile(file, destination);
     }
@@ -314,15 +322,46 @@ public class IndividualImageService {
         }
     }
 
-    private String resolveStoredContentType(String originalContentType) {
-        if (originalContentType == null) {
-            return null;
-        }
-        String normalized = originalContentType.toLowerCase(Locale.ROOT);
-        if ("image/heic".equals(normalized) || "image/heif".equals(normalized)) {
+    private String resolveStoredContentType(MultipartFile file) {
+        if (isHeicUpload(file)) {
             return "image/jpeg";
         }
-        return originalContentType;
+        return file.getContentType();
+    }
+
+    private boolean isAllowedUpload(MultipartFile file) {
+        String contentType = normalizeContentType(file.getContentType());
+        if (contentType == null) {
+            return hasHeicExtension(file);
+        }
+        if (ALLOWED_CONTENT_TYPES.contains(contentType)) {
+            return true;
+        }
+        return "application/octet-stream".equals(contentType) && hasHeicExtension(file);
+    }
+
+    private boolean isHeicUpload(MultipartFile file) {
+        String contentType = normalizeContentType(file.getContentType());
+        if (contentType != null && HEIC_CONTENT_TYPES.contains(contentType)) {
+            return true;
+        }
+        return hasHeicExtension(file);
+    }
+
+    private boolean hasHeicExtension(MultipartFile file) {
+        String original = file.getOriginalFilename();
+        if (original == null) {
+            return false;
+        }
+        String lower = original.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".heic") || lower.endsWith(".heif");
+    }
+
+    private String normalizeContentType(String contentType) {
+        if (contentType == null) {
+            return null;
+        }
+        return contentType.toLowerCase(Locale.ROOT).trim();
     }
 
     private long fileSize(Path path) {
