@@ -33,6 +33,25 @@
             pairing_id
     </select>
 
+    <select id="search" resultMap="PairingResultMap">
+        SELECT
+            <include refid="pairingColumns" />
+        FROM
+            pairing
+        <where>
+            <if test="speciesId != null and speciesId != ''">
+                species_id = #{speciesId}
+            </if>
+            <if test="fiscalYear != null">
+                AND fiscal_year = #{fiscalYear}
+            </if>
+        </where>
+        ORDER BY
+            species_id,
+            fiscal_year DESC,
+            pairing_id
+    </select>
+
     <select id="findByPrimaryKey" resultMap="PairingResultMap">
         SELECT
             <include refid="pairingColumns" />

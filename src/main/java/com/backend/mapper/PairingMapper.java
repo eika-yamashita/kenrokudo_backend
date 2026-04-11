@@ -13,6 +13,11 @@ public interface PairingMapper {
 
     List<PairingEntity> findAll();
 
+    List<PairingEntity> search(
+        @Param("speciesId") String speciesId,
+        @Param("fiscalYear") Integer fiscalYear
+    );
+
     PairingEntity findByPrimaryKey(
         @Param("speciesId") String speciesId,
         @Param("fiscalYear") Integer fiscalYear,

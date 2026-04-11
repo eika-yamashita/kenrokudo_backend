@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.api.IndividualsApi;
@@ -28,6 +29,15 @@ public class IndividualController implements IndividualsApi {
     @Override
     public ResponseEntity<List<Individual>> individualsGet() {
         return ResponseEntity.ok(individualService.getIndividuals());
+    }
+
+    @GetMapping("/individuals/search")
+    public ResponseEntity<List<Individual>> searchIndividuals(
+        @RequestParam(name = "species_id", required = false) String speciesId,
+        @RequestParam(name = "fiscal_year", required = false) Integer fiscalYear,
+        @RequestParam(name = "morph", required = false) String morph
+    ) {
+        return ResponseEntity.ok(individualService.searchIndividuals(speciesId, fiscalYear, morph));
     }
 
     @GetMapping("/individuals/{species_id}/{id}")

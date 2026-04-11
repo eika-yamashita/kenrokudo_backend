@@ -13,6 +13,12 @@ public interface IndividualMapper {
 
     List<IndividualEntity> findAll();
 
+    List<IndividualEntity> search(
+        @Param("speciesId") String speciesId,
+        @Param("idPrefix") String idPrefix,
+        @Param("morph") String morph
+    );
+
     IndividualEntity findBySpeciesIdAndId(@Param("speciesId") String speciesId, @Param("id") String id);
 
     List<String> findIdsByIdPrefix(@Param("idPrefix") String idPrefix);

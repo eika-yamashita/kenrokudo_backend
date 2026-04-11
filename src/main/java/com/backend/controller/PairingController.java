@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.entity.PairingEntity;
@@ -31,6 +32,14 @@ public class PairingController {
     @GetMapping("/pairings")
     public ResponseEntity<List<PairingEntity>> getPairings() {
         return ResponseEntity.ok(pairingService.getPairings());
+    }
+
+    @GetMapping("/pairings/search")
+    public ResponseEntity<List<PairingEntity>> searchPairings(
+        @RequestParam(name = "species_id", required = false) String speciesId,
+        @RequestParam(name = "fiscal_year", required = false) Integer fiscalYear
+    ) {
+        return ResponseEntity.ok(pairingService.searchPairings(speciesId, fiscalYear));
     }
 
     @GetMapping("/pairings/{species_id}/{fiscal_year}/{pairing_id}")

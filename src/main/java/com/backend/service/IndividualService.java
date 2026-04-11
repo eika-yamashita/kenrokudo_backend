@@ -51,6 +51,26 @@ public class IndividualService {
         return individualList;
     }
 
+    public List<Individual> searchIndividuals(String speciesIdRaw, Integer fiscalYear, String morphRaw) {
+        if (fiscalYear != null && fiscalYear < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year must be zero or positive");
+        }
+
+        String speciesId = trimToNull(speciesIdRaw);
+        String morph = trimToNull(morphRaw);
+        String idPrefix = fiscalYear == null ? null : String.format("%02d", Math.floorMod(fiscalYear, 100));
+
+        List<IndividualEntity> entityList = individualMapper.search(speciesId, idPrefix, morph);
+        List<Individual> individualList = new ArrayList<>();
+        for (IndividualEntity entity : entityList) {
+            Individual individual = new Individual();
+            individual = setIndividual(individual, entity);
+            individualList.add(individual);
+        }
+
+        return individualList;
+    }
+
     public IndividualEntity getIndividual(String speciesId, String id) {
         return individualMapper.findBySpeciesIdAndId(speciesId, id);
     }

@@ -33,6 +33,15 @@ public class PairingService {
         return pairingMapper.findAll();
     }
 
+    public List<PairingEntity> searchPairings(String speciesIdRaw, Integer fiscalYear) {
+        if (fiscalYear != null && fiscalYear < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year must be zero or positive");
+        }
+
+        String speciesId = trimToNull(speciesIdRaw);
+        return pairingMapper.search(speciesId, fiscalYear);
+    }
+
     public PairingEntity getPairing(String speciesId, Integer fiscalYear, String pairingId) {
         PairingEntity pairing = pairingMapper.findByPrimaryKey(speciesId, fiscalYear, pairingId);
         if (pairing == null) {

@@ -71,6 +71,27 @@
             id
     </select>
 
+    <select id="search" resultMap="IndividualResultMap">
+        SELECT
+            <include refid="individualColumns" />
+        FROM
+            individual
+        <where>
+            <if test="speciesId != null and speciesId != ''">
+                species_id = #{speciesId}
+            </if>
+            <if test="idPrefix != null and idPrefix != ''">
+                AND id LIKE CONCAT(#{idPrefix}, '%')
+            </if>
+            <if test="morph != null and morph != ''">
+                AND LOWER(COALESCE(morph, '')) LIKE CONCAT('%', LOWER(#{morph}), '%')
+            </if>
+        </where>
+        ORDER BY
+            species_id,
+            id
+    </select>
+
     <select id="findBySpeciesIdAndId"
             resultMap="IndividualResultMap">
         SELECT
