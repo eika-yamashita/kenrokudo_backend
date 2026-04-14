@@ -45,6 +45,15 @@
             <if test="fiscalYear != null">
                 AND fiscal_year = #{fiscalYear}
             </if>
+            <if test="pairingId != null and pairingId != ''">
+                AND pairing_id = #{pairingId}
+            </if>
+            <if test="maleParentId != null and maleParentId != ''">
+                AND male_parent_id = #{maleParentId}
+            </if>
+            <if test="femaleParentId != null and femaleParentId != ''">
+                AND female_parent_id = #{femaleParentId}
+            </if>
         </where>
         ORDER BY
             species_id,

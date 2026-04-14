@@ -15,7 +15,10 @@ public interface PairingMapper {
 
     List<PairingEntity> search(
         @Param("speciesId") String speciesId,
-        @Param("fiscalYear") Integer fiscalYear
+        @Param("fiscalYear") Integer fiscalYear,
+        @Param("pairingId") String pairingId,
+        @Param("maleParentId") String maleParentId,
+        @Param("femaleParentId") String femaleParentId
     );
 
     PairingEntity findByPrimaryKey(
