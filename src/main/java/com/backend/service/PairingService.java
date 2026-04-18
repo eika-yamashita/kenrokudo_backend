@@ -33,13 +33,22 @@ public class PairingService {
         return pairingMapper.findAll();
     }
 
-    public List<PairingEntity> searchPairings(String speciesIdRaw, Integer fiscalYear) {
+    public List<PairingEntity> searchPairings(
+        String speciesIdRaw,
+        Integer fiscalYear,
+        String pairingIdRaw,
+        String maleParentIdRaw,
+        String femaleParentIdRaw
+    ) {
         if (fiscalYear != null && fiscalYear < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year must be zero or positive");
         }
 
         String speciesId = trimToNull(speciesIdRaw);
-        return pairingMapper.search(speciesId, fiscalYear);
+        String pairingId = trimToNull(pairingIdRaw);
+        String maleParentId = trimToNull(maleParentIdRaw);
+        String femaleParentId = trimToNull(femaleParentIdRaw);
+        return pairingMapper.search(speciesId, fiscalYear, pairingId, maleParentId, femaleParentId);
     }
 
     public PairingEntity getPairing(String speciesId, Integer fiscalYear, String pairingId) {

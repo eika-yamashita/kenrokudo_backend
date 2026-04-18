@@ -37,9 +37,14 @@ public class PairingController {
     @GetMapping("/pairings/search")
     public ResponseEntity<List<PairingEntity>> searchPairings(
         @RequestParam(name = "species_id", required = false) String speciesId,
-        @RequestParam(name = "fiscal_year", required = false) Integer fiscalYear
+        @RequestParam(name = "fiscal_year", required = false) Integer fiscalYear,
+        @RequestParam(name = "pairing_id", required = false) String pairingId,
+        @RequestParam(name = "male_parent_id", required = false) String maleParentId,
+        @RequestParam(name = "female_parent_id", required = false) String femaleParentId
     ) {
-        return ResponseEntity.ok(pairingService.searchPairings(speciesId, fiscalYear));
+        return ResponseEntity.ok(
+            pairingService.searchPairings(speciesId, fiscalYear, pairingId, maleParentId, femaleParentId)
+        );
     }
 
     @GetMapping("/pairings/{species_id}/{fiscal_year}/{pairing_id}")
