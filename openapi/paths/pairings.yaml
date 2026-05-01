@@ -1,0 +1,126 @@
+/pairings:
+  get:
+    tags:
+      - pairings
+    operationId: getPairings
+    summary: ペアリング一覧取得
+    description: 登録されているペアリング情報を一覧で取得します
+    responses:
+      '200':
+        description: ペアリング一覧の取得に成功しました
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PairingEntity'
+  post:
+    tags:
+      - pairings
+    operationId: createPairing
+    summary: ペアリング登録
+    description: ペアリング情報を新規登録します
+    requestBody:
+      required: true
+      description: 登録するペアリング情報
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PairingEntity'
+    responses:
+      '201':
+        description: ペアリング情報の登録に成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PairingEntity'
+
+
+/pairings/search:
+  get:
+    tags:
+      - pairings
+    operationId: searchPairings
+    summary: ペアリング検索
+    description: 種コードと年度を条件にペアリング情報を検索します
+    parameters:
+      - in: query
+        name: species_id
+        required: false
+        description: 種コード
+        schema:
+          type: string
+      - in: query
+        name: fiscal_year
+        required: false
+        description: ペアリング年度
+        schema:
+          type: integer
+          format: int32
+    responses:
+      '200':
+        description: ペアリング検索結果の取得に成功しました
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PairingEntity'
+
+
+/pairings/{species_id}/{fiscal_year}/{pairing_id}:
+  get:
+    tags:
+      - pairings
+    operationId: getPairing
+    summary: ペアリング詳細取得
+    description: 種コード、年度、ペアリングIDを指定して、ペアリング情報を取得します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/FiscalYearPath'
+      - $ref: '#/components/parameters/PairingIdPath'
+    responses:
+      '200':
+        description: ペアリング情報の取得に成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PairingEntity'
+  put:
+    tags:
+      - pairings
+    operationId: updatePairing
+    summary: ペアリング更新
+    description: 種コード、年度、ペアリングIDを指定して、ペアリング情報を更新します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/FiscalYearPath'
+      - $ref: '#/components/parameters/PairingIdPath'
+    requestBody:
+      required: true
+      description: 更新するペアリング情報
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PairingEntity'
+    responses:
+      '200':
+        description: ペアリング情報の更新に成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PairingEntity'
+  delete:
+    tags:
+      - pairings
+    operationId: deletePairing
+    summary: ペアリング削除
+    description: 種コード、年度、ペアリングIDを指定して、ペアリング情報を削除します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/FiscalYearPath'
+      - $ref: '#/components/parameters/PairingIdPath'
+    responses:
+      '204':
+        description: ペアリング情報の削除に成功しました
+

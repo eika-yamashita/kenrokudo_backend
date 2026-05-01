@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.api.SpeciesApi;
 import com.backend.entity.SpeciesEntity;
 import com.backend.service.SpeciesService;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class SpeciesController {
+public class SpeciesController implements SpeciesApi {
 
     private final SpeciesService speciesService;
 
@@ -20,7 +20,7 @@ public class SpeciesController {
         this.speciesService = speciesService;
     }
 
-    @GetMapping("/species")
+    @Override
     public ResponseEntity<List<SpeciesEntity>> getSpecies() {
         return ResponseEntity.ok(speciesService.getSpeciesList());
     }

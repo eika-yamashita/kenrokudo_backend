@@ -36,9 +36,135 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
 
+def openApiSourceDir = "$rootDir/openapi"
+def openApiEntrySpec = "$openApiSourceDir/api.yaml"
+def openApiBundledSpec = "$buildDir/openapi/openapi.yaml"
+
+tasks.register('bundleOpenApiSpec') {
+    group = 'documentation'
+    description = 'Bundles split OpenAPI YAML files into a single specification.'
+    inputs.files(fileTree(openApiSourceDir) {
+        include '**/*.yaml'
+    })
+    outputs.file(openApiBundledSpec)
+    doLast {
+        def newline = System.lineSeparator()
+        def indent = { String text, int spaces ->
+            def prefix = ' ' * spaces
+            text.readLines().collect { line ->
+                line ? prefix + line : line
+            }.join(newline)
+        }
+        def entryText = file(openApiEntrySpec).getText('UTF-8')
+        def headerEnd = entryText.indexOf("${newline}paths:${newline}")
+        if (headerEnd < 0) {
+            headerEnd = entryText.indexOf("\npaths:\n")
+        }
+        if (headerEnd < 0) {
+            throw new GradleException("Unable to find paths section in ${openApiEntrySpec}")
+        }
+
+        def pathFiles = [
+            "$openApiSourceDir/paths/species.yaml",
+            "$openApiSourceDir/paths/individuals.yaml",
+            "$openApiSourceDir/paths/individual-images.yaml",
+            "$openApiSourceDir/paths/pairings.yaml"
+        ]
+        def parametersText = file("$openApiSourceDir/components/parameters.yaml").getText('UTF-8').trim()
+        def schemasText = file("$openApiSourceDir/components/schemas.yaml").getText('UTF-8').trim()
+        def outputFile = file(openApiBundledSpec)
+        outputFile.parentFile.mkdirs()
+
+        def bundled = new StringBuilder()
+        bundled << entryText.substring(0, headerEnd).trim() << newline << newline
+        bundled << 'paths:' << newline
+        pathFiles.eachWithIndex { pathFile, index ->
+            if (index > 0) {
+                bundled << newline
+            }
+            bundled << indent(file(pathFile).getText('UTF-8').trim(), 2) << newline
+        }
+        bundled << newline
+        bundled << 'components:' << newline
+        bundled << '  parameters:' << newline
+        bundled << indent(parametersText, 4) << newline << newline
+        bundled << '  schemas:' << newline
+        bundled << indent(schemasText, 4) << newline
+
+        outputFile.setText(bundled.toString(), 'UTF-8')
+    }
+}
+
+tasks.register('openApiDocs', org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    group = 'documentation'
+    description = 'Generates static OpenAPI HTML documentation.'
+    dependsOn tasks.named('bundleOpenApiSpec')
+    generatorName = 'html2'
+    inputSpec = openApiBundledSpec
+    outputDir = "$buildDir/docs/openapi"
+}
+
+tasks.register('exportOpenApiSpec', Copy) {
+    group = 'documentation'
+    description = 'Exports the OpenAPI YAML specification.'
+    dependsOn tasks.named('bundleOpenApiSpec')
+    from openApiBundledSpec
+    into "$buildDir/docs/openapi"
+    rename { 'openapi.yaml' }
+}
+
+tasks.register('exportOpenApiReDoc') {
+    group = 'documentation'
+    description = 'Exports a ReDoc HTML page for the OpenAPI specification.'
+    dependsOn tasks.named('bundleOpenApiSpec')
+    inputs.file(openApiBundledSpec)
+    outputs.file("$buildDir/docs/openapi/redoc.html")
+    doLast {
+        def outputFile = file("$buildDir/docs/openapi/redoc.html")
+        def openApiYaml = groovy.json.JsonOutput.toJson(file(openApiBundledSpec).getText('UTF-8'))
+        outputFile.parentFile.mkdirs()
+        outputFile.text = '''<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Individual Management API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="redoc-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script src="https://cdn.redoc.ly/redoc/v2.1.5/bundles/redoc.standalone.js"></script>
+  <script>
+    Redoc.init(jsyaml.load(''' + openApiYaml + '''), {}, document.getElementById('redoc-container'));
+  </script>
+</body>
+</html>
+'''
+    }
+}
+
+tasks.register('exportOpenApiDocs') {
+    group = 'documentation'
+    description = 'Generates OpenAPI HTML documentation and exports the YAML specification.'
+    dependsOn tasks.named('openApiValidate')
+    dependsOn tasks.named('openApiDocs')
+    dependsOn tasks.named('exportOpenApiSpec')
+    dependsOn tasks.named('exportOpenApiReDoc')
+}
+
+openApiValidate {
+    inputSpec = openApiBundledSpec
+}
+
 openApiGenerate {
     generatorName = 'spring'
-    inputSpec = "$rootDir/openapi/api.yaml"
+    inputSpec = openApiBundledSpec
 
     // ★ outputDir は「プロジェクト直下」
     outputDir = "$rootDir"
@@ -47,12 +173,18 @@ openApiGenerate {
     apiPackage = 'com.backend.api'
     modelPackage = 'com.backend.model'
     invokerPackage = 'com.backend.invoker'
+    importMappings = [
+        IndividualImageEntity: 'com.backend.entity.IndividualImageEntity',
+        PairingEntity: 'com.backend.entity.PairingEntity',
+        SpeciesEntity: 'com.backend.entity.SpeciesEntity'
+    ]
 
     configOptions = [
         dateLibrary: 'java17',
         interfaceOnly: 'true',
         skipDefaultInterface: 'true',
-        useSpringBoot3: 'true'
+        useSpringBoot3: 'true',
+        useTags: 'true'
     ]
 }
 
@@ -62,6 +194,11 @@ tasks.named('test') {
 
 tasks.named('openApiGenerate') {
     doNotTrackState("Disable state tracking due to Windows file lock issues")
+    dependsOn tasks.named('bundleOpenApiSpec')
+}
+
+tasks.named('openApiValidate') {
+    dependsOn tasks.named('bundleOpenApiSpec')
 }
 
 tasks.named('compileJava') {

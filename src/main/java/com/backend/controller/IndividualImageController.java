@@ -4,23 +4,16 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.backend.api.IndividualImagesApi;
 import com.backend.entity.IndividualImageEntity;
 import com.backend.service.IndividualImageService;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/individuals/{species_id}/{id}/images")
-public class IndividualImageController {
+public class IndividualImageController implements IndividualImagesApi {
 
     private final IndividualImageService individualImageService;
 
@@ -28,22 +21,22 @@ public class IndividualImageController {
         this.individualImageService = individualImageService;
     }
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<IndividualImageEntity>> getImages(
-        @PathVariable("species_id") String speciesId,
-        @PathVariable("id") String individualId
+        String speciesId,
+        String individualId
     ) {
         return ResponseEntity.ok(individualImageService.getImages(speciesId, individualId));
     }
 
-    @PostMapping(consumes = "multipart/form-data")
+    @Override
     public ResponseEntity<IndividualImageEntity> uploadImage(
-        @PathVariable("species_id") String speciesId,
-        @PathVariable("id") String individualId,
-        @RequestParam("file") MultipartFile file,
-        @RequestParam(value = "isPrimary", required = false) Boolean isPrimary,
-        @RequestParam(value = "sortOrder", required = false) Integer sortOrder,
-        @RequestParam(value = "createdBy", required = false) String createdBy
+        String speciesId,
+        String individualId,
+        MultipartFile file,
+        Boolean isPrimary,
+        Integer sortOrder,
+        String createdBy
     ) {
         IndividualImageEntity created = individualImageService.uploadImage(
             speciesId,
@@ -56,14 +49,14 @@ public class IndividualImageController {
         return ResponseEntity.ok(created);
     }
 
-    @PutMapping(value = "/{image_id}", consumes = "multipart/form-data")
+    @Override
     public ResponseEntity<IndividualImageEntity> replaceImage(
-        @PathVariable("species_id") String speciesId,
-        @PathVariable("id") String individualId,
-        @PathVariable("image_id") Long imageId,
-        @RequestParam("file") MultipartFile file,
-        @RequestParam(value = "isPrimary", required = false) Boolean isPrimary,
-        @RequestParam(value = "updatedBy", required = false) String updatedBy
+        String speciesId,
+        String individualId,
+        Long imageId,
+        MultipartFile file,
+        Boolean isPrimary,
+        String updatedBy
     ) {
         IndividualImageEntity updated = individualImageService.replaceImage(
             speciesId,
@@ -76,22 +69,22 @@ public class IndividualImageController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{image_id}")
+    @Override
     public ResponseEntity<Void> deleteImage(
-        @PathVariable("species_id") String speciesId,
-        @PathVariable("id") String individualId,
-        @PathVariable("image_id") Long imageId
+        String speciesId,
+        String individualId,
+        Long imageId
     ) {
         individualImageService.deleteImage(speciesId, individualId, imageId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{image_id}/primary")
+    @Override
     public ResponseEntity<Void> setPrimaryImage(
-        @PathVariable("species_id") String speciesId,
-        @PathVariable("id") String individualId,
-        @PathVariable("image_id") Long imageId,
-        @RequestParam(value = "updatedBy", required = false) String updatedBy
+        String speciesId,
+        String individualId,
+        Long imageId,
+        String updatedBy
     ) {
         individualImageService.setPrimaryImage(speciesId, individualId, imageId, updatedBy);
         return ResponseEntity.ok().build();

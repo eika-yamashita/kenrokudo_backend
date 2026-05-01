@@ -1,0 +1,125 @@
+/individuals:
+  get:
+    tags:
+      - individuals
+    operationId: individualsGet
+    summary: 個体一覧取得
+    description: 登録されている個体情報を一覧で取得します
+    responses:
+      '200':
+        description: 個体一覧の取得に成功しました
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Individual'
+  post:
+    tags:
+      - individuals
+    operationId: individualsPost
+    summary: 個体登録
+    description: 個体情報を新規登録します
+    requestBody:
+      required: true
+      description: 登録する個体情報
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Individual'
+    responses:
+      '201':
+        description: 個体情報の登録に成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Individual'
+
+
+/individuals/search:
+  get:
+    tags:
+      - individuals
+    operationId: searchIndividuals
+    summary: 個体検索
+    description: 種コード、年度、モルフを条件に個体情報を検索します
+    parameters:
+      - in: query
+        name: species_id
+        required: false
+        description: 種コード
+        schema:
+          type: string
+      - in: query
+        name: fiscal_year
+        required: false
+        description: ペアリング年度
+        schema:
+          type: integer
+          format: int32
+      - in: query
+        name: morph
+        required: false
+        description: モルフ名
+        schema:
+          type: string
+    responses:
+      '200':
+        description: 個体検索結果の取得に成功しました
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Individual'
+
+
+/individuals/{species_id}/{id}:
+  get:
+    tags:
+      - individuals
+    operationId: individualsSpeciesIdIdGet
+    summary: 個体詳細取得
+    description: 種コードと個体IDを指定して、個体情報を取得します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+    responses:
+      '200':
+        description: 個体情報の取得に成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Individual'
+  put:
+    tags:
+      - individuals
+    operationId: individualsSpeciesIdIdPut
+    summary: 個体更新
+    description: 種コードと個体IDを指定して、個体情報を更新します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+    requestBody:
+      required: true
+      description: 更新する個体情報
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Individual'
+    responses:
+      '200':
+        description: 個体情報の更新に成功しました
+  delete:
+    tags:
+      - individuals
+    operationId: individualsSpeciesIdIdDelete
+    summary: 個体削除
+    description: 種コードと個体IDを指定して、個体情報を削除します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+    responses:
+      '204':
+        description: 個体情報の削除に成功しました
+

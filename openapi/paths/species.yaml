@@ -1,0 +1,17 @@
+/species:
+  get:
+    tags:
+      - species
+    operationId: getSpecies
+    summary: 種一覧取得
+    description: 登録されている種マスタ情報を一覧で取得します
+    responses:
+      '200':
+        description: 種一覧の取得に成功しました
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SpeciesEntity'
+

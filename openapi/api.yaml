@@ -1,195 +1,63 @@
 openapi: 3.0.0
 info:
-  title: Individual Management API
+  title: 個体管理 API
+  description: 種、個体、個体画像、ペアリング情報を管理するためのAPI仕様
   version: 1.0.0
 
+tags:
+  - name: species
+    x-displayName: 種マスタ
+    description: 種マスタ情報を扱うAPI
+  - name: individuals
+    x-displayName: 個体管理
+    description: 個体情報の登録、検索、更新、削除を扱うAPI
+  - name: individual-images
+    x-displayName: 個体画像管理
+    description: 個体に紐づく画像の登録、差し替え、削除、メイン画像設定を扱うAPI
+  - name: pairings
+    x-displayName: ペアリング管理
+    description: ペアリング情報の登録、検索、更新、削除を扱うAPI
+
 paths:
+  /species:
+    $ref: './paths/species.yaml#/~1species'
   /individuals:
-    get:
-      summary: 個体情報一覧を取得
-      responses:
-        '200':
-          description: 一覧取得成功
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Individual'
-
-    post:
-      summary: 個体情報を新規登録
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Individual'
-      responses:
-        '201':
-          description: 登録成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Individual'
-
+    $ref: './paths/individuals.yaml#/~1individuals'
+  /individuals/search:
+    $ref: './paths/individuals.yaml#/~1individuals~1search'
   /individuals/{species_id}/{id}:
-    put:
-      summary: 個体情報を更新
-      parameters:
-        - in: path
-          name: species_id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Individual'
-      responses:
-        '200':
-          description: 更新成功
-
-    delete:
-      summary: 個体情報を論理削除
-      parameters:
-        - in: path
-          name: species_id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: 削除成功
+    $ref: './paths/individuals.yaml#/~1individuals~1{species_id}~1{id}'
+  /individuals/{species_id}/{id}/images:
+    $ref: './paths/individual-images.yaml#/~1individuals~1{species_id}~1{id}~1images'
+  /individuals/{species_id}/{id}/images/{image_id}:
+    $ref: './paths/individual-images.yaml#/~1individuals~1{species_id}~1{id}~1images~1{image_id}'
+  /individuals/{species_id}/{id}/images/{image_id}/primary:
+    $ref: './paths/individual-images.yaml#/~1individuals~1{species_id}~1{id}~1images~1{image_id}~1primary'
+  /pairings:
+    $ref: './paths/pairings.yaml#/~1pairings'
+  /pairings/search:
+    $ref: './paths/pairings.yaml#/~1pairings~1search'
+  /pairings/{species_id}/{fiscal_year}/{pairing_id}:
+    $ref: './paths/pairings.yaml#/~1pairings~1{species_id}~1{fiscal_year}~1{pairing_id}'
 
 components:
+  parameters:
+    SpeciesIdPath:
+      $ref: './components/parameters.yaml#/SpeciesIdPath'
+    IndividualIdPath:
+      $ref: './components/parameters.yaml#/IndividualIdPath'
+    FiscalYearPath:
+      $ref: './components/parameters.yaml#/FiscalYearPath'
+    PairingIdPath:
+      $ref: './components/parameters.yaml#/PairingIdPath'
+    ImageIdPath:
+      $ref: './components/parameters.yaml#/ImageIdPath'
   schemas:
+    SpeciesEntity:
+      $ref: './components/schemas.yaml#/SpeciesEntity'
+    IndividualImageEntity:
+      $ref: './components/schemas.yaml#/IndividualImageEntity'
+    PairingEntity:
+      $ref: './components/schemas.yaml#/PairingEntity'
     Individual:
-      type: object
-      description: 個体情報
-      properties:
-        species_id:
-          type: string
-          maxLength: 20
-          description: 種コード
-        id:
-          type: string
-          maxLength: 20
-          description: 個体ID（未入力の場合はサーバーで自動採番）
-        pairing_fiscal_year:
-          type: integer
-          format: int32
-          description: ペアリング年度
-        pairing_id:
-          type: string
-          maxLength: 20
-          description: ペアリングID
-        male_parent_id:
-          type: string
-          maxLength: 20
-          description: オス親個体ID
-        female_parent_id:
-          type: string
-          maxLength: 20
-          description: メス親個体ID
-        morph:
-          type: string
-          maxLength: 50
-          description: モルフ
-        bloodline:
-          type: string
-          maxLength: 50
-          description: 血統
-        gender_category:
-          type: string
-          maxLength: 1
-          description: 雌雄区分（M:オス / F:メス / U:不明）
-        breeding_category:
-          type: string
-          maxLength: 1
-          description: 繁殖区分（A:自家繁殖 / B:購入個体）
-        breeder:
-          type: string
-          maxLength: 20
-          description: ブリーダー名
-        clutch_date:
-          type: string
-          format: date
-          description: クラッチ日（産卵日）
-        hatch_date:
-          type: string
-          format: date
-          description: ハッチ日（孵化日）
-        purchase_from:
-          type: string
-          description: 仕入先
-        purchase_price:
-          type: number
-          format: double
-          description: 仕入価格
-        purchase_date:
-          type: string
-          format: date
-          description: 仕入日
-        sales_category:
-          type: string
-          description: 販売区分
-        sales_to:
-          type: string
-          description: 販売先
-        sales_price_tax_ex:
-          type: number
-          format: double
-          description: 販売価格（税抜）
-        sales_price_tax:
-          type: number
-          format: double
-          description: 消費税額
-        sales_price_tax_in:
-          type: number
-          format: double
-          description: 販売価格（税込）
-        sales_date:
-          type: string
-          format: date
-          description: 販売日
-        death_date:
-          type: string
-          format: date
-          description: 死亡日
-        note:
-          type: string
-          maxLength: 255
-          description: 備考
-        create_user:
-          type: string
-          maxLength: 20
-          description: 登録者
-        create_at:
-          type: string
-          format: date-time
-          description: 登録日時
-        update_user:
-          type: string
-          maxLength: 20
-          description: 更新者
-        update_at:
-          type: string
-          format: date-time
-          description: 更新日時
-      required:
-        - species_id
-        - create_user
-        - create_at
+      $ref: './components/schemas.yaml#/Individual'

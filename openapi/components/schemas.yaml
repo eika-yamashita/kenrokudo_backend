@@ -1,0 +1,228 @@
+SpeciesEntity:
+  type: object
+  description: 種マスタ情報
+  properties:
+    speciesId:
+      type: string
+      description: 種コード
+    japaneseName:
+      type: string
+      description: 和名
+    commonName:
+      type: string
+      description: 通称名
+    englishName:
+      type: string
+      description: 英名
+    totalLength:
+      type: string
+      description: 全長
+    bodyWeight:
+      type: string
+      description: 体重
+    lifespan:
+      type: string
+      description: 寿命
+
+IndividualImageEntity:
+  type: object
+  description: 個体画像情報
+  properties:
+    image_id:
+      type: integer
+      format: int64
+      description: 画像ID
+    species_id:
+      type: string
+      description: 種コード
+    individual_id:
+      type: string
+      description: 個体ID
+    storage_path:
+      type: string
+      description: 画像ファイルの保存パス
+    public_url:
+      type: string
+      description: 画像ファイルの公開URL
+    file_name:
+      type: string
+      description: ファイル名
+    content_type:
+      type: string
+      description: MIMEタイプ
+    file_size:
+      type: integer
+      format: int64
+      description: ファイルサイズ
+    sort_order:
+      type: integer
+      format: int32
+      description: 表示順
+    is_primary:
+      type: boolean
+      description: メイン画像フラグ
+    created_at:
+      type: string
+      format: date-time
+      description: 登録日時
+    created_by:
+      type: string
+      description: 登録者
+    updated_at:
+      type: string
+      format: date-time
+      description: 更新日時
+    updated_by:
+      type: string
+      description: 更新者
+
+PairingEntity:
+  type: object
+  description: ペアリング情報
+  properties:
+    species_id:
+      type: string
+      maxLength: 20
+      description: 種コード
+    fiscal_year:
+      type: integer
+      format: int32
+      description: ペアリング年度
+    pairing_id:
+      type: string
+      maxLength: 20
+      description: ペアリングID
+    male_parent_id:
+      type: string
+      maxLength: 20
+      description: オス親個体ID
+    female_parent_id:
+      type: string
+      maxLength: 20
+      description: メス親個体ID
+    pairing_date:
+      type: string
+      format: date
+      description: ペアリング日
+    note:
+      type: string
+      maxLength: 255
+      description: 備考
+
+Individual:
+  type: object
+  description: 個体情報
+  properties:
+    species_id:
+      type: string
+      maxLength: 20
+      description: 種コード
+    id:
+      type: string
+      maxLength: 20
+      description: 個体ID 未入力の場合はサーバー側で自動採番されます
+    pairing_fiscal_year:
+      type: integer
+      format: int32
+      description: ペアリング年度
+    pairing_id:
+      type: string
+      maxLength: 20
+      description: ペアリングID
+    male_parent_id:
+      type: string
+      maxLength: 20
+      description: オス親個体ID
+    female_parent_id:
+      type: string
+      maxLength: 20
+      description: メス親個体ID
+    morph:
+      type: string
+      maxLength: 50
+      description: モルフ
+    bloodline:
+      type: string
+      maxLength: 50
+      description: 血統
+    gender_category:
+      type: string
+      maxLength: 1
+      description: 雌雄区分 (0：不明、1：オス、2：メス)
+    breeding_category:
+      type: string
+      maxLength: 1
+      description: 繁殖区分 (0：自家繁殖、1：購入個体)
+    breeder:
+      type: string
+      maxLength: 20
+      description: ブリーダー名
+    clutch_date:
+      type: string
+      format: date
+      description: クラッチ日、または産卵日
+    hatch_date:
+      type: string
+      format: date
+      description: ハッチ日、または孵化日
+    purchase_from:
+      type: string
+      description: 仕入先
+    purchase_price:
+      type: number
+      format: double
+      description: 仕入価格
+    purchase_date:
+      type: string
+      format: date
+      description: 仕入日
+    sales_category:
+      type: string
+      description: 販売区分
+    sales_to:
+      type: string
+      description: 販売先
+    sales_price_tax_ex:
+      type: number
+      format: double
+      description: 販売価格（税抜）
+    sales_price_tax:
+      type: number
+      format: double
+      description: 消費税額
+    sales_price_tax_in:
+      type: number
+      format: double
+      description: 販売価格（税込）
+    sales_date:
+      type: string
+      format: date
+      description: 販売日
+    death_date:
+      type: string
+      format: date
+      description: 死亡日
+    note:
+      type: string
+      maxLength: 255
+      description: 備考
+    create_user:
+      type: string
+      maxLength: 20
+      description: 登録者
+    create_at:
+      type: string
+      format: date-time
+      description: 登録日時
+    update_user:
+      type: string
+      maxLength: 20
+      description: 更新者
+    update_at:
+      type: string
+      format: date-time
+      description: 更新日時
+  required:
+    - species_id
+    - create_user
+    - create_at

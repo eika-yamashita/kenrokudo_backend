@@ -1,0 +1,135 @@
+/individuals/{species_id}/{id}/images:
+  get:
+    tags:
+      - individual-images
+    operationId: getImages
+    summary: 個体画像一覧取得
+    description: 指定した個体に紐づく画像一覧を取得します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+    responses:
+      '200':
+        description: 個体画像一覧の取得に成功しました
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IndividualImageEntity'
+  post:
+    tags:
+      - individual-images
+    operationId: uploadImage
+    summary: 個体画像登録
+    description: 指定した個体に画像をアップロードして登録します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+    requestBody:
+      required: true
+      description: 登録する画像ファイルと画像属性
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+            properties:
+              file:
+                type: string
+                format: binary
+                description: アップロードする画像ファイル
+              isPrimary:
+                type: boolean
+                description: メイン画像として登録するかどうかを指定します
+              sortOrder:
+                type: integer
+                format: int32
+                description: 表示順
+              createdBy:
+                type: string
+                description: 登録者
+    responses:
+      '200':
+        description: 個体画像の登録に成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndividualImageEntity'
+
+
+/individuals/{species_id}/{id}/images/{image_id}:
+  put:
+    tags:
+      - individual-images
+    operationId: replaceImage
+    summary: 個体画像差し替え
+    description: 指定した個体画像を新しい画像ファイルに差し替えます
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+      - $ref: '#/components/parameters/ImageIdPath'
+    requestBody:
+      required: true
+      description: 差し替える画像ファイルと画像属性
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+            properties:
+              file:
+                type: string
+                format: binary
+                description: 差し替え後の画像ファイル
+              isPrimary:
+                type: boolean
+                description: メイン画像に設定するかどうかを指定します
+              updatedBy:
+                type: string
+                description: 更新者
+    responses:
+      '200':
+        description: 個体画像の差し替えに成功しました
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndividualImageEntity'
+  delete:
+    tags:
+      - individual-images
+    operationId: deleteImage
+    summary: 個体画像削除
+    description: 指定した個体画像を削除します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+      - $ref: '#/components/parameters/ImageIdPath'
+    responses:
+      '204':
+        description: 個体画像の削除に成功しました
+
+
+/individuals/{species_id}/{id}/images/{image_id}/primary:
+  put:
+    tags:
+      - individual-images
+    operationId: setPrimaryImage
+    summary: メイン画像設定
+    description: 指定した個体画像をメイン画像として設定します
+    parameters:
+      - $ref: '#/components/parameters/SpeciesIdPath'
+      - $ref: '#/components/parameters/IndividualIdPath'
+      - $ref: '#/components/parameters/ImageIdPath'
+      - in: query
+        name: updatedBy
+        required: false
+        description: 更新者
+        schema:
+          type: string
+    responses:
+      '200':
+        description: メイン画像の設定に成功しました
+

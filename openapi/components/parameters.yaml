@@ -1,0 +1,38 @@
+SpeciesIdPath:
+  in: path
+  name: species_id
+  required: true
+  description: 種コード
+  schema:
+    type: string
+IndividualIdPath:
+  in: path
+  name: id
+  required: true
+  description: 個体ID
+  schema:
+    type: string
+FiscalYearPath:
+  in: path
+  name: fiscal_year
+  required: true
+  description: ペアリング年度
+  schema:
+    type: integer
+    format: int32
+PairingIdPath:
+  in: path
+  name: pairing_id
+  required: true
+  description: ペアリングID
+  schema:
+    type: string
+ImageIdPath:
+  in: path
+  name: image_id
+  required: true
+  description: 画像ID
+  schema:
+    type: integer
+    format: int64
+
