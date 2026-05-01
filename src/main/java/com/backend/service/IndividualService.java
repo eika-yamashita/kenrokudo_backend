@@ -32,10 +32,16 @@ public class IndividualService {
 
     private final IndividualMapper individualMapper;
     private final PairingMapper pairingMapper;
+    private final IndividualImageService individualImageService;
 
-    public IndividualService(IndividualMapper individualMapper, PairingMapper pairingMapper) {
+    public IndividualService(
+        IndividualMapper individualMapper,
+        PairingMapper pairingMapper,
+        IndividualImageService individualImageService
+    ) {
         this.individualMapper = individualMapper;
         this.pairingMapper = pairingMapper;
+        this.individualImageService = individualImageService;
     }
 
     public List<Individual> getIndividuals() {
@@ -145,7 +151,13 @@ public class IndividualService {
         }
     }
 
+    @Transactional
     public void deleteIndividual(String speciesId, String id) {
+        if (getIndividual(speciesId, id) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
+        }
+
+        individualImageService.deleteImagesByIndividual(speciesId, id);
         int deleted = individualMapper.delete(speciesId, id);
         if (deleted == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");

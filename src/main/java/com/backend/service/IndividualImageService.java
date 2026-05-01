@@ -179,6 +179,14 @@ public class IndividualImageService {
         }
     }
 
+    public void deleteImagesByIndividual(String speciesId, String individualId) {
+        List<IndividualImageEntity> images = individualImageMapper.findByIndividual(speciesId, individualId);
+        for (IndividualImageEntity image : images) {
+            individualImageMapper.deleteByImageId(image.getImageId());
+            deleteFileQuietly(uploadBaseDir.resolve(image.getStoragePath()));
+        }
+    }
+
     public void setPrimaryImage(String speciesId, String individualId, Long imageId, String updatedBy) {
         getAndValidateImage(speciesId, individualId, imageId);
         individualImageMapper.clearPrimaryByIndividual(speciesId, individualId);
