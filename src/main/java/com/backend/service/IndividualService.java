@@ -1,12 +1,9 @@
 package com.backend.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.time.ZoneId;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -64,9 +61,8 @@ public class IndividualService {
 
         String speciesId = trimToNull(speciesIdRaw);
         String morph = trimToNull(morphRaw);
-        String idPrefix = fiscalYear == null ? null : String.format("%02d", Math.floorMod(fiscalYear, 100));
 
-        List<IndividualEntity> entityList = individualMapper.search(speciesId, idPrefix, morph);
+        List<IndividualEntity> entityList = individualMapper.search(speciesId, fiscalYear, morph);
         List<Individual> individualList = new ArrayList<>();
         for (IndividualEntity entity : entityList) {
             Individual individual = new Individual();
@@ -97,6 +93,10 @@ public class IndividualService {
         if (speciesId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "species_id is required");
         }
+        Integer fiscalYear = individual.getFiscalYear();
+        if (fiscalYear == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year is required");
+        }
         individual.setSpeciesId(speciesId);
         applyPairingParentsIfSpecified(individual, speciesId);
 
@@ -107,7 +107,7 @@ public class IndividualService {
         }
 
         if (autoIdRequired) {
-            id = generateNextId(individual.getCreateAt(), individual.getBreedingCategory());
+            id = generateNextId(individual.getFiscalYear(), individual.getBreedingCategory());
             individual.setId(id);
         }
 
@@ -130,7 +130,7 @@ public class IndividualService {
                         e
                     );
                 }
-                individual.setId(generateNextId(individual.getCreateAt(), individual.getBreedingCategory()));
+                individual.setId(generateNextId(individual.getFiscalYear(), individual.getBreedingCategory()));
             }
         }
 
@@ -144,6 +144,12 @@ public class IndividualService {
         if (getIndividual(speciesId, id) == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
         }
+
+        individual.setSpeciesId(speciesId);
+        if (individual.getFiscalYear() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year is required");
+        }
+        applyPairingParentsIfSpecified(individual, speciesId);
 
         int updated = individualMapper.update(speciesId, id, individual);
         if (updated == 0) {
@@ -166,7 +172,10 @@ public class IndividualService {
 
     private Individual setIndividual(Individual model, IndividualEntity entity) {
         model.setSpeciesId(entity.getSpeciesId());
+        model.setFiscalYear(entity.getFiscalYear());
         model.setId(entity.getId());
+        model.setPairingFiscalYear(entity.getPairingFiscalYear());
+        model.setPairingId(entity.getPairingId());
         model.setMaleParentId(entity.getMaleParentId());
         model.setFemaleParentId(entity.getFemaleParentId());
         model.setMorph(entity.getMorph());
@@ -194,10 +203,11 @@ public class IndividualService {
         return model;
     }
 
-    private String generateNextId(Date createAt, String breedingCategoryRaw) {
-        Date baseDate = Objects.requireNonNullElseGet(createAt, Date::new);
-        int year = baseDate.toInstant().atZone(ZoneId.systemDefault()).getYear();
-        String yy = String.format("%02d", year % 100);
+    private String generateNextId(Integer fiscalYear, String breedingCategoryRaw) {
+        if (fiscalYear == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year is required for auto id generation");
+        }
+        String yy = String.format("%02d", Math.floorMod(fiscalYear, 100));
         String breedingMarker = resolveBreedingMarker(breedingCategoryRaw);
         String prefix = yy + breedingMarker;
 

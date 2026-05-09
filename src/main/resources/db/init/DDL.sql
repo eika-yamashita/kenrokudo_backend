@@ -11,7 +11,10 @@ CREATE TABLE species (
 
 CREATE TABLE individual (
   species_id VARCHAR(20) NOT NULL,
+  fiscal_year INTEGER NOT NULL,
   id VARCHAR(20) NOT NULL,
+  pairing_fiscal_year INTEGER,
+  pairing_id VARCHAR(20),
   male_parent_id VARCHAR(20),
   female_parent_id VARCHAR(20),
   morph VARCHAR(50),
@@ -91,3 +94,8 @@ CREATE TABLE pairing (
 
 CREATE INDEX idx_pairing_species_year
   ON pairing (species_id, fiscal_year);
+
+ALTER TABLE individual
+  ADD CONSTRAINT fk_individual_pairing
+  FOREIGN KEY (species_id, pairing_fiscal_year, pairing_id)
+  REFERENCES pairing (species_id, fiscal_year, pairing_id);

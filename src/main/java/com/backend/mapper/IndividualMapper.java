@@ -15,7 +15,7 @@ public interface IndividualMapper {
 
     List<IndividualEntity> search(
         @Param("speciesId") String speciesId,
-        @Param("idPrefix") String idPrefix,
+        @Param("fiscalYear") Integer fiscalYear,
         @Param("morph") String morph
     );
 

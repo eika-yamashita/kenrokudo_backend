@@ -6,6 +6,9 @@
             type="com.backend.entity.IndividualEntity">
         <id column="id" property="id" />
         <result column="species_id" property="speciesId" />
+        <result column="fiscal_year" property="fiscalYear" />
+        <result column="pairing_fiscal_year" property="pairingFiscalYear" />
+        <result column="pairing_id" property="pairingId" />
         <result column="male_parent_id" property="maleParentId" />
         <result column="female_parent_id" property="femaleParentId" />
         <result column="morph" property="morph" />
@@ -34,7 +37,10 @@
 
     <sql id="individualColumns">
         species_id,
+        fiscal_year,
         id,
+        pairing_fiscal_year,
+        pairing_id,
         male_parent_id,
         female_parent_id,
         morph,
@@ -80,8 +86,8 @@
             <if test="speciesId != null and speciesId != ''">
                 species_id = #{speciesId}
             </if>
-            <if test="idPrefix != null and idPrefix != ''">
-                AND id LIKE CONCAT(#{idPrefix}, '%')
+            <if test="fiscalYear != null">
+                AND fiscal_year = #{fiscalYear}
             </if>
             <if test="morph != null and morph != ''">
                 AND LOWER(COALESCE(morph, '')) LIKE CONCAT('%', LOWER(#{morph}), '%')
@@ -116,7 +122,10 @@
     <insert id="insert">
         INSERT INTO individual (
             species_id,
+            fiscal_year,
             id,
+            pairing_fiscal_year,
+            pairing_id,
             male_parent_id,
             female_parent_id,
             morph,
@@ -144,7 +153,10 @@
         )
         VALUES (
             #{speciesId},
+            #{fiscalYear},
             #{id},
+            #{pairingFiscalYear},
+            #{pairingId},
             #{maleParentId},
             #{femaleParentId},
             #{morph},
@@ -175,6 +187,9 @@
     <update id="update">
         UPDATE individual
         SET
+            fiscal_year = #{individual.fiscalYear},
+            pairing_fiscal_year = #{individual.pairingFiscalYear},
+            pairing_id = #{individual.pairingId},
             male_parent_id = #{individual.maleParentId},
             female_parent_id = #{individual.femaleParentId},
             morph = #{individual.morph},

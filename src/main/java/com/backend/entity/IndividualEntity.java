@@ -17,9 +17,18 @@ public class IndividualEntity implements Serializable {
     @JsonProperty("species_id")
     private String speciesId;
 
+    @JsonProperty("fiscal_year")
+    private Integer fiscalYear;
+
     /** 個体ID */
     @JsonProperty("id")
     private String id;
+
+    @JsonProperty("pairing_fiscal_year")
+    private Integer pairingFiscalYear;
+
+    @JsonProperty("pairing_id")
+    private String pairingId;
 
     /** オス親個体ID */
     private String maleParentId;
