@@ -1,231 +1,205 @@
 SpeciesEntity:
   type: object
-  description: 種マスタ情報
+  description: Species master
   properties:
-    speciesId:
+    species_id:
       type: string
-      description: 種コード
-    japaneseName:
+      description: Species id
+    japanese_name:
       type: string
-      description: 和名
-    commonName:
+      description: Japanese name
+    common_name:
       type: string
-      description: 通称
-    englishName:
+      description: Common name
+    english_name:
       type: string
-      description: 英名
-    totalLength:
+      description: English name
+    total_length:
       type: string
-      description: 全長
-    bodyWeight:
+      description: Total length
+    body_weight:
       type: string
-      description: 体重
+      description: Body weight
     lifespan:
       type: string
-      description: 寿命
+      description: Lifespan
 
 IndividualImageEntity:
   type: object
-  description: 個体画像情報
+  description: Individual image
   properties:
     image_id:
       type: integer
       format: int64
-      description: 画像ID
     species_id:
       type: string
-      description: 種コード
     individual_id:
       type: string
-      description: 個体ID
     storage_path:
       type: string
-      description: ストレージ上の保存パス
     public_url:
       type: string
-      description: 画像の公開URL
     file_name:
       type: string
-      description: ファイル名
     content_type:
       type: string
-      description: MIMEタイプ
     file_size:
       type: integer
       format: int64
-      description: ファイルサイズ
     sort_order:
       type: integer
       format: int32
-      description: 表示順
     is_primary:
       type: boolean
-      description: メイン画像フラグ
     created_at:
       type: string
       format: date-time
-      description: 作成日時
     created_by:
       type: string
-      description: 作成者
     updated_at:
       type: string
       format: date-time
-      description: 更新日時
     updated_by:
       type: string
-      description: 更新者
 
 PairingEntity:
   type: object
-  description: ペアリング情報
+  description: Pairing
   properties:
     species_id:
       type: string
       maxLength: 20
-      description: 種コード
     fiscal_year:
       type: integer
       format: int32
-      description: ペアリング年度
     pairing_id:
       type: string
       maxLength: 20
-      description: ペアリングID
     male_parent_id:
       type: string
       maxLength: 20
-      description: オス親個体ID
     female_parent_id:
       type: string
       maxLength: 20
-      description: メス親個体ID
     pairing_date:
       type: string
       format: date
-      description: ペアリング日
     note:
       type: string
       maxLength: 255
-      description: メモ
+
+IndividualMorph:
+  type: object
+  description: Individual morph entry
+  properties:
+    morph_id:
+      type: string
+      maxLength: 20
+    morph_name:
+      type: string
+      maxLength: 100
+    bloodline_id:
+      type: string
+      maxLength: 20
+    bloodline_name:
+      type: string
+      maxLength: 100
+    expression_category:
+      type: string
+      maxLength: 1
+    possible_het_percentage:
+      type: integer
+      format: int32
+    sort_order:
+      type: integer
+      format: int32
 
 Individual:
   type: object
-  description: 個体情報
+  description: Individual
   properties:
     species_id:
       type: string
       maxLength: 20
-      description: 種コード
     fiscal_year:
       type: integer
       format: int32
-      description: 登録年度
     id:
       type: string
       maxLength: 20
-      description: 個体ID。未入力時はサーバ側で自動採番されます
     pairing_fiscal_year:
       type: integer
       format: int32
-      description: ペアリング年度
     pairing_id:
       type: string
       maxLength: 20
-      description: ペアリングID
     male_parent_id:
       type: string
       maxLength: 20
-      description: オス親個体ID
     female_parent_id:
       type: string
       maxLength: 20
-      description: メス親個体ID
-    morph:
-      type: string
-      maxLength: 50
-      description: モルフ
-    bloodline:
-      type: string
-      maxLength: 50
-      description: 血統
+    morph_entries:
+      type: array
+      items:
+        $ref: '#/components/schemas/IndividualMorph'
     gender_category:
       type: string
       maxLength: 1
-      description: 性別区分
     breeding_category:
       type: string
       maxLength: 1
-      description: 繁殖区分
     breeder:
       type: string
       maxLength: 20
-      description: ブリーダー名
     clutch_date:
       type: string
       format: date
-      description: クラッチ日
     hatch_date:
       type: string
       format: date
-      description: ハッチ日
     purchase_from:
       type: string
-      description: 購入元
     purchase_price:
       type: number
       format: double
-      description: 購入価格
     purchase_date:
       type: string
       format: date
-      description: 購入日
     sales_category:
       type: string
-      description: 販売区分
     sales_to:
       type: string
-      description: 販売先
     sales_price_tax_ex:
       type: number
       format: double
-      description: 販売価格(税抜)
     sales_price_tax:
       type: number
       format: double
-      description: 消費税額
     sales_price_tax_in:
       type: number
       format: double
-      description: 販売価格(税込)
     sales_date:
       type: string
       format: date
-      description: 販売日
     death_date:
       type: string
       format: date
-      description: 死亡日
     note:
       type: string
       maxLength: 255
-      description: メモ
     create_user:
       type: string
       maxLength: 20
-      description: 作成者
     create_at:
       type: string
       format: date-time
-      description: 作成日時
     update_user:
       type: string
       maxLength: 20
-      description: 更新者
     update_at:
       type: string
       format: date-time
-      description: 更新日時
   required:
     - species_id
     - fiscal_year

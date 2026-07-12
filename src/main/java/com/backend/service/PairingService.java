@@ -94,9 +94,17 @@ public class PairingService {
 
     @Transactional
     public void deletePairing(String speciesId, Integer fiscalYear, String pairingId) {
-        int deleted = pairingMapper.delete(speciesId, fiscalYear, pairingId);
-        if (deleted == 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "pairing not found");
+        try {
+            int deleted = pairingMapper.delete(speciesId, fiscalYear, pairingId);
+            if (deleted == 0) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "pairing not found");
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "このペアリングを参照している個体が存在するため削除できません",
+                e
+            );
         }
     }
 

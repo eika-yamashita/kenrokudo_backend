@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.BloodlineMasterMapper">
+
+    <resultMap id="BloodlineMasterResultMap" type="com.backend.entity.BloodlineMasterEntity">
+        <id column="species_id" property="speciesId" />
+        <id column="morph_id" property="morphId" />
+        <id column="bloodline_id" property="bloodlineId" />
+        <result column="bloodline_name" property="bloodlineName" />
+    </resultMap>
+
+    <sql id="bloodlineColumns">
+        species_id,
+        morph_id,
+        bloodline_id,
+        bloodline_name
+    </sql>
+
+    <select id="findAll" resultMap="BloodlineMasterResultMap">
+        SELECT
+            <include refid="bloodlineColumns" />
+        FROM
+            bloodline_master
+        ORDER BY
+            species_id,
+            morph_id,
+            bloodline_id
+    </select>
+
+    <select id="search" resultMap="BloodlineMasterResultMap">
+        SELECT
+            <include refid="bloodlineColumns" />
+        FROM
+            bloodline_master
+        <where>
+            <if test="speciesId != null and speciesId != ''">
+                species_id = #{speciesId}
+            </if>
+            <if test="morphId != null and morphId != ''">
+                AND morph_id = #{morphId}
+            </if>
+        </where>
+        ORDER BY
+            species_id,
+            morph_id,
+            bloodline_id
+    </select>
+
+    <select id="findByPrimaryKey" resultMap="BloodlineMasterResultMap">
+        SELECT
+            <include refid="bloodlineColumns" />
+        FROM
+            bloodline_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+            AND bloodline_id = #{bloodlineId}
+    </select>
+
+    <select id="findBySpeciesMorphAndBloodlineName" resultMap="BloodlineMasterResultMap">
+        SELECT
+            <include refid="bloodlineColumns" />
+        FROM
+            bloodline_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+            AND bloodline_name = #{bloodlineName}
+    </select>
+
+    <select id="findBloodlineIdsBySpeciesAndMorph" resultType="string">
+        SELECT
+            bloodline_id
+        FROM
+            bloodline_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+        ORDER BY
+            bloodline_id
+    </select>
+
+    <insert id="insert">
+        INSERT INTO bloodline_master (
+            species_id,
+            morph_id,
+            bloodline_id,
+            bloodline_name
+        ) VALUES (
+            #{speciesId},
+            #{morphId},
+            #{bloodlineId},
+            #{bloodlineName}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE bloodline_master
+        SET
+            species_id = #{bloodline.speciesId},
+            morph_id = #{bloodline.morphId},
+            bloodline_id = #{bloodline.bloodlineId},
+            bloodline_name = #{bloodline.bloodlineName}
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+            AND bloodline_id = #{bloodlineId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM bloodline_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+            AND bloodline_id = #{bloodlineId}
+    </delete>
+
+</mapper>

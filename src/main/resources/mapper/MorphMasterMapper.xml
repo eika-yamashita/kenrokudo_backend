@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.MorphMasterMapper">
+
+    <resultMap id="MorphMasterResultMap" type="com.backend.entity.MorphMasterEntity">
+        <id column="species_id" property="speciesId" />
+        <id column="morph_id" property="morphId" />
+        <result column="morph_name" property="morphName" />
+        <result column="inheritance_category" property="inheritanceCategory" />
+    </resultMap>
+
+    <sql id="morphColumns">
+        species_id,
+        morph_id,
+        morph_name,
+        inheritance_category
+    </sql>
+
+    <select id="findAll" resultMap="MorphMasterResultMap">
+        SELECT
+            <include refid="morphColumns" />
+        FROM
+            morph_master
+        ORDER BY
+            species_id,
+            morph_id
+    </select>
+
+    <select id="search" resultMap="MorphMasterResultMap">
+        SELECT
+            <include refid="morphColumns" />
+        FROM
+            morph_master
+        <where>
+            <if test="speciesId != null and speciesId != ''">
+                species_id = #{speciesId}
+            </if>
+        </where>
+        ORDER BY
+            species_id,
+            morph_id
+    </select>
+
+    <select id="findByPrimaryKey" resultMap="MorphMasterResultMap">
+        SELECT
+            <include refid="morphColumns" />
+        FROM
+            morph_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+    </select>
+
+    <select id="findBySpeciesIdAndMorphName" resultMap="MorphMasterResultMap">
+        SELECT
+            <include refid="morphColumns" />
+        FROM
+            morph_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_name = #{morphName}
+    </select>
+
+    <select id="findBySpeciesIdAndInheritanceCategory" resultMap="MorphMasterResultMap">
+        SELECT
+            <include refid="morphColumns" />
+        FROM
+            morph_master
+        WHERE
+            species_id = #{speciesId}
+            AND inheritance_category = #{inheritanceCategory}
+        ORDER BY
+            morph_id
+    </select>
+
+    <select id="findMorphIdsBySpeciesId" resultType="string">
+        SELECT
+            morph_id
+        FROM
+            morph_master
+        WHERE
+            species_id = #{speciesId}
+        ORDER BY
+            morph_id
+    </select>
+
+    <insert id="insert">
+        INSERT INTO morph_master (
+            species_id,
+            morph_id,
+            morph_name,
+            inheritance_category
+        ) VALUES (
+            #{speciesId},
+            #{morphId},
+            #{morphName},
+            #{inheritanceCategory}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE morph_master
+        SET
+            species_id = #{morph.speciesId},
+            morph_id = #{morph.morphId},
+            morph_name = #{morph.morphName},
+            inheritance_category = #{morph.inheritanceCategory}
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM morph_master
+        WHERE
+            species_id = #{speciesId}
+            AND morph_id = #{morphId}
+    </delete>
+
+</mapper>

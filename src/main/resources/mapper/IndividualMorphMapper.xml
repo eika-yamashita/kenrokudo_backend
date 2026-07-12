@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.IndividualMorphMapper">
+
+    <resultMap id="IndividualMorphResultMap" type="com.backend.entity.IndividualMorphEntity">
+        <id column="species_id" property="speciesId" />
+        <id column="individual_id" property="individualId" />
+        <id column="morph_id" property="morphId" />
+        <id column="expression_category" property="expressionCategory" />
+        <result column="morph_name" property="morphName" />
+        <result column="bloodline_id" property="bloodlineId" />
+        <result column="bloodline_name" property="bloodlineName" />
+        <result column="inheritance_category" property="inheritanceCategory" />
+        <result column="possible_het_percentage" property="possibleHetPercentage" />
+        <result column="sort_order" property="sortOrder" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+    <select id="findByIndividual" resultMap="IndividualMorphResultMap">
+        SELECT
+            im.species_id,
+            im.individual_id,
+            im.morph_id,
+            mm.morph_name,
+            im.bloodline_id,
+            bm.bloodline_name,
+            mm.inheritance_category,
+            im.expression_category,
+            im.possible_het_percentage,
+            im.sort_order,
+            im.create_user,
+            im.create_at,
+            im.update_user,
+            im.update_at
+        FROM
+            individual_morph im
+            INNER JOIN morph_master mm
+                ON mm.species_id = im.species_id
+                AND mm.morph_id = im.morph_id
+            LEFT JOIN bloodline_master bm
+                ON bm.species_id = im.species_id
+                AND bm.morph_id = im.morph_id
+                AND bm.bloodline_id = im.bloodline_id
+        WHERE
+            im.species_id = #{speciesId}
+            AND im.individual_id = #{individualId}
+        ORDER BY
+            im.expression_category,
+            im.sort_order,
+            im.morph_id
+    </select>
+
+    <insert id="insert">
+        INSERT INTO individual_morph (
+            species_id,
+            individual_id,
+            morph_id,
+            expression_category,
+            bloodline_id,
+            possible_het_percentage,
+            sort_order,
+            create_user,
+            create_at,
+            update_user,
+            update_at
+        ) VALUES (
+            #{speciesId},
+            #{individualId},
+            #{morphId},
+            #{expressionCategory},
+            #{bloodlineId},
+            #{possibleHetPercentage},
+            #{sortOrder},
+            #{createUser},
+            #{createAt},
+            #{updateUser},
+            #{updateAt}
+        )
+    </insert>
+
+    <delete id="deleteByIndividual">
+        DELETE FROM individual_morph
+        WHERE
+            species_id = #{speciesId}
+            AND individual_id = #{individualId}
+    </delete>
+</mapper>

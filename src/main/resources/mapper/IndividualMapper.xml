@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.backend.mapper.IndividualMapper">
 
-    <resultMap id="IndividualResultMap"
-            type="com.backend.entity.IndividualEntity">
+    <resultMap id="IndividualResultMap" type="com.backend.entity.IndividualEntity">
         <id column="id" property="id" />
         <result column="species_id" property="speciesId" />
         <result column="fiscal_year" property="fiscalYear" />
@@ -11,8 +10,6 @@
         <result column="pairing_id" property="pairingId" />
         <result column="male_parent_id" property="maleParentId" />
         <result column="female_parent_id" property="femaleParentId" />
-        <result column="morph" property="morph" />
-        <result column="bloodline" property="bloodline" />
         <result column="gender_category" property="genderCategory" />
         <result column="breeding_category" property="breedingCategory" />
         <result column="breeder" property="breeder" />
@@ -43,8 +40,6 @@
         pairing_id,
         male_parent_id,
         female_parent_id,
-        morph,
-        bloodline,
         gender_category,
         breeding_category,
         breeder,
@@ -90,7 +85,19 @@
                 AND fiscal_year = #{fiscalYear}
             </if>
             <if test="morph != null and morph != ''">
-                AND LOWER(COALESCE(morph, '')) LIKE CONCAT('%', LOWER(#{morph}), '%')
+                AND EXISTS (
+                    SELECT
+                        1
+                    FROM
+                        individual_morph im
+                        INNER JOIN morph_master mm
+                            ON mm.species_id = im.species_id
+                            AND mm.morph_id = im.morph_id
+                    WHERE
+                        im.species_id = individual.species_id
+                        AND im.individual_id = individual.id
+                        AND LOWER(mm.morph_name) LIKE CONCAT('%', LOWER(#{morph}), '%')
+                )
             </if>
         </where>
         ORDER BY
@@ -98,8 +105,7 @@
             id
     </select>
 
-    <select id="findBySpeciesIdAndId"
-            resultMap="IndividualResultMap">
+    <select id="findBySpeciesIdAndId" resultMap="IndividualResultMap">
         SELECT
             <include refid="individualColumns" />
         FROM
@@ -128,8 +134,6 @@
             pairing_id,
             male_parent_id,
             female_parent_id,
-            morph,
-            bloodline,
             gender_category,
             breeding_category,
             breeder,
@@ -159,8 +163,6 @@
             #{pairingId},
             #{maleParentId},
             #{femaleParentId},
-            #{morph},
-            #{bloodline},
             #{genderCategory},
             #{breedingCategory},
             #{breeder},
@@ -192,8 +194,6 @@
             pairing_id = #{individual.pairingId},
             male_parent_id = #{individual.maleParentId},
             female_parent_id = #{individual.femaleParentId},
-            morph = #{individual.morph},
-            bloodline = #{individual.bloodline},
             gender_category = #{individual.genderCategory},
             breeding_category = #{individual.breedingCategory},
             breeder = #{individual.breeder},

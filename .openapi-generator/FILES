@@ -7,5 +7,6 @@ src/main/java/com/backend/api/PairingsApi.java
 src/main/java/com/backend/api/SpeciesApi.java
 src/main/java/com/backend/model/Individual.java
 src/main/java/com/backend/model/IndividualImageEntity.java
+src/main/java/com/backend/model/IndividualMorph.java
 src/main/java/com/backend/model/PairingEntity.java
 src/main/java/com/backend/model/SpeciesEntity.java

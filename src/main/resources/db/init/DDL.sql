@@ -9,6 +9,35 @@ CREATE TABLE species (
   PRIMARY KEY (species_id)
 );
 
+CREATE TABLE morph_master (
+  species_id VARCHAR(20) NOT NULL,
+  morph_id VARCHAR(20) NOT NULL,
+  morph_name VARCHAR(100) NOT NULL,
+  inheritance_category CHAR(1) NOT NULL,
+  PRIMARY KEY (species_id, morph_id),
+  CONSTRAINT uq_morph_master_name UNIQUE (species_id, morph_name),
+  CONSTRAINT fk_morph_master_species FOREIGN KEY (species_id) REFERENCES species (species_id),
+  CONSTRAINT ck_morph_master_inheritance CHECK (inheritance_category IN ('0', '1', '2', '3'))
+);
+
+CREATE INDEX idx_morph_master_species
+  ON morph_master (species_id, morph_id);
+
+CREATE TABLE bloodline_master (
+  species_id VARCHAR(20) NOT NULL,
+  morph_id VARCHAR(20) NOT NULL,
+  bloodline_id VARCHAR(20) NOT NULL,
+  bloodline_name VARCHAR(100) NOT NULL,
+  PRIMARY KEY (species_id, morph_id, bloodline_id),
+  CONSTRAINT uq_bloodline_master_name UNIQUE (species_id, morph_id, bloodline_name),
+  CONSTRAINT fk_bloodline_master_morph
+    FOREIGN KEY (species_id, morph_id)
+    REFERENCES morph_master (species_id, morph_id)
+);
+
+CREATE INDEX idx_bloodline_master_morph
+  ON bloodline_master (species_id, morph_id, bloodline_id);
+
 CREATE TABLE individual (
   species_id VARCHAR(20) NOT NULL,
   fiscal_year INTEGER NOT NULL,
@@ -17,8 +46,6 @@ CREATE TABLE individual (
   pairing_id VARCHAR(20),
   male_parent_id VARCHAR(20),
   female_parent_id VARCHAR(20),
-  morph VARCHAR(50),
-  bloodline VARCHAR(50),
   gender_category CHAR(1),
   breeding_category CHAR(1),
   breeder VARCHAR(20),
@@ -40,10 +67,64 @@ CREATE TABLE individual (
   update_user VARCHAR(20),
   update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (species_id, id),
-  CONSTRAINT fk_individual_species
-    FOREIGN KEY (species_id)
-    REFERENCES species (species_id)
+  CONSTRAINT fk_individual_species FOREIGN KEY (species_id) REFERENCES species (species_id)
 );
+
+CREATE TABLE pairing (
+  species_id VARCHAR(20) NOT NULL,
+  fiscal_year INTEGER NOT NULL,
+  pairing_id VARCHAR(20) NOT NULL,
+  male_parent_id VARCHAR(20) NOT NULL,
+  female_parent_id VARCHAR(20) NOT NULL,
+  pairing_date DATE NOT NULL,
+  note VARCHAR(255),
+  PRIMARY KEY (species_id, fiscal_year, pairing_id),
+  CONSTRAINT uq_pairing_signature UNIQUE (species_id, male_parent_id, female_parent_id, pairing_date),
+  CONSTRAINT fk_pairing_species FOREIGN KEY (species_id) REFERENCES species (species_id),
+  CONSTRAINT fk_pairing_male_parent FOREIGN KEY (species_id, male_parent_id) REFERENCES individual (species_id, id),
+  CONSTRAINT fk_pairing_female_parent FOREIGN KEY (species_id, female_parent_id) REFERENCES individual (species_id, id)
+);
+
+CREATE INDEX idx_pairing_species_year
+  ON pairing (species_id, fiscal_year);
+
+ALTER TABLE individual
+  ADD CONSTRAINT fk_individual_pairing
+  FOREIGN KEY (species_id, pairing_fiscal_year, pairing_id)
+  REFERENCES pairing (species_id, fiscal_year, pairing_id);
+
+CREATE TABLE individual_morph (
+  species_id VARCHAR(20) NOT NULL,
+  individual_id VARCHAR(20) NOT NULL,
+  morph_id VARCHAR(20) NOT NULL,
+  expression_category CHAR(1) NOT NULL,
+  bloodline_id VARCHAR(20),
+  possible_het_percentage INTEGER,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (species_id, individual_id, morph_id, expression_category),
+  CONSTRAINT fk_individual_morph_individual
+    FOREIGN KEY (species_id, individual_id)
+    REFERENCES individual (species_id, id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_individual_morph_master
+    FOREIGN KEY (species_id, morph_id)
+    REFERENCES morph_master (species_id, morph_id),
+  CONSTRAINT fk_individual_morph_bloodline
+    FOREIGN KEY (species_id, morph_id, bloodline_id)
+    REFERENCES bloodline_master (species_id, morph_id, bloodline_id),
+  CONSTRAINT ck_individual_morph_expression CHECK (expression_category IN ('0', '1', '2')),
+  CONSTRAINT ck_individual_morph_percentage CHECK (
+    possible_het_percentage IS NULL OR
+    (possible_het_percentage >= 0 AND possible_het_percentage <= 100)
+  )
+);
+
+CREATE INDEX idx_individual_morph_individual
+  ON individual_morph (species_id, individual_id, expression_category, sort_order);
 
 CREATE TABLE individual_image (
   image_id BIGSERIAL NOT NULL,
@@ -70,32 +151,90 @@ CREATE TABLE individual_image (
 CREATE INDEX idx_individual_image_individual
   ON individual_image (species_id, individual_id);
 
-CREATE TABLE pairing (
-  species_id VARCHAR(20) NOT NULL,
-  fiscal_year INTEGER NOT NULL,
-  pairing_id VARCHAR(20) NOT NULL,
-  male_parent_id VARCHAR(20) NOT NULL,
-  female_parent_id VARCHAR(20) NOT NULL,
-  pairing_date DATE NOT NULL,
-  note VARCHAR(255),
-  PRIMARY KEY (species_id, fiscal_year, pairing_id),
-  CONSTRAINT uq_pairing_signature
-    UNIQUE (species_id, male_parent_id, female_parent_id, pairing_date),
-  CONSTRAINT fk_pairing_species
-    FOREIGN KEY (species_id)
-    REFERENCES species (species_id),
-  CONSTRAINT fk_pairing_male_parent
-    FOREIGN KEY (species_id, male_parent_id)
-    REFERENCES individual (species_id, id),
-  CONSTRAINT fk_pairing_female_parent
-    FOREIGN KEY (species_id, female_parent_id)
-    REFERENCES individual (species_id, id)
-);
+COMMENT ON TABLE species IS '種マスタ';
+COMMENT ON COLUMN species.species_id IS '種コード';
+COMMENT ON COLUMN species.japanese_name IS '和名';
+COMMENT ON COLUMN species.common_name IS '通称';
+COMMENT ON COLUMN species.english_name IS '英名';
+COMMENT ON COLUMN species.total_length IS '全長';
+COMMENT ON COLUMN species.body_weight IS '体重';
+COMMENT ON COLUMN species.lifespan IS '寿命';
 
-CREATE INDEX idx_pairing_species_year
-  ON pairing (species_id, fiscal_year);
+COMMENT ON TABLE morph_master IS 'モルフマスタ';
+COMMENT ON COLUMN morph_master.species_id IS '種コード';
+COMMENT ON COLUMN morph_master.morph_id IS 'モルフID';
+COMMENT ON COLUMN morph_master.morph_name IS 'モルフ名';
+COMMENT ON COLUMN morph_master.inheritance_category IS '遺伝性区分 0:多因性遺伝、1:劣性遺伝、2:優勢遺伝、3:共優勢遺伝';
 
-ALTER TABLE individual
-  ADD CONSTRAINT fk_individual_pairing
-  FOREIGN KEY (species_id, pairing_fiscal_year, pairing_id)
-  REFERENCES pairing (species_id, fiscal_year, pairing_id);
+COMMENT ON TABLE bloodline_master IS '血統マスタ';
+COMMENT ON COLUMN bloodline_master.species_id IS '種コード';
+COMMENT ON COLUMN bloodline_master.morph_id IS 'モルフID';
+COMMENT ON COLUMN bloodline_master.bloodline_id IS '血統ID';
+COMMENT ON COLUMN bloodline_master.bloodline_name IS '血統名';
+
+COMMENT ON TABLE individual IS '個体情報';
+COMMENT ON COLUMN individual.species_id IS '種コード';
+COMMENT ON COLUMN individual.fiscal_year IS '登録年度';
+COMMENT ON COLUMN individual.id IS '個体ID';
+COMMENT ON COLUMN individual.pairing_fiscal_year IS 'ペアリング年度';
+COMMENT ON COLUMN individual.pairing_id IS 'ペアリングID';
+COMMENT ON COLUMN individual.male_parent_id IS 'オス親ID';
+COMMENT ON COLUMN individual.female_parent_id IS 'メス親ID';
+COMMENT ON COLUMN individual.gender_category IS '性別区分 0:不明、1:オス、2:メス';
+COMMENT ON COLUMN individual.breeding_category IS '繁殖区分 0:自家繁殖、1:購入個体';
+COMMENT ON COLUMN individual.breeder IS 'ブリーダー';
+COMMENT ON COLUMN individual.clutch_date IS 'クラッチ日';
+COMMENT ON COLUMN individual.hatch_date IS 'ハッチ日';
+COMMENT ON COLUMN individual.purchase_from IS '購入元';
+COMMENT ON COLUMN individual.purchase_price IS '購入価格';
+COMMENT ON COLUMN individual.purchase_date IS '購入日';
+COMMENT ON COLUMN individual.sales_category IS '販売区分 0:非売個体、1:販売中、2:販売済み';
+COMMENT ON COLUMN individual.sales_to IS '販売先';
+COMMENT ON COLUMN individual.sales_price_tax_ex IS '販売価格(税抜)';
+COMMENT ON COLUMN individual.sales_price_tax IS '消費税額';
+COMMENT ON COLUMN individual.sales_price_tax_in IS '販売価格(税込)';
+COMMENT ON COLUMN individual.sales_date IS '販売日';
+COMMENT ON COLUMN individual.death_date IS '死亡日';
+COMMENT ON COLUMN individual.note IS 'メモ';
+COMMENT ON COLUMN individual.create_user IS '作成者';
+COMMENT ON COLUMN individual.create_at IS '作成日時';
+COMMENT ON COLUMN individual.update_user IS '更新者';
+COMMENT ON COLUMN individual.update_at IS '更新日時';
+
+COMMENT ON TABLE pairing IS 'ペアリング情報';
+COMMENT ON COLUMN pairing.species_id IS '種コード';
+COMMENT ON COLUMN pairing.fiscal_year IS 'ペアリング年度';
+COMMENT ON COLUMN pairing.pairing_id IS 'ペアリングID';
+COMMENT ON COLUMN pairing.male_parent_id IS 'オス親ID';
+COMMENT ON COLUMN pairing.female_parent_id IS 'メス親ID';
+COMMENT ON COLUMN pairing.pairing_date IS 'ペアリング日';
+COMMENT ON COLUMN pairing.note IS 'メモ';
+
+COMMENT ON TABLE individual_morph IS '個体モルフ情報';
+COMMENT ON COLUMN individual_morph.species_id IS '種コード';
+COMMENT ON COLUMN individual_morph.individual_id IS '個体ID';
+COMMENT ON COLUMN individual_morph.morph_id IS 'モルフID';
+COMMENT ON COLUMN individual_morph.bloodline_id IS '血統ID';
+COMMENT ON COLUMN individual_morph.expression_category IS '表現区分 0:visual、1:het、2:possible_het';
+COMMENT ON COLUMN individual_morph.possible_het_percentage IS 'Possヘテロ率';
+COMMENT ON COLUMN individual_morph.sort_order IS '表示順';
+COMMENT ON COLUMN individual_morph.create_user IS '作成者';
+COMMENT ON COLUMN individual_morph.create_at IS '作成日時';
+COMMENT ON COLUMN individual_morph.update_user IS '更新者';
+COMMENT ON COLUMN individual_morph.update_at IS '更新日時';
+
+COMMENT ON TABLE individual_image IS '個体画像';
+COMMENT ON COLUMN individual_image.image_id IS '画像ID';
+COMMENT ON COLUMN individual_image.species_id IS '種コード';
+COMMENT ON COLUMN individual_image.individual_id IS '個体ID';
+COMMENT ON COLUMN individual_image.storage_path IS '保存パス';
+COMMENT ON COLUMN individual_image.public_url IS '公開URL';
+COMMENT ON COLUMN individual_image.file_name IS 'ファイル名';
+COMMENT ON COLUMN individual_image.content_type IS 'Content-Type';
+COMMENT ON COLUMN individual_image.file_size IS 'ファイルサイズ';
+COMMENT ON COLUMN individual_image.sort_order IS '表示順';
+COMMENT ON COLUMN individual_image.is_primary IS 'メイン画像フラグ';
+COMMENT ON COLUMN individual_image.created_at IS '作成日時';
+COMMENT ON COLUMN individual_image.created_by IS '作成者';
+COMMENT ON COLUMN individual_image.updated_at IS '更新日時';
+COMMENT ON COLUMN individual_image.updated_by IS '更新者';

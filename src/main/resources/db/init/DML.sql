@@ -10,6 +10,48 @@ INSERT INTO species (
   ('0001', 'ヒョウモントカゲモドキ', 'レオパ', 'Leopard Gecko', '18-28cm', '45-80g', '10-20年'),
   ('0002', 'ニシアフリカトカゲモドキ', 'ニシアフ', 'African Fat-Tailed Gecko', '18-25cm', '45-75g', '10-18年');
 
+INSERT INTO morph_master (
+  species_id,
+  morph_id,
+  morph_name,
+  inheritance_category
+) VALUES
+  ('0001', '001', 'Mack Snow', '3'),
+  ('0001', '002', 'Bell Albino', '1'),
+  ('0001', '003', 'Murphy Patternless', '1'),
+  ('0001', '004', 'Super Hypo', '0'),
+  ('0001', '005', 'Mack Snow Bell', '3'),
+  ('0001', '006', 'Bell Enigma', '2'),
+  ('0001', '007', 'Tremper Albino', '1'),
+  ('0001', '008', 'Bell Stripe', '1'),
+  ('0001', '009', 'Bell Sunglow', '1'),
+  ('0002', '001', 'Whiteout', '3'),
+  ('0002', '002', 'Oreo', '1'),
+  ('0002', '003', 'Amel', '1'),
+  ('0002', '004', 'Whiteout Oreo', '3'),
+  ('0002', '005', 'Whiteout Het Oreo', '3');
+
+INSERT INTO bloodline_master (
+  species_id,
+  morph_id,
+  bloodline_id,
+  bloodline_name
+) VALUES
+  ('0001', '001', '001', 'US Line'),
+  ('0001', '002', '001', 'EU Line'),
+  ('0001', '003', '001', 'CA Import'),
+  ('0001', '004', '001', 'Domestic Select'),
+  ('0001', '005', '001', 'House Holdback'),
+  ('0001', '006', '001', 'House Select'),
+  ('0001', '007', '001', 'Project T'),
+  ('0001', '008', '001', 'House Select'),
+  ('0001', '009', '001', 'House Select'),
+  ('0002', '001', '001', 'Imported Line'),
+  ('0002', '002', '001', 'Imported Line'),
+  ('0002', '003', '001', 'Imported Line'),
+  ('0002', '004', '001', 'House Project'),
+  ('0002', '005', '001', 'House Project');
+
 INSERT INTO individual (
   species_id,
   fiscal_year,
@@ -18,8 +60,6 @@ INSERT INTO individual (
   pairing_id,
   male_parent_id,
   female_parent_id,
-  morph,
-  bloodline,
   gender_category,
   breeding_category,
   breeder,
@@ -41,13 +81,13 @@ INSERT INTO individual (
   update_user,
   update_at
 ) VALUES
-  ('0001', 2025, '25M001', NULL, NULL, NULL, NULL, 'Mack Snow', 'US Line', '1', '1', 'North Crest Geckos', NULL, '2024-06-15', 'Tokyo Reptiles', 42000.00, '2025-01-12', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025 purchased male', 'system', '2025-01-12 10:00:00', 'system', '2025-01-12 10:00:00'),
-  ('0001', 2025, '25F001', NULL, NULL, NULL, NULL, 'Bell Albino', 'EU Line', '0', '1', 'Amber Geckos', NULL, '2024-07-02', 'Osaka Gecko Farm', 46000.00, '2025-01-14', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025 purchased female', 'system', '2025-01-14 11:00:00', 'system', '2025-01-14 11:00:00'),
-  ('0001', 2026, '26A004', NULL, NULL, NULL, NULL, 'Murphy Patternless', 'CA Import', '0', '1', 'Sunset Geckos', NULL, '2025-10-10', 'Kyoto Reptile Market', 38000.00, '2026-01-18', '2', 'Fukuoka Reptile House', 43000.00, 4300.00, 47300.00, '2026-03-10', NULL, 'Purchased and sold sample', 'system', '2026-01-18 12:00:00', 'system', '2026-03-10 18:30:00'),
-  ('0001', 2026, '26A005', NULL, NULL, NULL, NULL, 'Super Hypo', 'Domestic Select', '1', '1', 'Maple Geckos', NULL, '2025-09-01', 'Yokohama Gecko Works', 36000.00, '2026-02-05', '1', NULL, 41000.00, 4100.00, 45100.00, NULL, NULL, 'Purchased and listed sample', 'system', '2026-02-05 15:10:00', 'system', '2026-05-01 09:30:00'),
-  ('0002', 2025, '25M001', NULL, NULL, NULL, NULL, 'Whiteout', 'Imported Line', '1', '1', 'Savanna Geckos', NULL, '2024-08-08', 'Tropical Supplier', 28000.00, '2025-02-01', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'AFT purchased male', 'system', '2025-02-01 10:20:00', 'system', '2025-02-01 10:20:00'),
-  ('0002', 2025, '25F001', NULL, NULL, NULL, NULL, 'Oreo', 'Imported Line', '0', '1', 'Savanna Geckos', NULL, '2024-09-12', 'Tropical Supplier', 30000.00, '2025-02-01', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'AFT purchased female', 'system', '2025-02-01 10:25:00', 'system', '2025-02-01 10:25:00'),
-  ('0002', 2025, '25A001', NULL, NULL, NULL, NULL, 'Amel', 'Imported Line', '0', '1', 'Savanna Geckos', NULL, '2024-10-01', 'West Reptile Hub', 22000.00, '2025-04-18', '2', 'Sapporo Exotic Shop', 26000.00, 2600.00, 28600.00, '2025-06-02', NULL, 'Purchased and sold sample', 'system', '2025-04-18 09:00:00', 'system', '2025-06-02 18:00:00');
+  ('0001', 2025, '25M001', NULL, NULL, NULL, NULL, '1', '1', 'North Crest Geckos', NULL, '2024-06-15', 'Tokyo Reptiles', 42000.00, '2025-01-12', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025 purchased male', 'system', '2025-01-12 10:00:00', 'system', '2025-01-12 10:00:00'),
+  ('0001', 2025, '25F001', NULL, NULL, NULL, NULL, '2', '1', 'Amber Geckos', NULL, '2024-07-02', 'Osaka Gecko Farm', 46000.00, '2025-01-14', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025 purchased female', 'system', '2025-01-14 11:00:00', 'system', '2025-01-14 11:00:00'),
+  ('0001', 2026, '26A004', NULL, NULL, NULL, NULL, '2', '1', 'Sunset Geckos', NULL, '2025-10-10', 'Kyoto Reptile Market', 38000.00, '2026-01-18', '2', 'Fukuoka Reptile House', 43000.00, 4300.00, 47300.00, '2026-03-10', NULL, 'Purchased and sold sample', 'system', '2026-01-18 12:00:00', 'system', '2026-03-10 18:30:00'),
+  ('0001', 2026, '26A005', NULL, NULL, NULL, NULL, '1', '1', 'Maple Geckos', NULL, '2025-09-01', 'Yokohama Gecko Works', 36000.00, '2026-02-05', '1', NULL, 41000.00, 4100.00, 45100.00, NULL, NULL, 'Purchased and listed sample', 'system', '2026-02-05 15:10:00', 'system', '2026-05-01 09:30:00'),
+  ('0002', 2025, '25M001', NULL, NULL, NULL, NULL, '1', '1', 'Savanna Geckos', NULL, '2024-08-08', 'Tropical Supplier', 28000.00, '2025-02-01', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'AFT purchased male', 'system', '2025-02-01 10:20:00', 'system', '2025-02-01 10:20:00'),
+  ('0002', 2025, '25F001', NULL, NULL, NULL, NULL, '2', '1', 'Savanna Geckos', NULL, '2024-09-12', 'Tropical Supplier', 30000.00, '2025-02-01', '0', NULL, NULL, NULL, NULL, NULL, NULL, 'AFT purchased female', 'system', '2025-02-01 10:25:00', 'system', '2025-02-01 10:25:00'),
+  ('0002', 2025, '25A001', NULL, NULL, NULL, NULL, '2', '1', 'Savanna Geckos', NULL, '2024-10-01', 'West Reptile Hub', 22000.00, '2025-04-18', '2', 'Sapporo Exotic Shop', 26000.00, 2600.00, 28600.00, '2025-06-02', NULL, 'Purchased and sold sample', 'system', '2025-04-18 09:00:00', 'system', '2025-06-02 18:00:00');
 
 INSERT INTO pairing (
   species_id,
@@ -73,8 +113,6 @@ INSERT INTO individual (
   pairing_id,
   male_parent_id,
   female_parent_id,
-  morph,
-  bloodline,
   gender_category,
   breeding_category,
   breeder,
@@ -96,12 +134,42 @@ INSERT INTO individual (
   update_user,
   update_at
 ) VALUES
-  ('0001', 2025, '25A001', 2025, 'A', '25M001', '25F001', 'Mack Snow Bell', 'House Holdback', '0', '0', '絢禄堂', '2025-03-02', '2025-05-08', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025 self-bred sample', 'system', '2025-05-08 09:30:00', 'system', '2025-05-08 09:30:00'),
-  ('0001', 2025, '25A002', 2025, 'A', '25M001', '25F001', 'Mack Snow Bell', 'House Holdback', '1', '0', '絢禄堂', '2025-03-02', '2025-05-10', NULL, NULL, NULL, '1', NULL, 28000.00, 2800.00, 30800.00, NULL, NULL, '2025 self-bred listed sample', 'system', '2025-05-10 09:45:00', 'system', '2025-08-01 14:00:00'),
-  ('0001', 2025, '25A003', 2025, 'A', '25M001', '25F001', 'Bell Enigma', 'House Select', '0', '0', '絢禄堂', '2025-03-02', '2025-05-14', NULL, NULL, NULL, '2', 'Nagoya Reptile Base', 32000.00, 3200.00, 35200.00, '2025-09-12', NULL, '2025 self-bred sold sample', 'system', '2025-05-14 10:10:00', 'system', '2025-09-12 18:20:00'),
-  ('0001', 2025, '25A004', 2025, 'A', '25M001', '25F001', 'Tremper Albino', 'Project T', '1', '0', '絢禄堂', '2025-03-02', '2025-05-16', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, '2025-11-12', '2025 self-bred deceased sample', 'system', '2025-05-16 10:30:00', 'system', '2025-11-12 08:00:00'),
-  ('0001', 2026, '26A001', 2026, 'A', '25M001', '25F001', 'Bell Stripe', 'House Select', '0', '0', '絢禄堂', '2026-02-14', '2026-04-20', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '2026 self-bred sample', 'system', '2026-04-20 09:20:00', 'system', '2026-04-20 09:20:00'),
-  ('0001', 2026, '26A002', 2026, 'A', '25M001', '25F001', 'Mack Snow', 'House Select', '1', '0', '絢禄堂', '2026-02-14', '2026-04-22', NULL, NULL, NULL, '1', NULL, 30000.00, 3000.00, 33000.00, NULL, NULL, '2026 self-bred listed sample', 'system', '2026-04-22 09:40:00', 'system', '2026-06-01 13:00:00'),
-  ('0001', 2026, '26A003', 2026, 'A', '25M001', '25F001', 'Bell Sunglow', 'House Select', '0', '0', '絢禄堂', '2026-02-14', '2026-04-25', NULL, NULL, NULL, '2', 'Shibuya Exotics', 34000.00, 3400.00, 37400.00, '2026-07-18', NULL, '2026 self-bred sold sample', 'system', '2026-04-25 10:10:00', 'system', '2026-07-18 16:50:00'),
-  ('0002', 2026, '26A001', 2026, 'A', '25M001', '25F001', 'Whiteout Oreo', 'House Project', '1', '0', '絢禄堂', '2026-01-30', '2026-03-28', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '2026 AFT self-bred sample', 'system', '2026-03-28 08:45:00', 'system', '2026-03-28 08:45:00'),
-  ('0002', 2026, '26A002', 2026, 'A', '25M001', '25F001', 'Whiteout Het Oreo', 'House Project', '0', '0', '絢禄堂', '2026-01-30', '2026-03-30', NULL, NULL, NULL, '1', NULL, 24000.00, 2400.00, 26400.00, NULL, NULL, '2026 AFT self-bred listed sample', 'system', '2026-03-30 09:00:00', 'system', '2026-05-12 10:40:00');
+  ('0001', 2025, '25A001', 2025, 'A', '25M001', '25F001', '2', '0', '自家繁殖', '2025-03-02', '2025-05-08', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025 self-bred sample', 'system', '2025-05-08 09:30:00', 'system', '2025-05-08 09:30:00'),
+  ('0001', 2025, '25A002', 2025, 'A', '25M001', '25F001', '1', '0', '自家繁殖', '2025-03-02', '2025-05-10', NULL, NULL, NULL, '1', NULL, 28000.00, 2800.00, 30800.00, NULL, NULL, '2025 self-bred listed sample', 'system', '2025-05-10 09:45:00', 'system', '2025-08-01 14:00:00'),
+  ('0001', 2025, '25A003', 2025, 'A', '25M001', '25F001', '2', '0', '自家繁殖', '2025-03-02', '2025-05-14', NULL, NULL, NULL, '2', 'Nagoya Reptile Base', 32000.00, 3200.00, 35200.00, '2025-09-12', NULL, '2025 self-bred sold sample', 'system', '2025-05-14 10:10:00', 'system', '2025-09-12 18:20:00'),
+  ('0001', 2025, '25A004', 2025, 'A', '25M001', '25F001', '1', '0', '自家繁殖', '2025-03-02', '2025-05-16', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, '2025-11-12', '2025 self-bred deceased sample', 'system', '2025-05-16 10:30:00', 'system', '2025-11-12 08:00:00'),
+  ('0001', 2026, '26A001', 2026, 'A', '25M001', '25F001', '2', '0', '自家繁殖', '2026-02-14', '2026-04-20', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '2026 self-bred sample', 'system', '2026-04-20 09:20:00', 'system', '2026-04-20 09:20:00'),
+  ('0001', 2026, '26A002', 2026, 'A', '25M001', '25F001', '1', '0', '自家繁殖', '2026-02-14', '2026-04-22', NULL, NULL, NULL, '1', NULL, 30000.00, 3000.00, 33000.00, NULL, NULL, '2026 self-bred listed sample', 'system', '2026-04-22 09:40:00', 'system', '2026-06-01 13:00:00'),
+  ('0001', 2026, '26A003', 2026, 'A', '25M001', '25F001', '2', '0', '自家繁殖', '2026-02-14', '2026-04-25', NULL, NULL, NULL, '2', 'Shibuya Exotics', 34000.00, 3400.00, 37400.00, '2026-07-18', NULL, '2026 self-bred sold sample', 'system', '2026-04-25 10:10:00', 'system', '2026-07-18 16:50:00'),
+  ('0002', 2026, '26A001', 2026, 'A', '25M001', '25F001', '1', '0', '自家繁殖', '2026-01-30', '2026-03-28', NULL, NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '2026 AFT self-bred sample', 'system', '2026-03-28 08:45:00', 'system', '2026-03-28 08:45:00'),
+  ('0002', 2026, '26A002', 2026, 'A', '25M001', '25F001', '2', '0', '自家繁殖', '2026-01-30', '2026-03-30', NULL, NULL, NULL, '1', NULL, 24000.00, 2400.00, 26400.00, NULL, NULL, '2026 AFT self-bred listed sample', 'system', '2026-03-30 09:00:00', 'system', '2026-05-12 10:40:00');
+
+INSERT INTO individual_morph (
+  species_id,
+  individual_id,
+  morph_id,
+  expression_category,
+  bloodline_id,
+  possible_het_percentage,
+  sort_order,
+  create_user,
+  create_at,
+  update_user,
+  update_at
+) VALUES
+  ('0001', '25M001', '001', '0', '001', NULL, 0, 'system', '2025-01-12 10:00:00', 'system', '2025-01-12 10:00:00'),
+  ('0001', '25F001', '002', '0', '001', NULL, 0, 'system', '2025-01-14 11:00:00', 'system', '2025-01-14 11:00:00'),
+  ('0001', '26A004', '003', '0', '001', NULL, 0, 'system', '2026-01-18 12:00:00', 'system', '2026-03-10 18:30:00'),
+  ('0001', '26A005', '004', '0', '001', NULL, 0, 'system', '2026-02-05 15:10:00', 'system', '2026-05-01 09:30:00'),
+  ('0002', '25M001', '001', '0', '001', NULL, 0, 'system', '2025-02-01 10:20:00', 'system', '2025-02-01 10:20:00'),
+  ('0002', '25F001', '002', '0', '001', NULL, 0, 'system', '2025-02-01 10:25:00', 'system', '2025-02-01 10:25:00'),
+  ('0002', '25A001', '003', '0', '001', NULL, 0, 'system', '2025-04-18 09:00:00', 'system', '2025-06-02 18:00:00'),
+  ('0001', '25A001', '005', '0', '001', NULL, 0, 'system', '2025-05-08 09:30:00', 'system', '2025-05-08 09:30:00'),
+  ('0001', '25A002', '005', '0', '001', NULL, 0, 'system', '2025-05-10 09:45:00', 'system', '2025-08-01 14:00:00'),
+  ('0001', '25A003', '006', '0', '001', NULL, 0, 'system', '2025-05-14 10:10:00', 'system', '2025-09-12 18:20:00'),
+  ('0001', '25A004', '007', '0', '001', NULL, 0, 'system', '2025-05-16 10:30:00', 'system', '2025-11-12 08:00:00'),
+  ('0001', '26A001', '008', '0', '001', NULL, 0, 'system', '2026-04-20 09:20:00', 'system', '2026-04-20 09:20:00'),
+  ('0001', '26A002', '001', '0', '001', NULL, 0, 'system', '2026-04-22 09:40:00', 'system', '2026-06-01 13:00:00'),
+  ('0001', '26A003', '009', '0', '001', NULL, 0, 'system', '2026-04-25 10:10:00', 'system', '2026-07-18 16:50:00'),
+  ('0002', '26A001', '004', '0', '001', NULL, 0, 'system', '2026-03-28 08:45:00', 'system', '2026-03-28 08:45:00'),
+  ('0002', '26A002', '005', '0', '001', NULL, 0, 'system', '2026-03-30 09:00:00', 'system', '2026-05-12 10:40:00');
