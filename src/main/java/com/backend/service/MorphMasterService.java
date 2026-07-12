@@ -35,11 +35,11 @@ public class MorphMasterService {
 
     public MorphMasterEntity getMorph(String speciesId, String morphId) {
         MorphMasterEntity morph = morphMasterMapper.findByPrimaryKey(
-            requireNonBlank(speciesId, "species_id is required"),
-            requireNonBlank(morphId, "morph_id is required")
+            requireNonBlank(speciesId, "種は必須です"),
+            requireNonBlank(morphId, "モルフIDは必須です")
         );
         if (morph == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "morph not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "モルフが見つかりません");
         }
         return morph;
     }
@@ -57,7 +57,7 @@ public class MorphMasterService {
         try {
             morphMasterMapper.insert(normalized);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "morph already exists", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "同じモルフが既に登録されています", e);
         }
         return getMorph(normalized.getSpeciesId(), normalized.getMorphId());
     }
@@ -69,10 +69,10 @@ public class MorphMasterService {
         try {
             int updated = morphMasterMapper.update(speciesId, morphId, normalized);
             if (updated == 0) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "morph not found");
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "モルフが見つかりません");
             }
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "morph update conflicts with existing data", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "同じモルフ名が既に登録されているため更新できません", e);
         }
         return getMorph(normalized.getSpeciesId(), normalized.getMorphId());
     }
@@ -85,20 +85,20 @@ public class MorphMasterService {
                 requireNonBlank(morphId, "morph_id is required")
             );
             if (deleted == 0) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "morph not found");
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "モルフが見つかりません");
             }
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "morph is referenced and cannot be deleted", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "このモルフは血統または個体情報で使用されているため削除できません", e);
         }
     }
 
     private MorphMasterEntity normalizeForCreate(MorphMasterEntity request) {
         if (request == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "request body is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "リクエスト内容が指定されていません");
         }
         MorphMasterEntity normalized = new MorphMasterEntity();
-        normalized.setSpeciesId(requireNonBlank(request.getSpeciesId(), "species_id is required"));
-        normalized.setMorphName(requireNonBlank(request.getMorphName(), "morph_name is required"));
+        normalized.setSpeciesId(requireNonBlank(request.getSpeciesId(), "種は必須です"));
+        normalized.setMorphName(requireNonBlank(request.getMorphName(), "モルフ名は必須です"));
         normalized.setInheritanceCategory(validateInheritanceCategory(request.getInheritanceCategory()));
         normalized.setMorphId(generateNextMorphId(normalized.getSpeciesId()));
         return normalized;
@@ -106,12 +106,12 @@ public class MorphMasterService {
 
     private MorphMasterEntity normalizeForUpdate(String speciesId, String morphId, MorphMasterEntity request) {
         if (request == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "request body is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "リクエスト内容が指定されていません");
         }
         MorphMasterEntity normalized = new MorphMasterEntity();
-        normalized.setSpeciesId(requireNonBlank(request.getSpeciesId(), "species_id is required"));
-        normalized.setMorphId(requireNonBlank(request.getMorphId(), "morph_id is required"));
-        normalized.setMorphName(requireNonBlank(request.getMorphName(), "morph_name is required"));
+        normalized.setSpeciesId(requireNonBlank(request.getSpeciesId(), "種は必須です"));
+        normalized.setMorphId(requireNonBlank(request.getMorphId(), "モルフIDは必須です"));
+        normalized.setMorphName(requireNonBlank(request.getMorphName(), "モルフ名は必須です"));
         normalized.setInheritanceCategory(validateInheritanceCategory(request.getInheritanceCategory()));
         return normalized;
     }
@@ -145,13 +145,13 @@ public class MorphMasterService {
     }
 
     private String validateInheritanceCategory(String rawCategory) {
-        String category = requireNonBlank(rawCategory, "inheritance_category is required");
+        String category = requireNonBlank(rawCategory, "遺伝性区分は必須です");
         if (POLYGENIC.equals(category) || RECESSIVE.equals(category) || DOMINANT.equals(category) || CODOMINANT.equals(category)) {
             return category;
         }
         throw new ResponseStatusException(
             HttpStatus.BAD_REQUEST,
-            "inheritance_category must be 0, 1, 2, or 3"
+            "遺伝性区分は 0, 1, 2, 3 のいずれかを指定してください"
         );
     }
 }
