@@ -43,17 +43,17 @@ public class IndividualImageEntity implements Serializable {
     @JsonProperty("is_primary")
     private Boolean isPrimary;
 
-    @JsonProperty("created_at")
+    @JsonProperty("create_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    private Date createdAt;
+    private Date createAt;
 
-    @JsonProperty("created_by")
-    private String createdBy;
+    @JsonProperty("create_user")
+    private String createUser;
 
-    @JsonProperty("updated_at")
+    @JsonProperty("update_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    private Date updatedAt;
+    private Date updateAt;
 
-    @JsonProperty("updated_by")
-    private String updatedBy;
+    @JsonProperty("update_user")
+    private String updateUser;
 }

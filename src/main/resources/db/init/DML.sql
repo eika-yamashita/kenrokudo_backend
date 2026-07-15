@@ -5,52 +5,64 @@ INSERT INTO species (
   english_name,
   total_length,
   body_weight,
-  lifespan
+  lifespan,
+  create_user,
+  create_at,
+  update_user,
+  update_at
 ) VALUES
-  ('0001', 'ヒョウモントカゲモドキ', 'レオパ', 'Leopard Gecko', '18-28cm', '45-80g', '10-20年'),
-  ('0002', 'ニシアフリカトカゲモドキ', 'ニシアフ', 'African Fat-Tailed Gecko', '18-25cm', '45-75g', '10-18年');
+  ('0001', 'ヒョウモントカゲモドキ', 'レオパ', 'Leopard Gecko', '18-28cm', '45-80g', '10-20年', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', 'ニシアフリカトカゲモドキ', 'ニシアフ', 'African Fat-Tailed Gecko', '18-25cm', '45-75g', '10-18年', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP);
 
 INSERT INTO morph_master (
   species_id,
   morph_id,
   morph_name,
-  inheritance_category
+  inheritance_category,
+  create_user,
+  create_at,
+  update_user,
+  update_at
 ) VALUES
-  ('0001', '001', 'Mack Snow', '3'),
-  ('0001', '002', 'Bell Albino', '1'),
-  ('0001', '003', 'Murphy Patternless', '1'),
-  ('0001', '004', 'Super Hypo', '0'),
-  ('0001', '005', 'Mack Snow Bell', '3'),
-  ('0001', '006', 'Bell Enigma', '2'),
-  ('0001', '007', 'Tremper Albino', '1'),
-  ('0001', '008', 'Bell Stripe', '1'),
-  ('0001', '009', 'Bell Sunglow', '1'),
-  ('0002', '001', 'Whiteout', '3'),
-  ('0002', '002', 'Oreo', '1'),
-  ('0002', '003', 'Amel', '1'),
-  ('0002', '004', 'Whiteout Oreo', '3'),
-  ('0002', '005', 'Whiteout Het Oreo', '3');
+  ('0001', '001', 'Mack Snow', '3', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '002', 'Bell Albino', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '003', 'Murphy Patternless', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '004', 'Super Hypo', '0', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '005', 'Mack Snow Bell', '3', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '006', 'Bell Enigma', '2', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '007', 'Tremper Albino', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '008', 'Bell Stripe', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '009', 'Bell Sunglow', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '001', 'Whiteout', '3', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '002', 'Oreo', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '003', 'Amel', '1', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '004', 'Whiteout Oreo', '3', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '005', 'Whiteout Het Oreo', '3', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP);
 
 INSERT INTO bloodline_master (
   species_id,
   morph_id,
   bloodline_id,
-  bloodline_name
+  bloodline_name,
+  create_user,
+  create_at,
+  update_user,
+  update_at
 ) VALUES
-  ('0001', '001', '001', 'US Line'),
-  ('0001', '002', '001', 'EU Line'),
-  ('0001', '003', '001', 'CA Import'),
-  ('0001', '004', '001', 'Domestic Select'),
-  ('0001', '005', '001', 'House Holdback'),
-  ('0001', '006', '001', 'House Select'),
-  ('0001', '007', '001', 'Project T'),
-  ('0001', '008', '001', 'House Select'),
-  ('0001', '009', '001', 'House Select'),
-  ('0002', '001', '001', 'Imported Line'),
-  ('0002', '002', '001', 'Imported Line'),
-  ('0002', '003', '001', 'Imported Line'),
-  ('0002', '004', '001', 'House Project'),
-  ('0002', '005', '001', 'House Project');
+  ('0001', '001', '001', 'US Line', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '002', '001', 'EU Line', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '003', '001', 'CA Import', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '004', '001', 'Domestic Select', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '005', '001', 'House Holdback', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '006', '001', 'House Select', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '007', '001', 'Project T', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '008', '001', 'House Select', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', '009', '001', 'House Select', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '001', '001', 'Imported Line', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '002', '001', 'Imported Line', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '003', '001', 'Imported Line', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '004', '001', 'House Project', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', '005', '001', 'House Project', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP);
 
 INSERT INTO individual (
   species_id,
@@ -96,14 +108,18 @@ INSERT INTO pairing (
   male_parent_id,
   female_parent_id,
   pairing_date,
-  note
+  note,
+  create_user,
+  create_at,
+  update_user,
+  update_at
 ) VALUES
-  ('0001', 2025, 'A', '25M001', '25F001', '2025-02-10', 'Main pairing for 2025'),
-  ('0001', 2025, 'B', '25M001', '25F001', '2025-09-05', 'Late-season pairing'),
-  ('0001', 2026, 'A', '25M001', '25F001', '2026-01-25', 'Main pairing for 2026'),
-  ('0001', 2026, 'B', '25M001', '25F001', '2026-03-12', 'Additional clutch pairing'),
-  ('0002', 2025, 'A', '25M001', '25F001', '2025-04-10', 'AFT main pairing 2025'),
-  ('0002', 2026, 'A', '25M001', '25F001', '2026-01-18', 'AFT main pairing 2026');
+  ('0001', 2025, 'A', '25M001', '25F001', '2025-02-10', 'Main pairing for 2025', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', 2025, 'B', '25M001', '25F001', '2025-09-05', 'Late-season pairing', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', 2026, 'A', '25M001', '25F001', '2026-01-25', 'Main pairing for 2026', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0001', 2026, 'B', '25M001', '25F001', '2026-03-12', 'Additional clutch pairing', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', 2025, 'A', '25M001', '25F001', '2025-04-10', 'AFT main pairing 2025', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP),
+  ('0002', 2026, 'A', '25M001', '25F001', '2026-01-18', 'AFT main pairing 2026', 'system', CURRENT_TIMESTAMP, 'system', CURRENT_TIMESTAMP);
 
 INSERT INTO individual (
   species_id,

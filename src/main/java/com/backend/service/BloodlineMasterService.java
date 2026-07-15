@@ -14,6 +14,8 @@ import com.backend.mapper.BloodlineMasterMapper;
 @Service
 public class BloodlineMasterService {
 
+    private static final String SYSTEM_USER = "system";
+
     private final BloodlineMasterMapper bloodlineMasterMapper;
 
     public BloodlineMasterService(BloodlineMasterMapper bloodlineMasterMapper) {
@@ -103,6 +105,8 @@ public class BloodlineMasterService {
         normalized.setMorphId(requireNonBlank(request.getMorphId(), "morph_id is required"));
         normalized.setBloodlineName(requireNonBlank(request.getBloodlineName(), "bloodline_name is required"));
         normalized.setBloodlineId(generateNextBloodlineId(normalized.getSpeciesId(), normalized.getMorphId()));
+        normalized.setCreateUser(SYSTEM_USER);
+        normalized.setUpdateUser(SYSTEM_USER);
         return normalized;
     }
 
@@ -115,6 +119,7 @@ public class BloodlineMasterService {
         normalized.setMorphId(requireNonBlank(request.getMorphId(), "morph_id is required"));
         normalized.setBloodlineId(requireNonBlank(request.getBloodlineId(), "bloodline_id is required"));
         normalized.setBloodlineName(requireNonBlank(request.getBloodlineName(), "bloodline_name is required"));
+        normalized.setUpdateUser(SYSTEM_USER);
         return normalized;
     }
 

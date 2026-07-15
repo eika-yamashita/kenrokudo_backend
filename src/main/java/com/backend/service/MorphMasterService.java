@@ -18,6 +18,7 @@ public class MorphMasterService {
     private static final String RECESSIVE = "1";
     private static final String DOMINANT = "2";
     private static final String CODOMINANT = "3";
+    private static final String SYSTEM_USER = "system";
 
     private final MorphMasterMapper morphMasterMapper;
 
@@ -101,6 +102,8 @@ public class MorphMasterService {
         normalized.setMorphName(requireNonBlank(request.getMorphName(), "モルフ名は必須です"));
         normalized.setInheritanceCategory(validateInheritanceCategory(request.getInheritanceCategory()));
         normalized.setMorphId(generateNextMorphId(normalized.getSpeciesId()));
+        normalized.setCreateUser(SYSTEM_USER);
+        normalized.setUpdateUser(SYSTEM_USER);
         return normalized;
     }
 
@@ -113,6 +116,7 @@ public class MorphMasterService {
         normalized.setMorphId(requireNonBlank(request.getMorphId(), "モルフIDは必須です"));
         normalized.setMorphName(requireNonBlank(request.getMorphName(), "モルフ名は必須です"));
         normalized.setInheritanceCategory(validateInheritanceCategory(request.getInheritanceCategory()));
+        normalized.setUpdateUser(SYSTEM_USER);
         return normalized;
     }
 

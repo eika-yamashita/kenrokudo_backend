@@ -113,7 +113,8 @@ public class IndividualImageService {
         image.setFileSize(fileSize(destination));
         image.setSortOrder(sortOrder != null ? sortOrder : individualImageMapper.nextSortOrder(speciesId, individualId));
         image.setIsPrimary(shouldBePrimary);
-        image.setCreatedBy(createdBy);
+        image.setCreateUser(createdBy != null ? createdBy : "system");
+        image.setUpdateUser(createdBy != null ? createdBy : "system");
 
         individualImageMapper.insert(image);
         IndividualImageEntity created = individualImageMapper.findByStoragePath(relativePath);

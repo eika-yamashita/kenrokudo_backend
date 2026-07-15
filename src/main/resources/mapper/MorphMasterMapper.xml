@@ -7,13 +7,21 @@
         <id column="morph_id" property="morphId" />
         <result column="morph_name" property="morphName" />
         <result column="inheritance_category" property="inheritanceCategory" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
     </resultMap>
 
     <sql id="morphColumns">
         species_id,
         morph_id,
         morph_name,
-        inheritance_category
+        inheritance_category,
+        create_user,
+        create_at,
+        update_user,
+        update_at
     </sql>
 
     <select id="findAll" resultMap="MorphMasterResultMap">
@@ -89,12 +97,20 @@
             species_id,
             morph_id,
             morph_name,
-            inheritance_category
+            inheritance_category,
+            create_user,
+            create_at,
+            update_user,
+            update_at
         ) VALUES (
             #{speciesId},
             #{morphId},
             #{morphName},
-            #{inheritanceCategory}
+            #{inheritanceCategory},
+            #{createUser},
+            CURRENT_TIMESTAMP,
+            #{updateUser},
+            CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -104,7 +120,9 @@
             species_id = #{morph.speciesId},
             morph_id = #{morph.morphId},
             morph_name = #{morph.morphName},
-            inheritance_category = #{morph.inheritanceCategory}
+            inheritance_category = #{morph.inheritanceCategory},
+            update_user = #{morph.updateUser},
+            update_at = CURRENT_TIMESTAMP
         WHERE
             species_id = #{speciesId}
             AND morph_id = #{morphId}

@@ -13,10 +13,10 @@
         <result column="file_size" property="fileSize" />
         <result column="sort_order" property="sortOrder" />
         <result column="is_primary" property="isPrimary" />
-        <result column="created_at" property="createdAt" />
-        <result column="created_by" property="createdBy" />
-        <result column="updated_at" property="updatedAt" />
-        <result column="updated_by" property="updatedBy" />
+        <result column="create_at" property="createAt" />
+        <result column="create_user" property="createUser" />
+        <result column="update_at" property="updateAt" />
+        <result column="update_user" property="updateUser" />
     </resultMap>
 
     <sql id="imageColumns">
@@ -30,10 +30,10 @@
         file_size,
         sort_order,
         is_primary,
-        created_at,
-        created_by,
-        updated_at,
-        updated_by
+        create_user,
+        create_at,
+        update_user,
+        update_at
     </sql>
 
     <sql id="imageIdCondition">
@@ -74,7 +74,10 @@
             file_size,
             sort_order,
             is_primary,
-            created_by
+            create_user,
+            create_at,
+            update_user,
+            update_at
         )
         VALUES (
             #{imageId},
@@ -87,7 +90,10 @@
             #{fileSize},
             #{sortOrder},
             #{isPrimary},
-            #{createdBy}
+            #{createUser},
+            CURRENT_TIMESTAMP,
+            #{updateUser},
+            CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -96,7 +102,7 @@
         FROM individual_image
         WHERE species_id = #{speciesId}
           AND individual_id = #{individualId}
-        ORDER BY sort_order, created_at
+        ORDER BY sort_order, create_at
     </select>
 
     <select id="findByImageId" resultMap="IndividualImageResultMap">
@@ -114,7 +120,7 @@
     <update id="clearPrimaryByIndividual">
         UPDATE individual_image
         SET is_primary = FALSE,
-            updated_at = CURRENT_TIMESTAMP
+            update_at = CURRENT_TIMESTAMP
         WHERE species_id = #{speciesId}
           AND individual_id = #{individualId}
           AND is_primary = TRUE
@@ -123,8 +129,8 @@
     <update id="setPrimaryByImageId">
         UPDATE individual_image
         SET is_primary = TRUE,
-            updated_by = #{updatedBy},
-            updated_at = CURRENT_TIMESTAMP
+            update_user = #{updatedBy},
+            update_at = CURRENT_TIMESTAMP
         WHERE <include refid="imageIdCondition" />
     </update>
 
@@ -136,8 +142,8 @@
             content_type = #{contentType},
             file_size = #{fileSize},
             is_primary = #{isPrimary},
-            updated_by = #{updatedBy},
-            updated_at = CURRENT_TIMESTAMP
+            update_user = #{updatedBy},
+            update_at = CURRENT_TIMESTAMP
         WHERE <include refid="imageIdCondition" />
     </update>
 

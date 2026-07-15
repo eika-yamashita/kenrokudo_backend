@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.ExhibitionEventMapper">
+
+    <resultMap id="ExhibitionEventResultMap" type="com.backend.entity.ExhibitionEventEntity">
+        <id column="event_id" property="eventId" />
+        <result column="event_name" property="eventName" />
+        <result column="event_date" property="eventDate" />
+        <result column="area" property="area" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="venue" property="venue" />
+        <result column="event_url" property="eventUrl" />
+        <result column="note" property="note" />
+        <result column="display_order" property="displayOrder" />
+        <result column="is_published" property="isPublished" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+    <sql id="eventColumns">
+        event_id,
+        event_name,
+        event_date,
+        area,
+        TO_CHAR(start_time, 'HH24:MI') AS start_time,
+        TO_CHAR(end_time, 'HH24:MI') AS end_time,
+        venue,
+        event_url,
+        note,
+        display_order,
+        is_published,
+        create_user,
+        create_at,
+        update_user,
+        update_at
+    </sql>
+
+    <select id="findAll" resultMap="ExhibitionEventResultMap">
+        SELECT
+            <include refid="eventColumns" />
+        FROM
+            exhibition_event
+        ORDER BY
+            event_date DESC,
+            display_order,
+            event_id DESC
+    </select>
+
+    <select id="findUpcomingPublished" resultMap="ExhibitionEventResultMap">
+        SELECT
+            <include refid="eventColumns" />
+        FROM
+            exhibition_event
+        WHERE
+            is_published = TRUE
+            AND event_date >= CURRENT_DATE
+        ORDER BY
+            event_date,
+            start_time,
+            display_order,
+            event_id
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <select id="findByEventId" resultMap="ExhibitionEventResultMap">
+        SELECT
+            <include refid="eventColumns" />
+        FROM
+            exhibition_event
+        WHERE
+            event_id = #{eventId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="eventId">
+        INSERT INTO exhibition_event (
+            event_name,
+            event_date,
+            area,
+            start_time,
+            end_time,
+            venue,
+            event_url,
+            note,
+            display_order,
+            is_published,
+            create_user,
+            create_at,
+            update_user,
+            update_at
+        ) VALUES (
+            #{eventName},
+            #{eventDate},
+            #{area},
+            CAST(NULLIF(#{startTime}, '') AS TIME),
+            CAST(NULLIF(#{endTime}, '') AS TIME),
+            #{venue},
+            #{eventUrl},
+            #{note},
+            #{displayOrder},
+            #{isPublished},
+            #{createUser},
+            CURRENT_TIMESTAMP,
+            #{updateUser},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE exhibition_event
+        SET
+            event_name = #{event.eventName},
+            event_date = #{event.eventDate},
+            area = #{event.area},
+            start_time = CAST(NULLIF(#{event.startTime}, '') AS TIME),
+            end_time = CAST(NULLIF(#{event.endTime}, '') AS TIME),
+            venue = #{event.venue},
+            event_url = #{event.eventUrl},
+            note = #{event.note},
+            display_order = #{event.displayOrder},
+            is_published = #{event.isPublished},
+            update_user = #{event.updateUser},
+            update_at = CURRENT_TIMESTAMP
+        WHERE
+            event_id = #{eventId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM exhibition_event
+        WHERE
+            event_id = #{eventId}
+    </delete>
+</mapper>

@@ -7,13 +7,21 @@
         <id column="morph_id" property="morphId" />
         <id column="bloodline_id" property="bloodlineId" />
         <result column="bloodline_name" property="bloodlineName" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
     </resultMap>
 
     <sql id="bloodlineColumns">
         species_id,
         morph_id,
         bloodline_id,
-        bloodline_name
+        bloodline_name,
+        create_user,
+        create_at,
+        update_user,
+        update_at
     </sql>
 
     <select id="findAll" resultMap="BloodlineMasterResultMap">
@@ -85,12 +93,20 @@
             species_id,
             morph_id,
             bloodline_id,
-            bloodline_name
+            bloodline_name,
+            create_user,
+            create_at,
+            update_user,
+            update_at
         ) VALUES (
             #{speciesId},
             #{morphId},
             #{bloodlineId},
-            #{bloodlineName}
+            #{bloodlineName},
+            #{createUser},
+            CURRENT_TIMESTAMP,
+            #{updateUser},
+            CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -100,7 +116,9 @@
             species_id = #{bloodline.speciesId},
             morph_id = #{bloodline.morphId},
             bloodline_id = #{bloodline.bloodlineId},
-            bloodline_name = #{bloodline.bloodlineName}
+            bloodline_name = #{bloodline.bloodlineName},
+            update_user = #{bloodline.updateUser},
+            update_at = CURRENT_TIMESTAMP
         WHERE
             species_id = #{speciesId}
             AND morph_id = #{morphId}

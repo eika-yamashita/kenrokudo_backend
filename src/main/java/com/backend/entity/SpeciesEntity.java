@@ -1,5 +1,10 @@
 package com.backend.entity;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SpeciesEntity {
 
     private String speciesId;
@@ -9,6 +14,10 @@ public class SpeciesEntity {
     private String totalLength;
     private String bodyWeight;
     private String lifespan;
+    private String createUser;
+    private Date createAt;
+    private String updateUser;
+    private Date updateAt;
 
     public String getSpeciesId() {
         return speciesId;
@@ -64,5 +73,43 @@ public class SpeciesEntity {
 
     public void setLifespan(String lifespan) {
         this.lifespan = lifespan;
+    }
+
+    @JsonProperty("create_user")
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    @JsonProperty("create_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    @JsonProperty("update_user")
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    @JsonProperty("update_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
     }
 }

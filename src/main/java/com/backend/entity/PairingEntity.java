@@ -34,4 +34,18 @@ public class PairingEntity implements Serializable {
 
     @JsonProperty("note")
     private String note;
+
+    @JsonProperty("create_user")
+    private String createUser;
+
+    @JsonProperty("create_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    private Date createAt;
+
+    @JsonProperty("update_user")
+    private String updateUser;
+
+    @JsonProperty("update_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    private Date updateAt;
 }

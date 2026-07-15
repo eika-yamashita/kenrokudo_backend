@@ -6,6 +6,10 @@ CREATE TABLE species (
   total_length VARCHAR(50),
   body_weight VARCHAR(50),
   lifespan VARCHAR(50),
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (species_id)
 );
 
@@ -14,6 +18,10 @@ CREATE TABLE morph_master (
   morph_id VARCHAR(20) NOT NULL,
   morph_name VARCHAR(100) NOT NULL,
   inheritance_category CHAR(1) NOT NULL,
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (species_id, morph_id),
   CONSTRAINT uq_morph_master_name UNIQUE (species_id, morph_name),
   CONSTRAINT fk_morph_master_species FOREIGN KEY (species_id) REFERENCES species (species_id),
@@ -28,6 +36,10 @@ CREATE TABLE bloodline_master (
   morph_id VARCHAR(20) NOT NULL,
   bloodline_id VARCHAR(20) NOT NULL,
   bloodline_name VARCHAR(100) NOT NULL,
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (species_id, morph_id, bloodline_id),
   CONSTRAINT uq_bloodline_master_name UNIQUE (species_id, morph_id, bloodline_name),
   CONSTRAINT fk_bloodline_master_morph
@@ -78,6 +90,10 @@ CREATE TABLE pairing (
   female_parent_id VARCHAR(20) NOT NULL,
   pairing_date DATE NOT NULL,
   note VARCHAR(255),
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (species_id, fiscal_year, pairing_id),
   CONSTRAINT uq_pairing_signature UNIQUE (species_id, male_parent_id, female_parent_id, pairing_date),
   CONSTRAINT fk_pairing_species FOREIGN KEY (species_id) REFERENCES species (species_id),
@@ -137,10 +153,10 @@ CREATE TABLE individual_image (
   file_size BIGINT NOT NULL,
   sort_order INTEGER NOT NULL DEFAULT 0,
   is_primary BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by VARCHAR(20),
-  updated_at TIMESTAMP,
-  updated_by VARCHAR(20),
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (image_id),
   CONSTRAINT fk_individual_image_individual
     FOREIGN KEY (species_id, individual_id)
@@ -150,6 +166,28 @@ CREATE TABLE individual_image (
 
 CREATE INDEX idx_individual_image_individual
   ON individual_image (species_id, individual_id);
+
+CREATE TABLE exhibition_event (
+  event_id BIGSERIAL NOT NULL,
+  event_name VARCHAR(100) NOT NULL,
+  event_date DATE NOT NULL,
+  area VARCHAR(50),
+  start_time TIME,
+  end_time TIME,
+  venue VARCHAR(255),
+  event_url VARCHAR(500),
+  note VARCHAR(500),
+  display_order INTEGER NOT NULL DEFAULT 0,
+  is_published BOOLEAN NOT NULL DEFAULT TRUE,
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (event_id)
+);
+
+CREATE INDEX idx_exhibition_event_upcoming
+  ON exhibition_event (is_published, event_date, start_time, display_order);
 
 COMMENT ON TABLE species IS '種マスタ';
 COMMENT ON COLUMN species.species_id IS '種コード';
@@ -234,7 +272,23 @@ COMMENT ON COLUMN individual_image.content_type IS 'Content-Type';
 COMMENT ON COLUMN individual_image.file_size IS 'ファイルサイズ';
 COMMENT ON COLUMN individual_image.sort_order IS '表示順';
 COMMENT ON COLUMN individual_image.is_primary IS 'メイン画像フラグ';
-COMMENT ON COLUMN individual_image.created_at IS '作成日時';
-COMMENT ON COLUMN individual_image.created_by IS '作成者';
-COMMENT ON COLUMN individual_image.updated_at IS '更新日時';
-COMMENT ON COLUMN individual_image.updated_by IS '更新者';
+COMMENT ON COLUMN individual_image.create_user IS '作成者';
+COMMENT ON COLUMN individual_image.create_at IS '作成日時';
+COMMENT ON COLUMN individual_image.update_user IS '更新者';
+COMMENT ON COLUMN individual_image.update_at IS '更新日時';
+
+COMMENT ON TABLE exhibition_event IS '出店イベント';
+COMMENT ON COLUMN exhibition_event.event_id IS 'イベントID';
+COMMENT ON COLUMN exhibition_event.event_name IS 'イベント名';
+COMMENT ON COLUMN exhibition_event.event_date IS 'イベント日';
+COMMENT ON COLUMN exhibition_event.start_time IS '開始時間';
+COMMENT ON COLUMN exhibition_event.end_time IS '終了時間';
+COMMENT ON COLUMN exhibition_event.venue IS '場所';
+COMMENT ON COLUMN exhibition_event.event_url IS 'URL';
+COMMENT ON COLUMN exhibition_event.note IS '備考';
+COMMENT ON COLUMN exhibition_event.display_order IS '表示順';
+COMMENT ON COLUMN exhibition_event.is_published IS '公開フラグ';
+COMMENT ON COLUMN exhibition_event.create_user IS '作成者';
+COMMENT ON COLUMN exhibition_event.create_at IS '作成日時';
+COMMENT ON COLUMN exhibition_event.update_user IS '更新者';
+COMMENT ON COLUMN exhibition_event.update_at IS '更新日時';

@@ -20,6 +20,7 @@ import com.backend.mapper.PairingMapper;
 public class PairingService {
 
     private static final Pattern PAIRING_ID_PATTERN = Pattern.compile("^[A-Z]+$");
+    private static final String SYSTEM_USER = "system";
 
     private final PairingMapper pairingMapper;
     private final IndividualMapper individualMapper;
@@ -129,6 +130,8 @@ public class PairingService {
         normalized.setMaleParentId(requireNonBlank(request.getMaleParentId(), "male_parent_id is required"));
         normalized.setFemaleParentId(requireNonBlank(request.getFemaleParentId(), "female_parent_id is required"));
         normalized.setNote(trimToNull(request.getNote()));
+        normalized.setCreateUser(SYSTEM_USER);
+        normalized.setUpdateUser(SYSTEM_USER);
 
         return normalized;
     }
@@ -161,6 +164,7 @@ public class PairingService {
         normalized.setFemaleParentId(requireNonBlank(femaleParentId, "female_parent_id is required"));
 
         normalized.setNote(trimToNull(request.getNote()));
+        normalized.setUpdateUser(SYSTEM_USER);
         return normalized;
     }
 

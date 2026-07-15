@@ -10,6 +10,10 @@
         <result column="female_parent_id" property="femaleParentId" />
         <result column="pairing_date" property="pairingDate" />
         <result column="note" property="note" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
     </resultMap>
 
     <sql id="pairingColumns">
@@ -19,7 +23,11 @@
         male_parent_id,
         female_parent_id,
         pairing_date,
-        note
+        note,
+        create_user,
+        create_at,
+        update_user,
+        update_at
     </sql>
 
     <select id="findAll" resultMap="PairingResultMap">
@@ -110,7 +118,11 @@
             male_parent_id,
             female_parent_id,
             pairing_date,
-            note
+            note,
+            create_user,
+            create_at,
+            update_user,
+            update_at
         )
         VALUES (
             #{speciesId},
@@ -119,7 +131,11 @@
             #{maleParentId},
             #{femaleParentId},
             #{pairingDate},
-            #{note}
+            #{note},
+            #{createUser},
+            CURRENT_TIMESTAMP,
+            #{updateUser},
+            CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -132,7 +148,9 @@
             male_parent_id = #{pairing.maleParentId},
             female_parent_id = #{pairing.femaleParentId},
             pairing_date = #{pairing.pairingDate},
-            note = #{pairing.note}
+            note = #{pairing.note},
+            update_user = #{pairing.updateUser},
+            update_at = CURRENT_TIMESTAMP
         WHERE
             species_id = #{speciesId}
             AND fiscal_year = #{fiscalYear}

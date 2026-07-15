@@ -10,6 +10,10 @@
         <result column="total_length" property="totalLength" />
         <result column="body_weight" property="bodyWeight" />
         <result column="lifespan" property="lifespan" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
     </resultMap>
 
     <sql id="speciesColumns">
@@ -19,7 +23,11 @@
         english_name,
         total_length,
         body_weight,
-        lifespan
+        lifespan,
+        create_user,
+        create_at,
+        update_user,
+        update_at
     </sql>
 
     <select id="findAll" resultMap="SpeciesResultMap">
@@ -48,7 +56,11 @@
             english_name,
             total_length,
             body_weight,
-            lifespan
+            lifespan,
+            create_user,
+            create_at,
+            update_user,
+            update_at
         ) VALUES (
             #{speciesId},
             #{japaneseName},
@@ -56,7 +68,11 @@
             #{englishName},
             #{totalLength},
             #{bodyWeight},
-            #{lifespan}
+            #{lifespan},
+            #{createUser},
+            CURRENT_TIMESTAMP,
+            #{updateUser},
+            CURRENT_TIMESTAMP
         )
     </insert>
 
@@ -69,7 +85,9 @@
             english_name = #{species.englishName},
             total_length = #{species.totalLength},
             body_weight = #{species.bodyWeight},
-            lifespan = #{species.lifespan}
+            lifespan = #{species.lifespan},
+            update_user = #{species.updateUser},
+            update_at = CURRENT_TIMESTAMP
         WHERE
             species_id = #{speciesId}
     </update>

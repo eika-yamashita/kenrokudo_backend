@@ -14,6 +14,8 @@ import com.backend.mapper.SpeciesMapper;
 @Service
 public class SpeciesService {
 
+    private static final String SYSTEM_USER = "system";
+
     private final SpeciesMapper speciesMapper;
 
     public SpeciesService(SpeciesMapper speciesMapper) {
@@ -86,6 +88,8 @@ public class SpeciesService {
         normalized.setTotalLength(trimToNull(request.getTotalLength()));
         normalized.setBodyWeight(trimToNull(request.getBodyWeight()));
         normalized.setLifespan(trimToNull(request.getLifespan()));
+        normalized.setCreateUser(SYSTEM_USER);
+        normalized.setUpdateUser(SYSTEM_USER);
         return normalized;
     }
 
