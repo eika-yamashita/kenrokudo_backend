@@ -17,7 +17,9 @@ CREATE TABLE morph_master (
   species_id VARCHAR(20) NOT NULL,
   morph_id VARCHAR(20) NOT NULL,
   morph_name VARCHAR(100) NOT NULL,
-  inheritance_category CHAR(1) NOT NULL,
+  morph_type VARCHAR(10) NOT NULL DEFAULT 'SINGLE',
+  inheritance_category CHAR(1),
+  display_priority INTEGER NOT NULL DEFAULT 0,
   create_user VARCHAR(20) NOT NULL,
   create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   update_user VARCHAR(20),
@@ -25,11 +27,32 @@ CREATE TABLE morph_master (
   PRIMARY KEY (species_id, morph_id),
   CONSTRAINT uq_morph_master_name UNIQUE (species_id, morph_name),
   CONSTRAINT fk_morph_master_species FOREIGN KEY (species_id) REFERENCES species (species_id),
-  CONSTRAINT ck_morph_master_inheritance CHECK (inheritance_category IN ('0', '1', '2', '3'))
+  CONSTRAINT ck_morph_master_type CHECK (morph_type IN ('SINGLE', 'COMBO')),
+  CONSTRAINT ck_morph_master_inheritance CHECK (
+    (morph_type = 'SINGLE' AND inheritance_category IN ('0', '1', '2', '3')) OR
+    (morph_type = 'COMBO' AND inheritance_category IS NULL)
+  )
 );
 
 CREATE INDEX idx_morph_master_species
   ON morph_master (species_id, morph_id);
+
+CREATE TABLE combo_morph_component (
+  species_id VARCHAR(20) NOT NULL,
+  combo_morph_id VARCHAR(20) NOT NULL,
+  component_morph_id VARCHAR(20) NOT NULL,
+  required_expression CHAR(1) NOT NULL DEFAULT '0',
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (species_id, combo_morph_id, component_morph_id),
+  CONSTRAINT fk_combo_morph_component_combo
+    FOREIGN KEY (species_id, combo_morph_id)
+    REFERENCES morph_master (species_id, morph_id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_combo_morph_component_single
+    FOREIGN KEY (species_id, component_morph_id)
+    REFERENCES morph_master (species_id, morph_id),
+  CONSTRAINT ck_combo_morph_component_expression CHECK (required_expression = '0')
+);
 
 CREATE TABLE bloodline_master (
   species_id VARCHAR(20) NOT NULL,
@@ -109,12 +132,30 @@ ALTER TABLE individual
   FOREIGN KEY (species_id, pairing_fiscal_year, pairing_id)
   REFERENCES pairing (species_id, fiscal_year, pairing_id);
 
+CREATE TABLE individual_bloodline (
+  species_id VARCHAR(20) NOT NULL,
+  individual_id VARCHAR(20) NOT NULL,
+  morph_id VARCHAR(20) NOT NULL,
+  bloodline_id VARCHAR(20) NOT NULL,
+  create_user VARCHAR(20) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_user VARCHAR(20),
+  update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (species_id, individual_id, morph_id),
+  CONSTRAINT fk_individual_bloodline_individual
+    FOREIGN KEY (species_id, individual_id)
+    REFERENCES individual (species_id, id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_individual_bloodline_master
+    FOREIGN KEY (species_id, morph_id, bloodline_id)
+    REFERENCES bloodline_master (species_id, morph_id, bloodline_id)
+);
+
 CREATE TABLE individual_morph (
   species_id VARCHAR(20) NOT NULL,
   individual_id VARCHAR(20) NOT NULL,
   morph_id VARCHAR(20) NOT NULL,
   expression_category CHAR(1) NOT NULL,
-  bloodline_id VARCHAR(20),
   possible_het_percentage INTEGER,
   sort_order INTEGER NOT NULL DEFAULT 0,
   create_user VARCHAR(20) NOT NULL,
@@ -129,9 +170,6 @@ CREATE TABLE individual_morph (
   CONSTRAINT fk_individual_morph_master
     FOREIGN KEY (species_id, morph_id)
     REFERENCES morph_master (species_id, morph_id),
-  CONSTRAINT fk_individual_morph_bloodline
-    FOREIGN KEY (species_id, morph_id, bloodline_id)
-    REFERENCES bloodline_master (species_id, morph_id, bloodline_id),
   CONSTRAINT ck_individual_morph_expression CHECK (expression_category IN ('0', '1', '2')),
   CONSTRAINT ck_individual_morph_percentage CHECK (
     possible_het_percentage IS NULL OR
@@ -252,7 +290,6 @@ COMMENT ON TABLE individual_morph IS '個体モルフ情報';
 COMMENT ON COLUMN individual_morph.species_id IS '種コード';
 COMMENT ON COLUMN individual_morph.individual_id IS '個体ID';
 COMMENT ON COLUMN individual_morph.morph_id IS 'モルフID';
-COMMENT ON COLUMN individual_morph.bloodline_id IS '血統ID';
 COMMENT ON COLUMN individual_morph.expression_category IS '表現区分 0:visual、1:het、2:possible_het';
 COMMENT ON COLUMN individual_morph.possible_het_percentage IS 'Possヘテロ率';
 COMMENT ON COLUMN individual_morph.sort_order IS '表示順';

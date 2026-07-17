@@ -17,11 +17,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.backend.entity.BloodlineMasterEntity;
 import com.backend.entity.IndividualEntity;
+import com.backend.entity.IndividualBloodlineEntity;
 import com.backend.entity.IndividualMorphEntity;
 import com.backend.entity.MorphMasterEntity;
 import com.backend.entity.PairingEntity;
 import com.backend.mapper.BloodlineMasterMapper;
 import com.backend.mapper.IndividualMapper;
+import com.backend.mapper.IndividualBloodlineMapper;
 import com.backend.mapper.IndividualMorphMapper;
 import com.backend.mapper.MorphMasterMapper;
 import com.backend.mapper.PairingMapper;
@@ -40,6 +42,7 @@ public class IndividualService {
     private static final String EXPRESSION_HET = "1";
     private static final String EXPRESSION_POSSIBLE_HET = "2";
     private static final String INHERITANCE_RECESSIVE = "1";
+    private static final String MORPH_SINGLE = "SINGLE";
     private static final Map<Character, Integer> SEQ_INDEX_MAP = createSeqIndexMap();
 
     private final IndividualMapper individualMapper;
@@ -47,6 +50,7 @@ public class IndividualService {
     private final MorphMasterMapper morphMasterMapper;
     private final BloodlineMasterMapper bloodlineMasterMapper;
     private final IndividualMorphMapper individualMorphMapper;
+    private final IndividualBloodlineMapper individualBloodlineMapper;
     private final IndividualImageService individualImageService;
 
     public IndividualService(
@@ -55,6 +59,7 @@ public class IndividualService {
         MorphMasterMapper morphMasterMapper,
         BloodlineMasterMapper bloodlineMasterMapper,
         IndividualMorphMapper individualMorphMapper,
+        IndividualBloodlineMapper individualBloodlineMapper,
         IndividualImageService individualImageService
     ) {
         this.individualMapper = individualMapper;
@@ -62,6 +67,7 @@ public class IndividualService {
         this.morphMasterMapper = morphMasterMapper;
         this.bloodlineMasterMapper = bloodlineMasterMapper;
         this.individualMorphMapper = individualMorphMapper;
+        this.individualBloodlineMapper = individualBloodlineMapper;
         this.individualImageService = individualImageService;
     }
 
@@ -146,6 +152,7 @@ public class IndividualService {
             try {
                 individualMapper.insert(individual);
                 saveIndividualMorphs(speciesId, individual.getId(), morphEntries, individual);
+                saveIndividualBloodline(speciesId, individual.getId(), morphEntries, individual);
                 break;
             } catch (DataIntegrityViolationException e) {
                 if (!autoIdRequired || attempt == MAX_INSERT_RETRY - 1) {
@@ -183,8 +190,10 @@ public class IndividualService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "individual not found");
         }
 
+        individualBloodlineMapper.deleteByIndividual(speciesId, id);
         individualMorphMapper.deleteByIndividual(speciesId, id);
         saveIndividualMorphs(speciesId, id, morphEntries, individual);
+        saveIndividualBloodline(speciesId, id, morphEntries, individual);
     }
 
     @Transactional
@@ -471,7 +480,7 @@ public class IndividualService {
                 sortOrder = 0;
                 possibleHetPercentage = null;
             } else {
-                if (!INHERITANCE_RECESSIVE.equals(morph.getInheritanceCategory())) {
+                if (!MORPH_SINGLE.equals(morph.getMorphType()) || !INHERITANCE_RECESSIVE.equals(morph.getInheritanceCategory())) {
                     throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "het and possible_het can be registered only for recessive morphs"
@@ -499,6 +508,9 @@ public class IndividualService {
             }
 
             BloodlineMasterEntity bloodline = null;
+            if (!EXPRESSION_VISUAL.equals(expressionCategory) && (bloodlineId != null || bloodlineName != null)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bloodline can be registered only for the visual morph");
+            }
             if (bloodlineId == null && bloodlineName != null) {
                 bloodline = bloodlineMasterMapper.findBySpeciesMorphAndBloodlineName(
                     speciesId,
@@ -610,10 +622,7 @@ public class IndividualService {
             .findFirst()
             .orElse(null);
         if (visual != null) {
-            builder.append(visual.morph.getMorphName());
-            if (visual.bloodlineName != null) {
-                builder.append(" / ").append(visual.bloodlineName);
-            }
+            builder.append(visual.bloodlineName != null ? visual.bloodlineName : visual.morph.getMorphName());
         }
 
         for (NormalizedMorphEntry entry : entries) {
@@ -653,6 +662,34 @@ public class IndividualService {
             entry.setUpdateAt(updateAt);
             individualMorphMapper.insert(entry);
         }
+    }
+
+    private void saveIndividualBloodline(
+        String speciesId,
+        String individualId,
+        List<IndividualMorphEntity> entries,
+        Individual individual
+    ) {
+        IndividualMorphEntity visual = entries.stream()
+            .filter(entry -> EXPRESSION_VISUAL.equals(entry.getExpressionCategory()))
+            .findFirst()
+            .orElse(null);
+        if (visual == null || trimToNull(visual.getBloodlineId()) == null) {
+            return;
+        }
+
+        Date createAt = individual.getCreateAt() != null ? individual.getCreateAt() : new Date();
+        Date updateAt = individual.getUpdateAt() != null ? individual.getUpdateAt() : createAt;
+        IndividualBloodlineEntity bloodline = new IndividualBloodlineEntity();
+        bloodline.setSpeciesId(speciesId);
+        bloodline.setIndividualId(individualId);
+        bloodline.setMorphId(visual.getMorphId());
+        bloodline.setBloodlineId(visual.getBloodlineId());
+        bloodline.setCreateUser(trimToNull(individual.getCreateUser()) != null ? individual.getCreateUser() : "system");
+        bloodline.setCreateAt(createAt);
+        bloodline.setUpdateUser(trimToNull(individual.getUpdateUser()) != null ? individual.getUpdateUser() : "system");
+        bloodline.setUpdateAt(updateAt);
+        individualBloodlineMapper.insert(bloodline);
     }
 
     private BloodlineMasterEntity bloodlineMapperFindByPrimaryKey(String speciesId, String morphId, String bloodlineId) {

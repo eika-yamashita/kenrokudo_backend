@@ -25,7 +25,7 @@
             im.individual_id,
             im.morph_id,
             mm.morph_name,
-            im.bloodline_id,
+            ib.bloodline_id,
             bm.bloodline_name,
             mm.inheritance_category,
             im.expression_category,
@@ -40,10 +40,15 @@
             INNER JOIN morph_master mm
                 ON mm.species_id = im.species_id
                 AND mm.morph_id = im.morph_id
+            LEFT JOIN individual_bloodline ib
+                ON ib.species_id = im.species_id
+                AND ib.individual_id = im.individual_id
+                AND ib.morph_id = im.morph_id
+                AND im.expression_category = '0'
             LEFT JOIN bloodline_master bm
-                ON bm.species_id = im.species_id
-                AND bm.morph_id = im.morph_id
-                AND bm.bloodline_id = im.bloodline_id
+                ON bm.species_id = ib.species_id
+                AND bm.morph_id = ib.morph_id
+                AND bm.bloodline_id = ib.bloodline_id
         WHERE
             im.species_id = #{speciesId}
             AND im.individual_id = #{individualId}
@@ -59,7 +64,6 @@
             individual_id,
             morph_id,
             expression_category,
-            bloodline_id,
             possible_het_percentage,
             sort_order,
             create_user,
@@ -71,7 +75,6 @@
             #{individualId},
             #{morphId},
             #{expressionCategory},
-            #{bloodlineId},
             #{possibleHetPercentage},
             #{sortOrder},
             #{createUser},

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.MorphComponentMapper">
+
+    <resultMap id="MorphComponentResultMap" type="com.backend.entity.MorphComponentEntity">
+        <id column="species_id" property="speciesId" />
+        <id column="combo_morph_id" property="comboMorphId" />
+        <id column="component_morph_id" property="componentMorphId" />
+        <result column="component_morph_name" property="componentMorphName" />
+        <result column="required_expression" property="requiredExpression" />
+        <result column="sort_order" property="sortOrder" />
+    </resultMap>
+
+    <select id="findByCombo" resultMap="MorphComponentResultMap">
+        SELECT
+            cmc.species_id,
+            cmc.combo_morph_id,
+            cmc.component_morph_id,
+            mm.morph_name AS component_morph_name,
+            cmc.required_expression,
+            cmc.sort_order
+        FROM combo_morph_component cmc
+        INNER JOIN morph_master mm
+            ON mm.species_id = cmc.species_id
+            AND mm.morph_id = cmc.component_morph_id
+        WHERE cmc.species_id = #{speciesId}
+          AND cmc.combo_morph_id = #{comboMorphId}
+        ORDER BY cmc.sort_order, cmc.component_morph_id
+    </select>
+
+    <insert id="insert">
+        INSERT INTO combo_morph_component (
+            species_id, combo_morph_id, component_morph_id,
+            required_expression, sort_order
+        ) VALUES (
+            #{speciesId}, #{comboMorphId}, #{componentMorphId},
+            #{requiredExpression}, #{sortOrder}
+        )
+    </insert>
+
+    <delete id="deleteByCombo">
+        DELETE FROM combo_morph_component
+        WHERE species_id = #{speciesId}
+          AND combo_morph_id = #{comboMorphId}
+    </delete>
+</mapper>

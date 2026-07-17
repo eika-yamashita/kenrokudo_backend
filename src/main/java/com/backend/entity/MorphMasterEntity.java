@@ -2,6 +2,7 @@ package com.backend.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,8 +23,17 @@ public class MorphMasterEntity implements Serializable {
     @JsonProperty("morph_name")
     private String morphName;
 
+    @JsonProperty("morph_type")
+    private String morphType;
+
     @JsonProperty("inheritance_category")
     private String inheritanceCategory;
+
+    @JsonProperty("display_priority")
+    private Integer displayPriority;
+
+    @JsonProperty("components")
+    private List<MorphComponentEntity> components;
 
     @JsonProperty("create_user")
     private String createUser;

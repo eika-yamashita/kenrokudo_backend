@@ -6,7 +6,9 @@
         <id column="species_id" property="speciesId" />
         <id column="morph_id" property="morphId" />
         <result column="morph_name" property="morphName" />
+        <result column="morph_type" property="morphType" />
         <result column="inheritance_category" property="inheritanceCategory" />
+        <result column="display_priority" property="displayPriority" />
         <result column="create_user" property="createUser" />
         <result column="create_at" property="createAt" />
         <result column="update_user" property="updateUser" />
@@ -17,7 +19,9 @@
         species_id,
         morph_id,
         morph_name,
+        morph_type,
         inheritance_category,
+        display_priority,
         create_user,
         create_at,
         update_user,
@@ -97,7 +101,9 @@
             species_id,
             morph_id,
             morph_name,
+            morph_type,
             inheritance_category,
+            display_priority,
             create_user,
             create_at,
             update_user,
@@ -106,7 +112,9 @@
             #{speciesId},
             #{morphId},
             #{morphName},
+            #{morphType},
             #{inheritanceCategory},
+            #{displayPriority},
             #{createUser},
             CURRENT_TIMESTAMP,
             #{updateUser},
@@ -120,7 +128,9 @@
             species_id = #{morph.speciesId},
             morph_id = #{morph.morphId},
             morph_name = #{morph.morphName},
+            morph_type = #{morph.morphType},
             inheritance_category = #{morph.inheritanceCategory},
+            display_priority = #{morph.displayPriority},
             update_user = #{morph.updateUser},
             update_at = CURRENT_TIMESTAMP
         WHERE

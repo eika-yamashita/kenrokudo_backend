@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backend.mapper.IndividualBloodlineMapper">
+
+    <resultMap id="IndividualBloodlineResultMap" type="com.backend.entity.IndividualBloodlineEntity">
+        <id column="species_id" property="speciesId" />
+        <id column="individual_id" property="individualId" />
+        <id column="morph_id" property="morphId" />
+        <result column="bloodline_id" property="bloodlineId" />
+        <result column="bloodline_name" property="bloodlineName" />
+        <result column="create_user" property="createUser" />
+        <result column="create_at" property="createAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+    <select id="findByIndividualAndMorph" resultMap="IndividualBloodlineResultMap">
+        SELECT ib.*, bm.bloodline_name
+        FROM individual_bloodline ib
+        INNER JOIN bloodline_master bm
+            ON bm.species_id = ib.species_id
+            AND bm.morph_id = ib.morph_id
+            AND bm.bloodline_id = ib.bloodline_id
+        WHERE ib.species_id = #{speciesId}
+          AND ib.individual_id = #{individualId}
+          AND ib.morph_id = #{morphId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO individual_bloodline (
+            species_id, individual_id, morph_id, bloodline_id,
+            create_user, create_at, update_user, update_at
+        ) VALUES (
+            #{speciesId}, #{individualId}, #{morphId}, #{bloodlineId},
+            #{createUser}, #{createAt}, #{updateUser}, #{updateAt}
+        )
+    </insert>
+
+    <delete id="deleteByIndividual">
+        DELETE FROM individual_bloodline
+        WHERE species_id = #{speciesId}
+          AND individual_id = #{individualId}
+    </delete>
+</mapper>
