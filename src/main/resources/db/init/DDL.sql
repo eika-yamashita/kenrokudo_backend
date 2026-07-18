@@ -29,7 +29,7 @@ CREATE TABLE morph_master (
   CONSTRAINT fk_morph_master_species FOREIGN KEY (species_id) REFERENCES species (species_id),
   CONSTRAINT ck_morph_master_type CHECK (morph_type IN ('SINGLE', 'COMBO')),
   CONSTRAINT ck_morph_master_inheritance CHECK (
-    (morph_type = 'SINGLE' AND inheritance_category IN ('0', '1', '2', '3')) OR
+    (morph_type = 'SINGLE' AND inheritance_category IN ('0', '1', '2', '3', '9')) OR
     (morph_type = 'COMBO' AND inheritance_category IS NULL)
   )
 );
@@ -240,7 +240,7 @@ COMMENT ON TABLE morph_master IS 'モルフマスタ';
 COMMENT ON COLUMN morph_master.species_id IS '種コード';
 COMMENT ON COLUMN morph_master.morph_id IS 'モルフID';
 COMMENT ON COLUMN morph_master.morph_name IS 'モルフ名';
-COMMENT ON COLUMN morph_master.inheritance_category IS '遺伝性区分 0:多因性遺伝、1:劣性遺伝、2:優勢遺伝、3:共優勢遺伝';
+COMMENT ON COLUMN morph_master.inheritance_category IS '遺伝性区分 0:多因子遺伝、1:劣性遺伝、2:優性遺伝、3:共優性遺伝、9:該当なし';
 
 COMMENT ON TABLE bloodline_master IS '血統マスタ';
 COMMENT ON COLUMN bloodline_master.species_id IS '種コード';

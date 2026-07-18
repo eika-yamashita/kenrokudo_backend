@@ -22,7 +22,7 @@ public class MorphMasterService {
     private static final String MORPH_SINGLE = "SINGLE";
     private static final String MORPH_COMBO = "COMBO";
     private static final String EXPRESSION_VISUAL = "0";
-    private static final Set<String> INHERITANCE_CATEGORIES = Set.of("0", "1", "2", "3");
+    private static final Set<String> INHERITANCE_CATEGORIES = Set.of("0", "1", "2", "3", "9");
     private static final String SYSTEM_USER = "system";
 
     private final MorphMasterMapper morphMasterMapper;
