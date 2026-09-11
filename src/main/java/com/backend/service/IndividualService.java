@@ -135,7 +135,7 @@ public class IndividualService {
         }
 
         if (autoIdRequired) {
-            id = generateNextId(individual.getFiscalYear(), individual.getBreedingCategory());
+            id = generateNextId(speciesId, individual.getFiscalYear(), individual.getBreedingCategory());
             individual.setId(id);
         }
 
@@ -162,7 +162,7 @@ public class IndividualService {
                         e
                     );
                 }
-                individual.setId(generateNextId(individual.getFiscalYear(), individual.getBreedingCategory()));
+                individual.setId(generateNextId(speciesId, individual.getFiscalYear(), individual.getBreedingCategory()));
                 morphEntries = normalizeMorphEntries(individual, speciesId, individual.getId());
             }
         }
@@ -260,7 +260,7 @@ public class IndividualService {
         return models;
     }
 
-    private String generateNextId(Integer fiscalYear, String breedingCategoryRaw) {
+    private String generateNextId(String speciesId, Integer fiscalYear, String breedingCategoryRaw) {
         if (fiscalYear == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year is required for auto id generation");
         }
@@ -269,7 +269,7 @@ public class IndividualService {
         String prefix = yy + breedingMarker;
 
         int maxSequence = -1;
-        for (String existingId : individualMapper.findIdsByIdPrefix(prefix)) {
+        for (String existingId : individualMapper.findIdsBySpeciesIdAndIdPrefix(speciesId, prefix)) {
             int sequence = parseSequence(existingId, prefix);
             if (sequence > maxSequence) {
                 maxSequence = sequence;

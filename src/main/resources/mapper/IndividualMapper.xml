@@ -115,13 +115,14 @@
             AND id = #{id}
     </select>
 
-    <select id="findIdsByIdPrefix" resultType="string">
+    <select id="findIdsBySpeciesIdAndIdPrefix" resultType="string">
         SELECT
             id
         FROM
             individual
         WHERE
-            id LIKE CONCAT(#{idPrefix}, '%')
+            species_id = #{speciesId}
+            AND id LIKE CONCAT(#{idPrefix}, '%')
             AND CHAR_LENGTH(id) = 6
     </select>
 

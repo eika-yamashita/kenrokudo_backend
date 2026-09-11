@@ -21,7 +21,10 @@ public interface IndividualMapper {
 
     IndividualEntity findBySpeciesIdAndId(@Param("speciesId") String speciesId, @Param("id") String id);
 
-    List<String> findIdsByIdPrefix(@Param("idPrefix") String idPrefix);
+    List<String> findIdsBySpeciesIdAndIdPrefix(
+        @Param("speciesId") String speciesId,
+        @Param("idPrefix") String idPrefix
+    );
 
     int insert(Individual individual);
 
