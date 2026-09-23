@@ -7,6 +7,7 @@ RUN chmod +x ./gradlew && ./gradlew bootJar -x test
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
+ENV TZ=Asia/Tokyo
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libheif-examples \
     && rm -rf /var/lib/apt/lists/*
@@ -14,4 +15,4 @@ COPY --from=build /app/build/libs/*.jar app.jar
 RUN mkdir -p /app/uploads
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=Asia/Tokyo", "-jar", "/app/app.jar"]

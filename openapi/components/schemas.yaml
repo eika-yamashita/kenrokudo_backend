@@ -203,5 +203,3 @@ Individual:
   required:
     - species_id
     - fiscal_year
-    - create_user
-    - create_at

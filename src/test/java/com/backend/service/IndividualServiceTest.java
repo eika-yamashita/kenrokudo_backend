@@ -1,12 +1,15 @@
 package com.backend.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,10 +80,18 @@ class IndividualServiceTest {
         request.setFiscalYear(2026);
         request.setBreedingCategory("0");
         request.setMorphEntries(List.of(visualMorph));
+        Date clientTimestamp = new Date(0);
+        request.setCreateAt(clientTimestamp);
+        request.setUpdateAt(clientTimestamp);
 
         Individual created = individualService.createIndividual(request);
 
         assertEquals("26A001", created.getId());
+        assertEquals("system", request.getCreateUser());
+        assertEquals("system", request.getUpdateUser());
+        assertNotNull(request.getCreateAt());
+        assertEquals(request.getCreateAt(), request.getUpdateAt());
+        assertNotEquals(clientTimestamp, request.getCreateAt());
         verify(individualMapper).findIdsBySpeciesIdAndIdPrefix(speciesId, idPrefix);
     }
 }

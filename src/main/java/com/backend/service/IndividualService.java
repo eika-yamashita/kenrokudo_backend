@@ -125,6 +125,11 @@ public class IndividualService {
         }
 
         individual.setSpeciesId(speciesId);
+        Date registeredAt = new Date();
+        individual.setCreateUser("system");
+        individual.setCreateAt(registeredAt);
+        individual.setUpdateUser("system");
+        individual.setUpdateAt(registeredAt);
         applyPairingParentsIfSpecified(individual, speciesId);
         applyMorphAndBloodlineIfSpecified(individual, speciesId);
 
@@ -178,6 +183,8 @@ public class IndividualService {
         }
 
         individual.setSpeciesId(speciesId);
+        individual.setUpdateUser("system");
+        individual.setUpdateAt(new Date());
         if (individual.getFiscalYear() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fiscal_year is required");
         }
