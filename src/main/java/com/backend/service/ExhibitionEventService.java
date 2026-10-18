@@ -15,8 +15,6 @@ import com.backend.mapper.ExhibitionEventMapper;
 public class ExhibitionEventService {
 
     private static final String SYSTEM_USER = "system";
-    private static final int DEFAULT_UPCOMING_LIMIT = 3;
-    private static final int MAX_UPCOMING_LIMIT = 20;
     private static final Pattern TIME_PATTERN = Pattern.compile("^([01][0-9]|2[0-3]):[0-5][0-9]$");
 
     private final ExhibitionEventMapper exhibitionEventMapper;
@@ -29,9 +27,8 @@ public class ExhibitionEventService {
         return exhibitionEventMapper.findAll();
     }
 
-    public List<ExhibitionEventEntity> getUpcomingPublished(Integer limit) {
-        int normalizedLimit = limit == null ? DEFAULT_UPCOMING_LIMIT : Math.max(1, Math.min(limit, MAX_UPCOMING_LIMIT));
-        return exhibitionEventMapper.findUpcomingPublished(normalizedLimit);
+    public List<ExhibitionEventEntity> getPublicPublished() {
+        return exhibitionEventMapper.findPublicPublished();
     }
 
     public ExhibitionEventEntity getEvent(Long eventId) {

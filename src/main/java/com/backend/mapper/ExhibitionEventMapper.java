@@ -12,7 +12,7 @@ public interface ExhibitionEventMapper {
 
     List<ExhibitionEventEntity> findAll();
 
-    List<ExhibitionEventEntity> findUpcomingPublished(@Param("limit") Integer limit);
+    List<ExhibitionEventEntity> findPublicPublished();
 
     ExhibitionEventEntity findByEventId(@Param("eventId") Long eventId);
 

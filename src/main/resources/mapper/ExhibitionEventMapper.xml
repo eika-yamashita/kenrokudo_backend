@@ -49,22 +49,21 @@
             event_id DESC
     </select>
 
-    <select id="findUpcomingPublished" resultMap="ExhibitionEventResultMap">
+    <select id="findPublicPublished" resultMap="ExhibitionEventResultMap">
         SELECT
             <include refid="eventColumns" />
         FROM
             exhibition_event
         WHERE
             is_published = TRUE
-            AND event_date >= CURRENT_DATE
+            AND event_date >= CURRENT_DATE - INTERVAL '6 months'
         ORDER BY
-            event_date,
+            CASE WHEN event_date >= CURRENT_DATE THEN 0 ELSE 1 END,
+            CASE WHEN event_date >= CURRENT_DATE THEN event_date END,
+            CASE WHEN event_date &lt; CURRENT_DATE THEN event_date END DESC,
             start_time,
             display_order,
             event_id
-        <if test="limit != null">
-            LIMIT #{limit}
-        </if>
     </select>
 
     <select id="findByEventId" resultMap="ExhibitionEventResultMap">

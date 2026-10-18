@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.entity.ExhibitionEventEntity;
@@ -34,11 +33,9 @@ public class ExhibitionEventController {
         return ResponseEntity.ok(exhibitionEventService.getEvents());
     }
 
-    @GetMapping("/public/events/upcoming")
-    public ResponseEntity<List<ExhibitionEventEntity>> getUpcomingEvents(
-        @RequestParam(value = "limit", required = false) Integer limit
-    ) {
-        return ResponseEntity.ok(exhibitionEventService.getUpcomingPublished(limit));
+    @GetMapping("/public/events")
+    public ResponseEntity<List<ExhibitionEventEntity>> getPublicEvents() {
+        return ResponseEntity.ok(exhibitionEventService.getPublicPublished());
     }
 
     @GetMapping("/events/{event_id}")
